@@ -1135,8 +1135,9 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Open the SDL2 Window</span>
 
-<span class="sd">        :param configuration: Configurations parameters from Application</span>
-<span class="sd">        :type confiuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configurations parameters from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_Init</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t open window: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>
@@ -1217,12 +1218,14 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get extensions which depend on the window and configuration</span>
 
-<span class="sd">        :param window: The VulkWindow</span>
-<span class="sd">        :param configuration: Configuration from App</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
-<span class="sd">        :return: Extensions list</span>
-<span class="sd">        :rtype: list</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The `VulkWindow`</span>
+<span class="sd">        - `configuration`: Configuration from App</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        Extension list</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c1"># Get available extensions</span>
@@ -1272,10 +1275,13 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_get_device_extensions</span><span class="p">(</span><span class="n">physical_device</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get device extensions</span>
 
-<span class="sd">        :param physical_device: The device to check</span>
-<span class="sd">        :type physical_device: VkPhysicalDevice</span>
-<span class="sd">        :return: Extensions list</span>
-<span class="sd">        :rtype: list</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `physical_device`: The VkPhysicalDevice to check</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        Extension list</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c1"># Get available extensions</span>
@@ -1302,10 +1308,13 @@ The context will be then passed to the Application to use it.</p>
 
 <span class="sd">        Simple algorythm: return everything in debug mode else nothing</span>
 
-<span class="sd">        :param configuration: configuration from App</span>
-<span class="sd">        :type configuration: dict</span>
-<span class="sd">        :return: All enabled layers</span>
-<span class="sd">        :rtype: list</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - configuration: configuration from App</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        List of all enabled layers</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">configuration</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
@@ -1323,14 +1332,15 @@ The context will be then passed to the Application to use it.</p>
 
 <span class="sd">        Check for graphic and presentation queue families.</span>
 
-<span class="sd">        :param physical_device: The physical device to check for</span>
-<span class="sd">        :param surface: The surface to present</span>
-<span class="sd">        :param pfn: Function vkGetPhysicalDeviceSurfaceSupportKHR callable</span>
-<span class="sd">        :type physical_device: VkPhysicalDevice</span>
-<span class="sd">        :type surface: VkSurfaceKHR</span>
-<span class="sd">        :type pfn: function</span>
-<span class="sd">        :return: a tuple with graphic index and present index or None</span>
-<span class="sd">        :rtype: tuple</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `physical_device`: The `VkPhysicalDevice` to check for</span>
+<span class="sd">        - `surface`: The `VkSurfaceKHR` to present</span>
+<span class="sd">        - `pfn`: Function `vkGetPhysicalDeviceSurfaceSupportKHR` callable</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        A tuple with graphic index and present index or None</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">queue_families</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceQueueFamilyProperties</span><span class="p">(</span><span class="n">physical_device</span><span class="p">)</span> <span class="c1"># noqa</span>
 
@@ -1358,10 +1368,11 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_get_pfn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get extension function pointers</span>
 
-<span class="sd">        Get only functions used in VulkContext, vulkan instance must exist</span>
+<span class="sd">        Get only functions used in `VulkContext`, vulkan instance must exist</span>
 
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">:</span>
@@ -1401,10 +1412,10 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan instance</span>
 
-<span class="sd">        :param window: The window for Vulkan</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The window for Vulkan</span>
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span>
@@ -1434,8 +1445,10 @@ The context will be then passed to the Application to use it.</p>
         <span class="sd">&#39;&#39;&#39;Create debug callback</span>
 
 <span class="sd">        It works only on debug mode</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type configuration: dict</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">configuration</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="k">return</span>
@@ -1457,8 +1470,9 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan surface</span>
 
-<span class="sd">        :param info: The window information for Vulkan</span>
-<span class="sd">        :type window: SDL_SysWMinfo from pySDL2</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `info`: The window information for Vulkan</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">def</span> <span class="nf">call_platform</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">surface_create</span><span class="p">):</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetInstanceProcAddr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -1576,10 +1590,10 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan logical device</span>
 
-<span class="sd">        :param window: The window for Vulkan</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The window for Vulkan</span>
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_device_extensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_layers</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
@@ -1608,8 +1622,9 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_swapchain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan swapchain</span>
 
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">surface_capabilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetPhysicalDeviceSurfaceCapabilitiesKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">)</span> <span class="c1"># noqa</span>
         <span class="n">surface_formats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetPhysicalDeviceSurfaceFormatsKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">)</span> <span class="c1"># noqa</span>
@@ -1722,10 +1737,10 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
 
-<span class="sd">        :param window: The window for Vulkan</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The `VulkWindow`</span>
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_instance</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
 
@@ -1851,12 +1866,14 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get extensions which depend on the window and configuration</span>
 
-<span class="sd">        :param window: The VulkWindow</span>
-<span class="sd">        :param configuration: Configuration from App</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
-<span class="sd">        :return: Extensions list</span>
-<span class="sd">        :rtype: list</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The `VulkWindow`</span>
+<span class="sd">        - `configuration`: Configuration from App</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        Extension list</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c1"># Get available extensions</span>
@@ -1906,10 +1923,13 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_get_device_extensions</span><span class="p">(</span><span class="n">physical_device</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get device extensions</span>
 
-<span class="sd">        :param physical_device: The device to check</span>
-<span class="sd">        :type physical_device: VkPhysicalDevice</span>
-<span class="sd">        :return: Extensions list</span>
-<span class="sd">        :rtype: list</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `physical_device`: The VkPhysicalDevice to check</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        Extension list</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c1"># Get available extensions</span>
@@ -1936,10 +1956,13 @@ The context will be then passed to the Application to use it.</p>
 
 <span class="sd">        Simple algorythm: return everything in debug mode else nothing</span>
 
-<span class="sd">        :param configuration: configuration from App</span>
-<span class="sd">        :type configuration: dict</span>
-<span class="sd">        :return: All enabled layers</span>
-<span class="sd">        :rtype: list</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - configuration: configuration from App</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        List of all enabled layers</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">configuration</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
@@ -1957,14 +1980,15 @@ The context will be then passed to the Application to use it.</p>
 
 <span class="sd">        Check for graphic and presentation queue families.</span>
 
-<span class="sd">        :param physical_device: The physical device to check for</span>
-<span class="sd">        :param surface: The surface to present</span>
-<span class="sd">        :param pfn: Function vkGetPhysicalDeviceSurfaceSupportKHR callable</span>
-<span class="sd">        :type physical_device: VkPhysicalDevice</span>
-<span class="sd">        :type surface: VkSurfaceKHR</span>
-<span class="sd">        :type pfn: function</span>
-<span class="sd">        :return: a tuple with graphic index and present index or None</span>
-<span class="sd">        :rtype: tuple</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `physical_device`: The `VkPhysicalDevice` to check for</span>
+<span class="sd">        - `surface`: The `VkSurfaceKHR` to present</span>
+<span class="sd">        - `pfn`: Function `vkGetPhysicalDeviceSurfaceSupportKHR` callable</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        A tuple with graphic index and present index or None</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">queue_families</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceQueueFamilyProperties</span><span class="p">(</span><span class="n">physical_device</span><span class="p">)</span> <span class="c1"># noqa</span>
 
@@ -1992,10 +2016,11 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_get_pfn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get extension function pointers</span>
 
-<span class="sd">        Get only functions used in VulkContext, vulkan instance must exist</span>
+<span class="sd">        Get only functions used in `VulkContext`, vulkan instance must exist</span>
 
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">:</span>
@@ -2035,10 +2060,10 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan instance</span>
 
-<span class="sd">        :param window: The window for Vulkan</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The window for Vulkan</span>
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span>
@@ -2068,8 +2093,10 @@ The context will be then passed to the Application to use it.</p>
         <span class="sd">&#39;&#39;&#39;Create debug callback</span>
 
 <span class="sd">        It works only on debug mode</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type configuration: dict</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">configuration</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="k">return</span>
@@ -2091,8 +2118,9 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan surface</span>
 
-<span class="sd">        :param info: The window information for Vulkan</span>
-<span class="sd">        :type window: SDL_SysWMinfo from pySDL2</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `info`: The window information for Vulkan</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">def</span> <span class="nf">call_platform</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">surface_create</span><span class="p">):</span>
             <span class="n">f</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetInstanceProcAddr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -2210,10 +2238,10 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan logical device</span>
 
-<span class="sd">        :param window: The window for Vulkan</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The window for Vulkan</span>
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_device_extensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_layers</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
@@ -2242,8 +2270,9 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">_create_swapchain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan swapchain</span>
 
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">surface_capabilities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetPhysicalDeviceSurfaceCapabilitiesKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">)</span> <span class="c1"># noqa</span>
         <span class="n">surface_formats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetPhysicalDeviceSurfaceFormatsKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">)</span> <span class="c1"># noqa</span>
@@ -2356,10 +2385,10 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
 
-<span class="sd">        :param window: The window for Vulkan</span>
-<span class="sd">        :param configuration: Configuration from Application</span>
-<span class="sd">        :type window: VulkWindow</span>
-<span class="sd">        :type configuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `window`: The `VulkWindow`</span>
+<span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_instance</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
 
@@ -2449,20 +2478,21 @@ The context will be then passed to the Application to use it.</p>
   
     <div class="desc"><p>Create Vulkan context</p>
 
-<p>:param window: The window for Vulkan
-:param configuration: Configuration from Application
-:type window: VulkWindow
-:type configuration: dict</p>
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>window</code>: The <code>VulkWindow</code></li>
+<li><code>configuration</code>: Configuration from Application</li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkContext.create', this);">Show source &equiv;</a></p>
   <div id="source-vulk.context.VulkContext.create" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
-<span class="sd">    :param window: The window for Vulkan</span>
-<span class="sd">    :param configuration: Configuration from Application</span>
-<span class="sd">    :type window: VulkWindow</span>
-<span class="sd">    :type configuration: dict</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `window`: The `VulkWindow`</span>
+<span class="sd">    - `configuration`: Configuration from Application</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_instance</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
     <span class="c1"># Next functions need extension pointers</span>
@@ -2659,8 +2689,9 @@ The context will be then passed to the Application to use it.</p>
     <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Open the SDL2 Window</span>
 
-<span class="sd">        :param configuration: Configurations parameters from Application</span>
-<span class="sd">        :type confiuration: dict</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configurations parameters from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_Init</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t open window: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>
@@ -2771,16 +2802,19 @@ The context will be then passed to the Application to use it.</p>
   
     <div class="desc"><p>Open the SDL2 Window</p>
 
-<p>:param configuration: Configurations parameters from Application
-:type confiuration: dict</p>
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>configuration</code>: Configurations parameters from Application</li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkWindow.open', this);">Show source &equiv;</a></p>
   <div id="source-vulk.context.VulkWindow.open" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Open the SDL2 Window</span>
-<span class="sd">    :param configuration: Configurations parameters from Application</span>
-<span class="sd">    :type confiuration: dict</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `configuration`: Configurations parameters from Application</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_Init</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t open window: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>

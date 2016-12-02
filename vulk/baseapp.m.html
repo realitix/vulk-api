@@ -1046,8 +1046,10 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.baseapp.BaseApp.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.baseapp.BaseApp.end">end</a></li>
     <li class="mono"><a href="#vulk.baseapp.BaseApp.render">render</a></li>
     <li class="mono"><a href="#vulk.baseapp.BaseApp.run">run</a></li>
+    <li class="mono"><a href="#vulk.baseapp.BaseApp.start">start</a></li>
   </ul>
 
         </li>
@@ -1097,30 +1099,22 @@ table {
                  <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 
-<span class="sd">        :param name: Name of the application</span>
-<span class="sd">        :param x: X position of the window</span>
-<span class="sd">        :param y: Y position of the window</span>
-<span class="sd">        :param width: Width of the window</span>
-<span class="sd">        :param height: Height of the window</span>
-<span class="sd">        :param fullscreen: Should the window be in fullscreen mode</span>
-<span class="sd">        :param resizable: Should the window be resizable</span>
-<span class="sd">        :param decorated: Should the window be decorated (button close)</span>
-<span class="sd">        :param highdpi: Enable highdpi mode if supported</span>
-<span class="sd">        :param debug: Enable debug mode (for development only)</span>
-<span class="sd">        :type name: string</span>
-<span class="sd">        :type x: int</span>
-<span class="sd">        :type y: int</span>
-<span class="sd">        :type width: int</span>
-<span class="sd">        :type height: int</span>
-<span class="sd">        :type fullscreen: boolean</span>
-<span class="sd">        :type resizable: boolean</span>
-<span class="sd">        :type decorated: boolean</span>
-<span class="sd">        :type highdpi: boolean</span>
-<span class="sd">        :type debug: boolean</span>
+<span class="sd">        *Parameters:*</span>
 
-<span class="sd">        .. note:: When full screen mode is enabled, you can set width and</span>
-<span class="sd">                  height to 0 to use the native resolution, otherwise the</span>
-<span class="sd">                  fullscreen resolution will be set to width/height.</span>
+<span class="sd">        - `name`: Name of the application</span>
+<span class="sd">        - `x`: X position of the window</span>
+<span class="sd">        - `y`: Y position of the window</span>
+<span class="sd">        - `width`: Width of the window</span>
+<span class="sd">        - `height`: Height of the window</span>
+<span class="sd">        - `fullscreen`: Should the window be in fullscreen mode</span>
+<span class="sd">        - `resizable`: Should the window be resizable</span>
+<span class="sd">        - `decorated`: Should the window be decorated (button close)</span>
+<span class="sd">        - `highdpi`: Enable highdpi mode if supported</span>
+<span class="sd">        - `debug`: Enable debug mode (for development only)</span>
+
+<span class="sd">        **Note: When full screen mode is enabled, you can set width and</span>
+<span class="sd">                height to 0 to use the native resolution, otherwise the</span>
+<span class="sd">                fullscreen resolution will be set to width/height.**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AppConfiguration&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span>
@@ -1149,10 +1143,12 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Clean Vulkan resource&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">pass</span>
 
@@ -1164,6 +1160,24 @@ table {
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Here your game loop.</span>
+
+<span class="sd">        In this function, all your game is playing.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - delta: The delta time since the last frame in milliseconds</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function is called when your App starts&#39;&#39;&#39;</span>
+        <span class="k">return</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function is called when your App ends&#39;&#39;&#39;</span>
         <span class="k">return</span>
 </pre></div>
 
@@ -1200,30 +1214,22 @@ cycle of the program.</p>
                  <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 
-<span class="sd">        :param name: Name of the application</span>
-<span class="sd">        :param x: X position of the window</span>
-<span class="sd">        :param y: Y position of the window</span>
-<span class="sd">        :param width: Width of the window</span>
-<span class="sd">        :param height: Height of the window</span>
-<span class="sd">        :param fullscreen: Should the window be in fullscreen mode</span>
-<span class="sd">        :param resizable: Should the window be resizable</span>
-<span class="sd">        :param decorated: Should the window be decorated (button close)</span>
-<span class="sd">        :param highdpi: Enable highdpi mode if supported</span>
-<span class="sd">        :param debug: Enable debug mode (for development only)</span>
-<span class="sd">        :type name: string</span>
-<span class="sd">        :type x: int</span>
-<span class="sd">        :type y: int</span>
-<span class="sd">        :type width: int</span>
-<span class="sd">        :type height: int</span>
-<span class="sd">        :type fullscreen: boolean</span>
-<span class="sd">        :type resizable: boolean</span>
-<span class="sd">        :type decorated: boolean</span>
-<span class="sd">        :type highdpi: boolean</span>
-<span class="sd">        :type debug: boolean</span>
+<span class="sd">        *Parameters:*</span>
 
-<span class="sd">        .. note:: When full screen mode is enabled, you can set width and</span>
-<span class="sd">                  height to 0 to use the native resolution, otherwise the</span>
-<span class="sd">                  fullscreen resolution will be set to width/height.</span>
+<span class="sd">        - `name`: Name of the application</span>
+<span class="sd">        - `x`: X position of the window</span>
+<span class="sd">        - `y`: Y position of the window</span>
+<span class="sd">        - `width`: Width of the window</span>
+<span class="sd">        - `height`: Height of the window</span>
+<span class="sd">        - `fullscreen`: Should the window be in fullscreen mode</span>
+<span class="sd">        - `resizable`: Should the window be resizable</span>
+<span class="sd">        - `decorated`: Should the window be decorated (button close)</span>
+<span class="sd">        - `highdpi`: Enable highdpi mode if supported</span>
+<span class="sd">        - `debug`: Enable debug mode (for development only)</span>
+
+<span class="sd">        **Note: When full screen mode is enabled, you can set width and</span>
+<span class="sd">                height to 0 to use the native resolution, otherwise the</span>
+<span class="sd">                fullscreen resolution will be set to width/height.**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AppConfiguration&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span>
@@ -1252,10 +1258,12 @@ cycle of the program.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Clean Vulkan resource&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">pass</span>
 
@@ -1267,6 +1275,24 @@ cycle of the program.</p>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Here your game loop.</span>
+
+<span class="sd">        In this function, all your game is playing.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - delta: The delta time since the last frame in milliseconds</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function is called when your App starts&#39;&#39;&#39;</span>
+        <span class="k">return</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;This function is called when your App ends&#39;&#39;&#39;</span>
         <span class="k">return</span>
 </pre></div>
 
@@ -1293,30 +1319,24 @@ cycle of the program.</p>
   
     <div class="desc"><p>Set initial configuration</p>
 
-<p>:param name: Name of the application
-:param x: X position of the window
-:param y: Y position of the window
-:param width: Width of the window
-:param height: Height of the window
-:param fullscreen: Should the window be in fullscreen mode
-:param resizable: Should the window be resizable
-:param decorated: Should the window be decorated (button close)
-:param highdpi: Enable highdpi mode if supported
-:param debug: Enable debug mode (for development only)
-:type name: string
-:type x: int
-:type y: int
-:type width: int
-:type height: int
-:type fullscreen: boolean
-:type resizable: boolean
-:type decorated: boolean
-:type highdpi: boolean
-:type debug: boolean</p>
+<p><em>Parameters:</em></p>
 
-<p>.. note:: When full screen mode is enabled, you can set width and
-          height to 0 to use the native resolution, otherwise the
-          fullscreen resolution will be set to width/height.</p>
+<ul>
+<li><code>name</code>: Name of the application</li>
+<li><code>x</code>: X position of the window</li>
+<li><code>y</code>: Y position of the window</li>
+<li><code>width</code>: Width of the window</li>
+<li><code>height</code>: Height of the window</li>
+<li><code>fullscreen</code>: Should the window be in fullscreen mode</li>
+<li><code>resizable</code>: Should the window be resizable</li>
+<li><code>decorated</code>: Should the window be decorated (button close)</li>
+<li><code>highdpi</code>: Enable highdpi mode if supported</li>
+<li><code>debug</code>: Enable debug mode (for development only)</li>
+</ul>
+
+<p><strong>Note: When full screen mode is enabled, you can set width and
+        height to 0 to use the native resolution, otherwise the
+        fullscreen resolution will be set to width/height.</strong></p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.baseapp.BaseApp.__init__', this);">Show source &equiv;</a></p>
@@ -1325,34 +1345,50 @@ cycle of the program.</p>
              <span class="n">fullscreen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">decorated</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
              <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
-<span class="sd">    :param name: Name of the application</span>
-<span class="sd">    :param x: X position of the window</span>
-<span class="sd">    :param y: Y position of the window</span>
-<span class="sd">    :param width: Width of the window</span>
-<span class="sd">    :param height: Height of the window</span>
-<span class="sd">    :param fullscreen: Should the window be in fullscreen mode</span>
-<span class="sd">    :param resizable: Should the window be resizable</span>
-<span class="sd">    :param decorated: Should the window be decorated (button close)</span>
-<span class="sd">    :param highdpi: Enable highdpi mode if supported</span>
-<span class="sd">    :param debug: Enable debug mode (for development only)</span>
-<span class="sd">    :type name: string</span>
-<span class="sd">    :type x: int</span>
-<span class="sd">    :type y: int</span>
-<span class="sd">    :type width: int</span>
-<span class="sd">    :type height: int</span>
-<span class="sd">    :type fullscreen: boolean</span>
-<span class="sd">    :type resizable: boolean</span>
-<span class="sd">    :type decorated: boolean</span>
-<span class="sd">    :type highdpi: boolean</span>
-<span class="sd">    :type debug: boolean</span>
-<span class="sd">    .. note:: When full screen mode is enabled, you can set width and</span>
-<span class="sd">              height to 0 to use the native resolution, otherwise the</span>
-<span class="sd">              fullscreen resolution will be set to width/height.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `name`: Name of the application</span>
+<span class="sd">    - `x`: X position of the window</span>
+<span class="sd">    - `y`: Y position of the window</span>
+<span class="sd">    - `width`: Width of the window</span>
+<span class="sd">    - `height`: Height of the window</span>
+<span class="sd">    - `fullscreen`: Should the window be in fullscreen mode</span>
+<span class="sd">    - `resizable`: Should the window be resizable</span>
+<span class="sd">    - `decorated`: Should the window be decorated (button close)</span>
+<span class="sd">    - `highdpi`: Enable highdpi mode if supported</span>
+<span class="sd">    - `debug`: Enable debug mode (for development only)</span>
+<span class="sd">    **Note: When full screen mode is enabled, you can set width and</span>
+<span class="sd">            height to 0 to use the native resolution, otherwise the</span>
+<span class="sd">            fullscreen resolution will be set to width/height.**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">c</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span><span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AppConfiguration&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.baseapp.BaseApp.end">
+    <p>def <span class="ident">end</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>This function is called when your App ends</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.baseapp.BaseApp.end', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.baseapp.BaseApp.end" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This function is called when your App ends&#39;&#39;&#39;</span>
+    <span class="k">return</span>
 </pre></div>
 
   </div>
@@ -1369,11 +1405,26 @@ cycle of the program.</p>
 
     
   
+    <div class="desc"><p>Here your game loop.</p>
+
+<p>In this function, all your game is playing.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li>delta: The delta time since the last frame in milliseconds</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.baseapp.BaseApp.render', this);">Show source &equiv;</a></p>
   <div id="source-vulk.baseapp.BaseApp.render" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@abstractmethod</span>
 <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Here your game loop.</span>
+<span class="sd">    In this function, all your game is playing.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - delta: The delta time since the last frame in milliseconds</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span>
 </pre></div>
 
@@ -1401,6 +1452,31 @@ cycle of the program.</p>
     <span class="k">while</span><span class="p">(</span><span class="bp">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">time_since_millis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.baseapp.BaseApp.start">
+    <p>def <span class="ident">start</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>This function is called when your App starts</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.baseapp.BaseApp.start', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.baseapp.BaseApp.start" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This function is called when your App starts&#39;&#39;&#39;</span>
+    <span class="k">return</span>
 </pre></div>
 
   </div>
