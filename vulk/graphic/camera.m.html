@@ -639,10 +639,6 @@ table {
     font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
   }
 
-  em {
-    text-decoration-line: underline;
-  }
-
   .title .name {
     font-weight: bold;
   }
@@ -1465,6 +1461,10 @@ table {
             <div class="item">
             <p id="vulk.graphic.camera.PerspectiveCamera.viewport_height" class="name">var <span class="ident">viewport_height</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.graphic.camera.Camera">Camera</a></code>.<code><a href="#vulk.graphic.camera.Camera.viewport_height">viewport_height</a></code>
+    </p>
 
             
   
@@ -1475,10 +1475,6 @@ table {
             <div class="item">
             <p id="vulk.graphic.camera.PerspectiveCamera.viewport_width" class="name">var <span class="ident">viewport_width</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#vulk.graphic.camera.Camera">Camera</a></code>.<code><a href="#vulk.graphic.camera.Camera.viewport_width">viewport_width</a></code>
-    </p>
 
             
   
@@ -1499,11 +1495,23 @@ table {
       <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.2</a>
     </p>
 
-    <p>pdoc is in the public domain with the
-      <a href="http://unlicense.org">UNLICENSE</a></p>
-
-    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
   </footer>
 </div>
+
+<script type="text/javascript">
+    var em = document.querySelectorAll("em");
+    var underline = ["Parameters:", "Returns:", "Exemple:"];
+
+    for (var i = 0; i < em.length; ++i) {
+        var item = em[i];
+        for (var j = 0; j < underline.length; j++) {
+            var search = underline[j];
+            if (item.textContent == search) {
+                item.style.textDecorationLine = "underline";
+            }
+        }
+    }
+</script>
+
 </body>
 </html>

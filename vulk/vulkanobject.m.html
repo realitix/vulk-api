@@ -6,8 +6,8 @@
     <title>vulk.vulkanobject API documentation</title>
     <meta name="description" content="Vulkan objects modules
 
-This module contains the *High* level Vulkan object. It's not that *high*"
-l..." />
+This module contains the *High* level Vulkan object. It's not that *high*
+le..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -642,10 +642,6 @@ table {
     font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
   }
 
-  em {
-    text-decoration-line: underline;
-  }
-
   .title .name {
     font-weight: bold;
   }
@@ -1187,7 +1183,7 @@ table {
   <h1 class="title"><span class="name">vulk.vulkanobject</span> module</h1>
   <p>Vulkan objects modules</p>
 
-<p>This module contains the <em>High</em> level Vulkan object. It's not that <em>high</em>"
+<p>This module contains the <em>High</em> level Vulkan object. It's not that <em>high</em>
 level, you need to understand fully Vulkan to use theses objects.
 This module must be use by Vulkan expert and is very complicated to work with.
 You will see a lot of namedtuple here, they are used to better document the
@@ -1196,12 +1192,16 @@ documented namedtuple, I think it's better.
 If you want to understand internal Vulkan functions, you can hack around this
 module.</p>
 
+<p><strong>Note: In this module, when it's needed, the parameter type is indicated. If
+        the type begins with Vk..., it means a real Vulkan object and not an
+        object in this module.</strong></p>
+
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject" class="source">
     <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39;Vulkan objects modules</span>
 
-<span class="sd">This module contains the *High* level Vulkan object. It&#39;s not that *high*&quot;</span>
+<span class="sd">This module contains the *High* level Vulkan object. It&#39;s not that *high*</span>
 <span class="sd">level, you need to understand fully Vulkan to use theses objects.</span>
 <span class="sd">This module must be use by Vulkan expert and is very complicated to work with.</span>
 <span class="sd">You will see a lot of namedtuple here, they are used to better document the</span>
@@ -1209,6 +1209,10 @@ module.</p>
 <span class="sd">documented namedtuple, I think it&#39;s better.</span>
 <span class="sd">If you want to understand internal Vulkan functions, you can hack around this</span>
 <span class="sd">module.</span>
+
+<span class="sd">**Note: In this module, when it&#39;s needed, the parameter type is indicated. If</span>
+<span class="sd">        the type begins with Vk..., it means a real Vulkan object and not an</span>
+<span class="sd">        object in this module.**</span>
 <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
@@ -1486,7 +1490,7 @@ module.</p>
 <span class="n">PipelineVertexInputState</span><span class="o">.</span><span class="n">__new__</span><span class="o">.</span><span class="n">__defaults__</span> <span class="o">=</span> \
         <span class="p">([],)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">PipelineVertexInputState</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>
 <span class="n">PipelineVertexInputState</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    *Parameters*:</span>
+<span class="s1">    *Parameters:*</span>
 
 <span class="s1">    - `bindings`: List of vertice bindings</span>
 <span class="s1">    - `attributes`: List of vertice attributes</span>
@@ -1588,7 +1592,7 @@ module.</p>
                                      <span class="p">[</span><span class="s1">&#39;op_enable&#39;</span><span class="p">,</span> <span class="s1">&#39;op&#39;</span><span class="p">,</span> <span class="s1">&#39;attachments&#39;</span><span class="p">,</span>
                                       <span class="s1">&#39;constants&#39;</span><span class="p">])</span>
 <span class="n">PipelineColorBlendState</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    *Parameters*:</span>
+<span class="s1">    *Parameters:*</span>
 
 <span class="s1">    - `op_enable`: Enable bitwise combination</span>
 <span class="s1">    - `op`: Operation to perform (`VlLogicOp`)</span>
@@ -1834,7 +1838,7 @@ module.</p>
                  <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="sd">        *Parameters*:</span>
+<span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
 <span class="sd">        - `renderpass`: The compatible `Renderpass` of this `Framebuffer`</span>
@@ -2150,7 +2154,7 @@ represent the attachments of a <code>Renderpass</code>.</p>
                  <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 
-<span class="sd">        *Parameters*:</span>
+<span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
 <span class="sd">        - `renderpass`: The compatible `Renderpass` of this `Framebuffer`</span>
@@ -2194,7 +2198,7 @@ represent the attachments of a <code>Renderpass</code>.</p>
 
     
   
-    <div class="desc"><p><em>Parameters</em>:</p>
+    <div class="desc"><p><em>Parameters:</em></p>
 
 <ul>
 <li><code>context</code>: The <code>VulkContext</code></li>
@@ -2211,7 +2215,7 @@ represent the attachments of a <code>Renderpass</code>.</p>
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">,</span> <span class="n">attachments</span><span class="p">,</span>
              <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    *Parameters*:</span>
+<span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: The `VulkContext`</span>
 <span class="sd">    - `renderpass`: The compatible `Renderpass` of this `Framebuffer`</span>
 <span class="sd">    - `attachments`: List of `ImageView`</span>
@@ -2920,7 +2924,7 @@ the render targets. The pipeline combines the following elements:</p>
       <p id="vulk.vulkanobject.PipelineColorBlendState" class="name">class <span class="ident">PipelineColorBlendState</span></p>
       
   
-    <div class="desc"><p><em>Parameters</em>:</p>
+    <div class="desc"><p><em>Parameters:</em></p>
 
 <ul>
 <li><code>op_enable</code>: Enable bitwise combination</li>
@@ -3451,7 +3455,7 @@ the render targets. The pipeline combines the following elements:</p>
       <p id="vulk.vulkanobject.PipelineVertexInputState" class="name">class <span class="ident">PipelineVertexInputState</span></p>
       
   
-    <div class="desc"><p><em>Parameters</em>:</p>
+    <div class="desc"><p><em>Parameters:</em></p>
 
 <ul>
 <li><code>bindings</code>: List of vertice bindings</li>
@@ -4174,11 +4178,23 @@ value is an empty list.</p>
       <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.2</a>
     </p>
 
-    <p>pdoc is in the public domain with the
-      <a href="http://unlicense.org">UNLICENSE</a></p>
-
-    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
   </footer>
 </div>
+
+<script type="text/javascript">
+    var em = document.querySelectorAll("em");
+    var underline = ["Parameters:", "Returns:", "Exemple:"];
+
+    for (var i = 0; i < em.length; ++i) {
+        var item = em[i];
+        for (var j = 0; j < underline.length; j++) {
+            var search = underline[j];
+            if (item.textContent == search) {
+                item.style.textDecorationLine = "underline";
+            }
+        }
+    }
+</script>
+
 </body>
 </html>

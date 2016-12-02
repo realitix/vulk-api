@@ -641,10 +641,6 @@ table {
     font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
   }
 
-  em {
-    text-decoration-line: underline;
-  }
-
   .title .name {
     font-weight: bold;
   }
@@ -1150,10 +1146,10 @@ The context will be then passed to the Application to use it.</p>
   
     <div class="desc"><p>Vulkan objects modules</p>
 
-<p>This module contains the <em>High</em> level Vulkan object. It's not that <em>high</em>"
+<p>This module contains the <em>High</em> level Vulkan object. It's not that <em>high</em>
 level, you need to understand fully Vulkan to use theses objects.
 This module must be use by Vulkan expert and is very complicated to work with.
-You will see a lot of namedtuple here, they are used to ...</p>
+You will see a lot of namedtuple here, they are used to b...</p>
 </div>
 
       </div>
@@ -1167,11 +1163,23 @@ You will see a lot of namedtuple here, they are used to ...</p>
       <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.2</a>
     </p>
 
-    <p>pdoc is in the public domain with the
-      <a href="http://unlicense.org">UNLICENSE</a></p>
-
-    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
   </footer>
 </div>
+
+<script type="text/javascript">
+    var em = document.querySelectorAll("em");
+    var underline = ["Parameters:", "Returns:", "Exemple:"];
+
+    for (var i = 0; i < em.length; ++i) {
+        var item = em[i];
+        for (var j = 0; j < underline.length; j++) {
+            var search = underline[j];
+            if (item.textContent == search) {
+                item.style.textDecorationLine = "underline";
+            }
+        }
+    }
+</script>
+
 </body>
 </html>
