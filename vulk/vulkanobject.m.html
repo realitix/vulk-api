@@ -1051,6 +1051,7 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.binded">binded</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.btov">btov</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.find_memory_type">find_memory_type</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.vk_const">vk_const</a></li>
@@ -1066,6 +1067,33 @@ table {
         </li>
         <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.AttachmentReference">AttachmentReference</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.CommandBuffer">CommandBuffer</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBuffer.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBuffer.beginRenderPass">beginRenderPass</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBuffer.bind">bind</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBuffer.bindPipeline">bindPipeline</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBuffer.draw">draw</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBuffer.endRenderPass">endRenderPass</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.CommandPool">CommandPool</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandPool.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.Extent2D">Extent2D</a></span>
         
         </li>
         <li class="mono">
@@ -1087,7 +1115,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.vulkanobject.Image.__init__">__init__</a></li>
-    <li class="mono"><a href="#vulk.vulkanobject.Image.map">map</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.Image.bind">bind</a></li>
   </ul>
 
         </li>
@@ -1103,6 +1131,10 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.ImageView.__init__">__init__</a></li>
   </ul>
 
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.Offset2D">Offset2D</a></span>
+        
         </li>
         <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.Pipeline">Pipeline</a></span>
@@ -1154,11 +1186,24 @@ table {
         
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.Rect2d">Rect2D</a></span>
+        
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.Renderpass">Renderpass</a></span>
         
           
   <ul>
     <li class="mono"><a href="#vulk.vulkanobject.Renderpass.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.Semaphore">Semaphore</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.Semaphore.__init__">__init__</a></li>
   </ul>
 
         </li>
@@ -1236,6 +1281,7 @@ module.</p>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>
 
@@ -1862,6 +1908,24 @@ module.</p>
                                                      <span class="mi">1</span><span class="p">,</span> <span class="n">pipeline_create</span><span class="p">)</span>
 
 
+<span class="n">Offset2D</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Offset2D&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
+<span class="n">Offset2D</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `x`: x offset</span>
+<span class="s1">    - `y`: y offset</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
+<span class="n">Extent2D</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Extent2D&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">])</span>
+<span class="n">Extent2D</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `width`: Width</span>
+<span class="s1">    - `height`: Height</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
 <span class="n">Extent3D</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Extent3D&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">])</span>
 <span class="n">Extent3D</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">    *Parameters:*</span>
@@ -1883,6 +1947,7 @@ module.</p>
 <span class="sd">    converted to vulk Image object. If the Image is created from VkImage,</span>
 <span class="sd">    `staging_image`, `staging_memory` and `memory` are set to `None`.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;If only one non-named arg, we create from `VkImage`,</span>
 <span class="sd">        else from parameters</span>
@@ -2006,7 +2071,7 @@ module.</p>
         <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">memory</span>
 
     <span class="nd">@contextmanager</span>
-    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Map this image to upload data in it.</span>
 <span class="sd">        This function is a context manager and must be called with `with`.</span>
@@ -2108,7 +2173,6 @@ module.</p>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">,</span> <span class="n">attachments</span><span class="p">,</span>
                  <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
@@ -2131,6 +2195,236 @@ module.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateFramebuffer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
                                                   <span class="n">framebuffer_create</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">CommandPool</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Command pools manage the memory that is used to store the buffers and</span>
+<span class="sd">    command buffers are allocated from them.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">queue_family_index</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: The `VulkContext`</span>
+<span class="sd">        - `queue_family_index`: Index of the queue family to use</span>
+<span class="sd">        - `flags`: `VkCommandPoolCreateFlags` Vulkan constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">commandpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandPoolCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">queueFamilyIndex</span><span class="o">=</span><span class="n">queue_family_index</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateCommandPool</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                  <span class="n">commandpool_create</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">allocate_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+            <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Allocate list of `CommandBuffer` from pool.</span>
+
+<span class="sd">            *Parameters:*</span>
+
+<span class="sd">            - `context`: The `VulkContext`</span>
+<span class="sd">            - `commandpool`: The source `CommandPool`</span>
+<span class="sd">            - `level`: `VkCommandBufferLevel` Vulkan constant</span>
+<span class="sd">            - `count`: Number of buffer to create</span>
+
+<span class="sd">            *Returns:*</span>
+
+<span class="sd">            `list` of `CommandBuffer`</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+            <span class="n">commandbuffers_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferAllocateInfo</span><span class="p">(</span>
+                <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO</span><span class="p">,</span>
+                <span class="n">commandPool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span>
+                <span class="n">level</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
+                <span class="n">commandBufferCount</span><span class="o">=</span><span class="n">count</span>
+            <span class="p">)</span>
+
+            <span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateCommandBuffers</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                <span class="n">commandbuffers_create</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">[</span><span class="n">CommandBuffer</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="k">for</span> <span class="n">cb</span> <span class="ow">in</span> <span class="n">commandbuffers</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">binded</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Decorator that check that self.binded is True&#39;&#39;&#39;</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">binded</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Command buffer must be binded to execute a command&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="n">Rect2D</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Rect2d&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="s1">&#39;extent&#39;</span><span class="p">])</span>
+<span class="n">Rect2D</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    2D surface with offset.</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `offset`: `Offset2D` object</span>
+<span class="s1">    - `extent`: `Extent2D` object</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">CommandBuffer</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Commands in Vulkan, like drawing operations and memory transfers, are not</span>
+<span class="sd">    executed directly using function calls. You have to record all of the</span>
+<span class="sd">    operations you want to perform in command buffer objects. The advantage of</span>
+<span class="sd">    this is that all of the hard work of setting up the drawing commands can</span>
+<span class="sd">    be done in advance and in multiple threads. After that, you just have to</span>
+<span class="sd">    tell Vulkan to execute the commands in the main loop.</span>
+
+<span class="sd">    Commands are executed directly from this class. The naming convention is</span>
+<span class="sd">    simple: `vkCmd[CommandName]` becomes `commandName`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This object must be initialized with an existing `VkCommandBuffer`</span>
+<span class="sd">        because it is generated from `CommandPool`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `commandbuffer`: The `VkCommadBuffer`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">commandbuffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind this buffer to register command.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `flags`: `VkCommandBufferUsageFlags` Vulkan constant</span>
+
+<span class="sd">        **Todo: `pInheritanceInfo` must be implemented**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">commandbuffer_begin_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferBeginInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+            <span class="n">pInheritanceInfo</span><span class="o">=</span><span class="bp">None</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkBeginCommandBuffer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span>
+                <span class="n">commandbuffer_begin_create</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">yield</span> <span class="bp">self</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkEndCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">beginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">,</span> <span class="n">framebuffer</span><span class="p">,</span> <span class="n">renderarea</span><span class="p">,</span>
+                        <span class="n">clears</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Begin a new renderpass</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `renderpass`: The `RenderPass` to begin an instance of</span>
+<span class="sd">        - `framebuffer`: The `Framebuffer` containing the attachments that</span>
+<span class="sd">                         are used with the render pass</span>
+<span class="sd">        - `renderarea`: `Rect2D` size to render</span>
+<span class="sd">        - `clears`:  `list` of `ClearValue` for each `Framebuffer`</span>
+<span class="sd">        - `contents`: `VkSubpassContents` Vulkan constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_renderarea</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkRect2D</span><span class="p">(</span>
+            <span class="n">offset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset2D</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">offset</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">offset</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+            <span class="n">extent</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkExtent2D</span><span class="p">(</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">renderpass_begin</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkRenderPassBeginInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO</span><span class="p">,</span>
+            <span class="n">renderPass</span><span class="o">=</span><span class="n">renderpass</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
+            <span class="n">framebuffer</span><span class="o">=</span><span class="n">framebuffer</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
+            <span class="n">renderArea</span><span class="o">=</span><span class="n">vk_renderarea</span><span class="p">,</span>
+            <span class="n">clearValueCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">clears</span><span class="p">),</span>
+            <span class="n">pClearValues</span><span class="o">=</span><span class="n">clears</span>
+        <span class="p">)</span>
+
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBeginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">renderpass_begin</span><span class="p">,</span>
+                                <span class="n">vk_const</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">bindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
+                     <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind the pipeline to this `CommandBuffer`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `pipeline`: The `Pipeline` to bind</span>
+<span class="sd">        - `bind_point`: `VkPipelineBindPoint` Vulkan constant</span>
+<span class="sd">                        (default to graphic)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span>
+                             <span class="n">pipeline</span><span class="p">)</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
+             <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw the vertice buffer.</span>
+
+<span class="sd">        When the command is executed, primitives are assembled using the</span>
+<span class="sd">        current primitive topology and vertexCount consecutive vertex indices</span>
+<span class="sd">        with the first vertexIndex value equal to firstVertex. The primitives</span>
+<span class="sd">        are drawn instanceCount times with instanceIndex starting with</span>
+<span class="sd">        firstInstance and increasing sequentially for each instance.</span>
+<span class="sd">        The assembled primitives execute the currently bound graphics pipeline.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vertex_count`: Number of vertices to draw</span>
+<span class="sd">        - `first_vertex`: Index of the first vertex to draw</span>
+<span class="sd">        - `instance_count`: Number of instance to draw (default: 1)</span>
+<span class="sd">        - `first_instance`: First instance to draw (default: 0)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDraw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
+                     <span class="n">first_vertex</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">endRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;End the current render pass&#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdEndRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Semaphore</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Semaphores are a synchronization primitive that can be used to insert a</span>
+<span class="sd">    dependency between batches submitted to queues. Semaphores have two</span>
+<span class="sd">    states - signaled and unsignaled. The state of a semaphore can be signaled</span>
+<span class="sd">    after execution of a batch of commands is completed. A batch can wait for</span>
+<span class="sd">    a semaphore to become signaled before it begins execution, and the</span>
+<span class="sd">    semaphore is also unsignaled before the batch begins execution.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">semaphore_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSemaphoreCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSemaphore</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">semaphore_create</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2157,6 +2451,37 @@ module.</p>
       </div>
 
     <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.binded">
+    <p>def <span class="ident">binded</span>(</p><p>f)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Decorator that check that self.binded is True</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.binded', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.binded" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">binded</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Decorator that check that self.binded is True&#39;&#39;&#39;</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">binded</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Command buffer must be binded to execute a command&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.btov">
@@ -2474,6 +2799,661 @@ else we return it as is</p>
       </div>
       
       <div class="item">
+      <p id="vulk.vulkanobject.CommandBuffer" class="name">class <span class="ident">CommandBuffer</span></p>
+      
+  
+    <div class="desc"><p>Commands in Vulkan, like drawing operations and memory transfers, are not
+executed directly using function calls. You have to record all of the
+operations you want to perform in command buffer objects. The advantage of
+this is that all of the hard work of setting up the drawing commands can
+be done in advance and in multiple threads. After that, you just have to
+tell Vulkan to execute the commands in the main loop.</p>
+
+<p>Commands are executed directly from this class. The naming convention is
+simple: <code>vkCmd[CommandName]</code> becomes <code>commandName</code></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBuffer', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBuffer" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CommandBuffer</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Commands in Vulkan, like drawing operations and memory transfers, are not</span>
+<span class="sd">    executed directly using function calls. You have to record all of the</span>
+<span class="sd">    operations you want to perform in command buffer objects. The advantage of</span>
+<span class="sd">    this is that all of the hard work of setting up the drawing commands can</span>
+<span class="sd">    be done in advance and in multiple threads. After that, you just have to</span>
+<span class="sd">    tell Vulkan to execute the commands in the main loop.</span>
+
+<span class="sd">    Commands are executed directly from this class. The naming convention is</span>
+<span class="sd">    simple: `vkCmd[CommandName]` becomes `commandName`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This object must be initialized with an existing `VkCommandBuffer`</span>
+<span class="sd">        because it is generated from `CommandPool`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `commandbuffer`: The `VkCommadBuffer`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">commandbuffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind this buffer to register command.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `flags`: `VkCommandBufferUsageFlags` Vulkan constant</span>
+
+<span class="sd">        **Todo: `pInheritanceInfo` must be implemented**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">commandbuffer_begin_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferBeginInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+            <span class="n">pInheritanceInfo</span><span class="o">=</span><span class="bp">None</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkBeginCommandBuffer</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span>
+                <span class="n">commandbuffer_begin_create</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">yield</span> <span class="bp">self</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkEndCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">beginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">,</span> <span class="n">framebuffer</span><span class="p">,</span> <span class="n">renderarea</span><span class="p">,</span>
+                        <span class="n">clears</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Begin a new renderpass</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `renderpass`: The `RenderPass` to begin an instance of</span>
+<span class="sd">        - `framebuffer`: The `Framebuffer` containing the attachments that</span>
+<span class="sd">                         are used with the render pass</span>
+<span class="sd">        - `renderarea`: `Rect2D` size to render</span>
+<span class="sd">        - `clears`:  `list` of `ClearValue` for each `Framebuffer`</span>
+<span class="sd">        - `contents`: `VkSubpassContents` Vulkan constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_renderarea</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkRect2D</span><span class="p">(</span>
+            <span class="n">offset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset2D</span><span class="p">(</span>
+                <span class="n">x</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">offset</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">offset</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+            <span class="n">extent</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkExtent2D</span><span class="p">(</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">renderpass_begin</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkRenderPassBeginInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO</span><span class="p">,</span>
+            <span class="n">renderPass</span><span class="o">=</span><span class="n">renderpass</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
+            <span class="n">framebuffer</span><span class="o">=</span><span class="n">framebuffer</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
+            <span class="n">renderArea</span><span class="o">=</span><span class="n">vk_renderarea</span><span class="p">,</span>
+            <span class="n">clearValueCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">clears</span><span class="p">),</span>
+            <span class="n">pClearValues</span><span class="o">=</span><span class="n">clears</span>
+        <span class="p">)</span>
+
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBeginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">renderpass_begin</span><span class="p">,</span>
+                                <span class="n">vk_const</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">bindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
+                     <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind the pipeline to this `CommandBuffer`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `pipeline`: The `Pipeline` to bind</span>
+<span class="sd">        - `bind_point`: `VkPipelineBindPoint` Vulkan constant</span>
+<span class="sd">                        (default to graphic)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span>
+                             <span class="n">pipeline</span><span class="p">)</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
+             <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw the vertice buffer.</span>
+
+<span class="sd">        When the command is executed, primitives are assembled using the</span>
+<span class="sd">        current primitive topology and vertexCount consecutive vertex indices</span>
+<span class="sd">        with the first vertexIndex value equal to firstVertex. The primitives</span>
+<span class="sd">        are drawn instanceCount times with instanceIndex starting with</span>
+<span class="sd">        firstInstance and increasing sequentially for each instance.</span>
+<span class="sd">        The assembled primitives execute the currently bound graphics pipeline.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vertex_count`: Number of vertices to draw</span>
+<span class="sd">        - `first_vertex`: Index of the first vertex to draw</span>
+<span class="sd">        - `instance_count`: Number of instance to draw (default: 1)</span>
+<span class="sd">        - `first_instance`: First instance to draw (default: 0)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDraw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
+                     <span class="n">first_vertex</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
+
+    <span class="nd">@binded</span>
+    <span class="k">def</span> <span class="nf">endRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;End the current render pass&#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdEndRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.CommandBuffer">CommandBuffer</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBuffer.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, commandbuffer)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>This object must be initialized with an existing <code>VkCommandBuffer</code>
+because it is generated from <code>CommandPool</code>.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>commandbuffer</code>: The <code>VkCommadBuffer</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBuffer.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBuffer.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    This object must be initialized with an existing `VkCommandBuffer`</span>
+<span class="sd">    because it is generated from `CommandPool`.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `commandbuffer`: The `VkCommadBuffer`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">commandbuffer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">False</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBuffer.beginRenderPass">
+    <p>def <span class="ident">beginRenderPass</span>(</p><p>self, *args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Begin a new renderpass</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>renderpass</code>: The <code>RenderPass</code> to begin an instance of</li>
+<li><code>framebuffer</code>: The <code>Framebuffer</code> containing the attachments that
+             are used with the render pass</li>
+<li><code>renderarea</code>: <code>Rect2D</code> size to render</li>
+<li><code>clears</code>:  <code>list</code> of <code>ClearValue</code> for each <code>Framebuffer</code></li>
+<li><code>contents</code>: <code>VkSubpassContents</code> Vulkan constant</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBuffer.beginRenderPass', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBuffer.beginRenderPass" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@binded</span>
+<span class="k">def</span> <span class="nf">beginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">,</span> <span class="n">framebuffer</span><span class="p">,</span> <span class="n">renderarea</span><span class="p">,</span>
+                    <span class="n">clears</span><span class="p">,</span> <span class="n">contents</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Begin a new renderpass</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `renderpass`: The `RenderPass` to begin an instance of</span>
+<span class="sd">    - `framebuffer`: The `Framebuffer` containing the attachments that</span>
+<span class="sd">                     are used with the render pass</span>
+<span class="sd">    - `renderarea`: `Rect2D` size to render</span>
+<span class="sd">    - `clears`:  `list` of `ClearValue` for each `Framebuffer`</span>
+<span class="sd">    - `contents`: `VkSubpassContents` Vulkan constant</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk_renderarea</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkRect2D</span><span class="p">(</span>
+        <span class="n">offset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset2D</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">offset</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">offset</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
+        <span class="n">extent</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkExtent2D</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">renderarea</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">renderpass_begin</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkRenderPassBeginInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO</span><span class="p">,</span>
+        <span class="n">renderPass</span><span class="o">=</span><span class="n">renderpass</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
+        <span class="n">framebuffer</span><span class="o">=</span><span class="n">framebuffer</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
+        <span class="n">renderArea</span><span class="o">=</span><span class="n">vk_renderarea</span><span class="p">,</span>
+        <span class="n">clearValueCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">clears</span><span class="p">),</span>
+        <span class="n">pClearValues</span><span class="o">=</span><span class="n">clears</span>
+    <span class="p">)</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBeginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">renderpass_begin</span><span class="p">,</span>
+                            <span class="n">vk_const</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBuffer.bind">
+    <p>def <span class="ident">bind</span>(</p><p>*args, **kwds)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Bind this buffer to register command.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>flags</code>: <code>VkCommandBufferUsageFlags</code> Vulkan constant</li>
+</ul>
+
+<p><strong>Todo: <code>pInheritanceInfo</code> must be implemented</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBuffer.bind', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBuffer.bind" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Bind this buffer to register command.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `flags`: `VkCommandBufferUsageFlags` Vulkan constant</span>
+<span class="sd">    **Todo: `pInheritanceInfo` must be implemented**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">commandbuffer_begin_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferBeginInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+        <span class="n">pInheritanceInfo</span><span class="o">=</span><span class="bp">None</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkBeginCommandBuffer</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span>
+            <span class="n">commandbuffer_begin_create</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">yield</span> <span class="bp">self</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkEndCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="o">=</span> <span class="bp">False</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBuffer.bindPipeline">
+    <p>def <span class="ident">bindPipeline</span>(</p><p>self, *args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Bind the pipeline to this <code>CommandBuffer</code>.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>pipeline</code>: The <code>Pipeline</code> to bind</li>
+<li><code>bind_point</code>: <code>VkPipelineBindPoint</code> Vulkan constant
+            (default to graphic)</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBuffer.bindPipeline', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBuffer.bindPipeline" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@binded</span>
+<span class="k">def</span> <span class="nf">bindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
+                 <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Bind the pipeline to this `CommandBuffer`.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `pipeline`: The `Pipeline` to bind</span>
+<span class="sd">    - `bind_point`: `VkPipelineBindPoint` Vulkan constant</span>
+<span class="sd">                    (default to graphic)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span>
+                         <span class="n">pipeline</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBuffer.draw">
+    <p>def <span class="ident">draw</span>(</p><p>self, *args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Draw the vertice buffer.</p>
+
+<p>When the command is executed, primitives are assembled using the
+current primitive topology and vertexCount consecutive vertex indices
+with the first vertexIndex value equal to firstVertex. The primitives
+are drawn instanceCount times with instanceIndex starting with
+firstInstance and increasing sequentially for each instance.
+The assembled primitives execute the currently bound graphics pipeline.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vertex_count</code>: Number of vertices to draw</li>
+<li><code>first_vertex</code>: Index of the first vertex to draw</li>
+<li><code>instance_count</code>: Number of instance to draw (default: 1)</li>
+<li><code>first_instance</code>: First instance to draw (default: 0)</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBuffer.draw', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBuffer.draw" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@binded</span>
+<span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
+         <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Draw the vertice buffer.</span>
+<span class="sd">    When the command is executed, primitives are assembled using the</span>
+<span class="sd">    current primitive topology and vertexCount consecutive vertex indices</span>
+<span class="sd">    with the first vertexIndex value equal to firstVertex. The primitives</span>
+<span class="sd">    are drawn instanceCount times with instanceIndex starting with</span>
+<span class="sd">    firstInstance and increasing sequentially for each instance.</span>
+<span class="sd">    The assembled primitives execute the currently bound graphics pipeline.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vertex_count`: Number of vertices to draw</span>
+<span class="sd">    - `first_vertex`: Index of the first vertex to draw</span>
+<span class="sd">    - `instance_count`: Number of instance to draw (default: 1)</span>
+<span class="sd">    - `first_instance`: First instance to draw (default: 0)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDraw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
+                 <span class="n">first_vertex</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBuffer.endRenderPass">
+    <p>def <span class="ident">endRenderPass</span>(</p><p>self, *args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>End the current render pass</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBuffer.endRenderPass', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBuffer.endRenderPass" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@binded</span>
+<span class="k">def</span> <span class="nf">endRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;End the current render pass&#39;&#39;&#39;</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdEndRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.CommandBuffer.binded" class="name">var <span class="ident">binded</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.CommandBuffer.commandbuffer" class="name">var <span class="ident">commandbuffer</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.CommandPool" class="name">class <span class="ident">CommandPool</span></p>
+      
+  
+    <div class="desc"><p>Command pools manage the memory that is used to store the buffers and
+command buffers are allocated from them.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandPool', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandPool" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CommandPool</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Command pools manage the memory that is used to store the buffers and</span>
+<span class="sd">    command buffers are allocated from them.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">queue_family_index</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: The `VulkContext`</span>
+<span class="sd">        - `queue_family_index`: Index of the queue family to use</span>
+<span class="sd">        - `flags`: `VkCommandPoolCreateFlags` Vulkan constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">commandpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandPoolCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">queueFamilyIndex</span><span class="o">=</span><span class="n">queue_family_index</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateCommandPool</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                  <span class="n">commandpool_create</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">allocate_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+            <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">            Allocate list of `CommandBuffer` from pool.</span>
+
+<span class="sd">            *Parameters:*</span>
+
+<span class="sd">            - `context`: The `VulkContext`</span>
+<span class="sd">            - `commandpool`: The source `CommandPool`</span>
+<span class="sd">            - `level`: `VkCommandBufferLevel` Vulkan constant</span>
+<span class="sd">            - `count`: Number of buffer to create</span>
+
+<span class="sd">            *Returns:*</span>
+
+<span class="sd">            `list` of `CommandBuffer`</span>
+<span class="sd">            &#39;&#39;&#39;</span>
+            <span class="n">commandbuffers_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferAllocateInfo</span><span class="p">(</span>
+                <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO</span><span class="p">,</span>
+                <span class="n">commandPool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span>
+                <span class="n">level</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
+                <span class="n">commandBufferCount</span><span class="o">=</span><span class="n">count</span>
+            <span class="p">)</span>
+
+            <span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateCommandBuffers</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                <span class="n">commandbuffers_create</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">[</span><span class="n">CommandBuffer</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="k">for</span> <span class="n">cb</span> <span class="ow">in</span> <span class="n">commandbuffers</span><span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.CommandPool">CommandPool</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandPool.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, queue_family_index, flags)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: The <code>VulkContext</code></li>
+<li><code>queue_family_index</code>: Index of the queue family to use</li>
+<li><code>flags</code>: <code>VkCommandPoolCreateFlags</code> Vulkan constant</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandPool.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandPool.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">queue_family_index</span><span class="p">,</span> <span class="n">flags</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: The `VulkContext`</span>
+<span class="sd">    - `queue_family_index`: Index of the queue family to use</span>
+<span class="sd">    - `flags`: `VkCommandPoolCreateFlags` Vulkan constant</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">commandpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandPoolCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">queueFamilyIndex</span><span class="o">=</span><span class="n">queue_family_index</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateCommandPool</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                              <span class="n">commandpool_create</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">allocate_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Allocate list of `CommandBuffer` from pool.</span>
+<span class="sd">        *Parameters:*</span>
+<span class="sd">        - `context`: The `VulkContext`</span>
+<span class="sd">        - `commandpool`: The source `CommandPool`</span>
+<span class="sd">        - `level`: `VkCommandBufferLevel` Vulkan constant</span>
+<span class="sd">        - `count`: Number of buffer to create</span>
+<span class="sd">        *Returns:*</span>
+<span class="sd">        `list` of `CommandBuffer`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">commandbuffers_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferAllocateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO</span><span class="p">,</span>
+            <span class="n">commandPool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
+            <span class="n">commandBufferCount</span><span class="o">=</span><span class="n">count</span>
+        <span class="p">)</span>
+        <span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateCommandBuffers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+            <span class="n">commandbuffers_create</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">CommandBuffer</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span> <span class="k">for</span> <span class="n">cb</span> <span class="ow">in</span> <span class="n">commandbuffers</span><span class="p">]</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.CommandPool.commandpool" class="name">var <span class="ident">commandpool</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.Extent2D" class="name">class <span class="ident">Extent2D</span></p>
+      
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>width</code>: Width</li>
+<li><code>height</code>: Height</li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.Extent2D">Extent2D</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.Extent2D.height" class="name">var <span class="ident">height</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.Extent2D.width" class="name">var <span class="ident">width</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
       <p id="vulk.vulkanobject.Extent3D" class="name">class <span class="ident">Extent3D</span></p>
       
   
@@ -2555,7 +3535,6 @@ represent the attachments of a <code>Renderpass</code>.</p>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">,</span> <span class="n">attachments</span><span class="p">,</span>
                  <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
@@ -2687,6 +3666,7 @@ converted to vulk Image object. If the Image is created from VkImage,
 <span class="sd">    converted to vulk Image object. If the Image is created from VkImage,</span>
 <span class="sd">    `staging_image`, `staging_memory` and `memory` are set to `None`.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;If only one non-named arg, we create from `VkImage`,</span>
 <span class="sd">        else from parameters</span>
@@ -2810,7 +3790,7 @@ converted to vulk Image object. If the Image is created from VkImage,
         <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">memory</span>
 
     <span class="nd">@contextmanager</span>
-    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Map this image to upload data in it.</span>
 <span class="sd">        This function is a context manager and must be called with `with`.</span>
@@ -2886,8 +3866,8 @@ else from parameters</p>
   
             
   <div class="item">
-    <div class="name def" id="vulk.vulkanobject.Image.map">
-    <p>def <span class="ident">map</span>(</p><p>*args, **kwds)</p>
+    <div class="name def" id="vulk.vulkanobject.Image.bind">
+    <p>def <span class="ident">bind</span>(</p><p>*args, **kwds)</p>
     </div>
     
 
@@ -2905,10 +3885,10 @@ be careful!</p>
 </ul>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.map', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.vulkanobject.Image.map" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.bind', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Image.bind" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@contextmanager</span>
-<span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Map this image to upload data in it.</span>
 <span class="sd">    This function is a context manager and must be called with `with`.</span>
@@ -3227,6 +4207,56 @@ texture without any mipmapping levels.</p>
 
             
   
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.Offset2D" class="name">class <span class="ident">Offset2D</span></p>
+      
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>x</code>: x offset</li>
+<li><code>y</code>: y offset</li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.Offset2D">Offset2D</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.Offset2D.x" class="name">var <span class="ident">x</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.Offset2D.y" class="name">var <span class="ident">y</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
   <div class="source_cont">
 </div>
 
@@ -4443,6 +5473,58 @@ the render targets. The pipeline combines the following elements:</p>
       </div>
       
       <div class="item">
+      <p id="vulk.vulkanobject.Rect2d" class="name">class <span class="ident">Rect2D</span></p>
+      
+  
+    <div class="desc"><p>2D surface with offset.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>offset</code>: <code>Offset2D</code> object</li>
+<li><code>extent</code>: <code>Extent2D</code> object</li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.Rect2d">Rect2D</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.Rect2d.extent" class="name">var <span class="ident">extent</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.Rect2d.offset" class="name">var <span class="ident">offset</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
       <p id="vulk.vulkanobject.Renderpass" class="name">class <span class="ident">Renderpass</span></p>
       
   
@@ -4712,6 +5794,104 @@ in a RenderPass object</p>
           <h3>Instance variables</h3>
             <div class="item">
             <p id="vulk.vulkanobject.Renderpass.renderpass" class="name">var <span class="ident">renderpass</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.Semaphore" class="name">class <span class="ident">Semaphore</span></p>
+      
+  
+    <div class="desc"><p>Semaphores are a synchronization primitive that can be used to insert a
+dependency between batches submitted to queues. Semaphores have two
+states - signaled and unsignaled. The state of a semaphore can be signaled
+after execution of a batch of commands is completed. A batch can wait for
+a semaphore to become signaled before it begins execution, and the
+semaphore is also unsignaled before the batch begins execution.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Semaphore', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Semaphore" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Semaphore</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Semaphores are a synchronization primitive that can be used to insert a</span>
+<span class="sd">    dependency between batches submitted to queues. Semaphores have two</span>
+<span class="sd">    states - signaled and unsignaled. The state of a semaphore can be signaled</span>
+<span class="sd">    after execution of a batch of commands is completed. A batch can wait for</span>
+<span class="sd">    a semaphore to become signaled before it begins execution, and the</span>
+<span class="sd">    semaphore is also unsignaled before the batch begins execution.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">semaphore_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSemaphoreCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSemaphore</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">semaphore_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.Semaphore">Semaphore</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Semaphore.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Semaphore.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Semaphore.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">semaphore_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSemaphoreCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSemaphore</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">semaphore_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.Semaphore.semaphore" class="name">var <span class="ident">semaphore</span></p>
             
 
             
