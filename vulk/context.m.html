@@ -1060,6 +1060,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.context.VulkContext.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.context.VulkContext.acquire_image">acquire_image</a></li>
     <li class="mono"><a href="#vulk.context.VulkContext.create">create</a></li>
   </ul>
 
@@ -1102,6 +1103,12 @@ table {
 logical device and queues.
 The context will be then passed to the Application to use it.</p>
 
+<p>Vulk uses a specific way to interact with Vulkan that allow a good
+abstraction. Instead of performing the final drawing operation
+directly on the swapchain's images, Vulk performs all operations on
+custom images and framebuffer and finally just copy the result in the
+swapchain's image.</p>
+
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context', this);">Show source &equiv;</a></p>
   <div id="source-vulk.context" class="source">
@@ -1110,6 +1117,12 @@ The context will be then passed to the Application to use it.</p>
 <span class="sd">This module contains class to create the SDL2 window and the Vulkan</span>
 <span class="sd">logical device and queues.</span>
 <span class="sd">The context will be then passed to the Application to use it.</span>
+
+<span class="sd">Vulk uses a specific way to interact with Vulkan that allow a good</span>
+<span class="sd">abstraction. Instead of performing the final drawing operation</span>
+<span class="sd">directly on the swapchain&#39;s images, Vulk performs all operations on</span>
+<span class="sd">custom images and framebuffer and finally just copy the result in the</span>
+<span class="sd">swapchain&#39;s image.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">ctypes</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -1734,6 +1747,36 @@ The context will be then passed to the Application to use it.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images_views</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                  <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImageView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">img_create</span><span class="p">))</span>
 
+    <span class="k">def</span> <span class="nf">_create_commandbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create the command buffer use to copy image&#39;&#39;&#39;</span>
+        <span class="c1"># Create pool</span>
+        <span class="n">commandpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandPoolCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">queueFamilyIndex</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateCommandPool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">commandpool_create</span><span class="p">)</span>
+
+        <span class="c1"># Create one commend buffer</span>
+        <span class="n">commandbuffer_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferAllocateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO</span><span class="p">,</span>
+            <span class="n">commandPool</span><span class="o">=</span><span class="n">commandpool</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_COMMAND_BUFFER_LEVEL_PRIMARY</span><span class="p">,</span>
+            <span class="n">commandBufferCount</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateCommandBuffers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">commandbuffer_create</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Register command buffer</span>
+        <span class="n">commandbuffer_begin_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferBeginInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">pInheritanceInfo</span><span class="o">=</span><span class="bp">None</span>
+        <span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkBeginCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">commandbuffer_begin_create</span><span class="p">)</span>
+        <span class="c1"># TODO</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkEndCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
 
@@ -1752,6 +1795,20 @@ The context will be then passed to the Application to use it.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain_images_views</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffer</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">acquire_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphore</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the index of the acquired image in swapchain</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `semaphore`: The semaphore to signal when the image is ready</span>
+
+<span class="sd">        **Note: `semaphore` is of type `vulkanobject.Semaphore`,</span>
+<span class="sd">                not `VkSemaphore`**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAcquireNextImageKHR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">,</span>
+                                        <span class="n">vk</span><span class="o">.</span><span class="n">UINT64_MAX</span><span class="p">,</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">semaphore</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2382,6 +2439,36 @@ The context will be then passed to the Application to use it.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images_views</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                  <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImageView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">img_create</span><span class="p">))</span>
 
+    <span class="k">def</span> <span class="nf">_create_commandbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create the command buffer use to copy image&#39;&#39;&#39;</span>
+        <span class="c1"># Create pool</span>
+        <span class="n">commandpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandPoolCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">queueFamilyIndex</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateCommandPool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">commandpool_create</span><span class="p">)</span>
+
+        <span class="c1"># Create one commend buffer</span>
+        <span class="n">commandbuffer_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferAllocateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO</span><span class="p">,</span>
+            <span class="n">commandPool</span><span class="o">=</span><span class="n">commandpool</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_COMMAND_BUFFER_LEVEL_PRIMARY</span><span class="p">,</span>
+            <span class="n">commandBufferCount</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateCommandBuffers</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">commandbuffer_create</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Register command buffer</span>
+        <span class="n">commandbuffer_begin_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkCommandBufferBeginInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">pInheritanceInfo</span><span class="o">=</span><span class="bp">None</span>
+        <span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkBeginCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">commandbuffer_begin_create</span><span class="p">)</span>
+        <span class="c1"># TODO</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkEndCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
 
@@ -2400,6 +2487,20 @@ The context will be then passed to the Application to use it.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain_images_views</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffer</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">acquire_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphore</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the index of the acquired image in swapchain</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `semaphore`: The semaphore to signal when the image is ready</span>
+
+<span class="sd">        **Note: `semaphore` is of type `vulkanobject.Semaphore`,</span>
+<span class="sd">                not `VkSemaphore`**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAcquireNextImageKHR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">,</span>
+                                        <span class="n">vk</span><span class="o">.</span><span class="n">UINT64_MAX</span><span class="p">,</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">semaphore</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2469,6 +2570,45 @@ The context will be then passed to the Application to use it.</p>
   
             
   <div class="item">
+    <div class="name def" id="vulk.context.VulkContext.acquire_image">
+    <p>def <span class="ident">acquire_image</span>(</p><p>self, semaphore)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return the index of the acquired image in swapchain</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>semaphore</code>: The semaphore to signal when the image is ready</li>
+</ul>
+
+<p><strong>Note: <code>semaphore</code> is of type <code>vulkanobject.Semaphore</code>,
+        not <code>VkSemaphore</code></strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkContext.acquire_image', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.context.VulkContext.acquire_image" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">acquire_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphore</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the index of the acquired image in swapchain</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `semaphore`: The semaphore to signal when the image is ready</span>
+<span class="sd">    **Note: `semaphore` is of type `vulkanobject.Semaphore`,</span>
+<span class="sd">            not `VkSemaphore`**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAcquireNextImageKHR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">,</span>
+                                    <span class="n">vk</span><span class="o">.</span><span class="n">UINT64_MAX</span><span class="p">,</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">semaphore</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.context.VulkContext.create">
     <p>def <span class="ident">create</span>(</p><p>self, window, configuration)</p>
     </div>
@@ -2503,6 +2643,7 @@ The context will be then passed to the Application to use it.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain_images_views</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffer</span><span class="p">()</span>
 </pre></div>
 
   </div>
