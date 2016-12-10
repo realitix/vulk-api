@@ -1107,12 +1107,24 @@ table {
 
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.HighPerformanceImage">HighPerformanceImage</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.HighPerformanceImage.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.HighPerformanceImage.bind">bind</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.Image">Image</a></span>
         
           
   <ul>
     <li class="mono"><a href="#vulk.vulkanobject.Image.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.Image.bind">bind</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.Image.copy_to">copy_to</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.Image.update_layout">update_layout</a></li>
   </ul>
 
         </li>
@@ -1934,84 +1946,28 @@ module.</p>
 
 <span class="k">class</span> <span class="nc">Image</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Image can be initialized in two ways:</span>
-
-<span class="sd">      - In the classic ways passing all the properties</span>
-<span class="sd">      - Directly by passing a real vulkan image</span>
-
-<span class="sd">    This is useful because image can be created by swapchain and can be</span>
-<span class="sd">    converted to vulk Image object. If the Image is created from VkImage,</span>
-<span class="sd">    `staging_image`, `staging_memory` and `memory` are set to `None`.</span>
+<span class="sd">    `Image` is a wrapper around a `VkImage` and a `VkMemory`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;If only one non-named arg, we create from `VkImage`,</span>
-<span class="sd">        else from parameters</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">None</span>
-
-        <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_image</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_init_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        To get the maximum performance, we are going to create two `VkImage`,</span>
-<span class="sd">        a staging image which memory can be updated (with our texture) and</span>
-<span class="sd">        a final image with very fast memory that we will use in shaders.</span>
-<span class="sd">        When we create an image, we first upload the pixels in the staging</span>
-<span class="sd">        image and the copy the memory in the final image. Of course, both of</span>
-<span class="sd">        the image have the same properties.</span>
-
-<span class="sd">        This method takes the same arguments as `_create_image` minus the</span>
-<span class="sd">        `memory_properties`, `usage` and `tiling` parameters.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c1"># Create the staging image</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_image</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-            <span class="n">tiling</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
-            <span class="n">usage</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
-            <span class="n">memory_properties</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Create the final image</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_image</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-            <span class="n">tiling</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
-            <span class="n">usage</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
-            <span class="n">memory_properties</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Set others properties</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;extent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">width</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;extent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">height</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">])</span>
-
-    <span class="k">def</span> <span class="nf">_create_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">extent</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
-                      <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span>
-                      <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
+                 <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+                 <span class="n">layout</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a new image</span>
 
 <span class="sd">        Creating an image is made of several steps:</span>
 
 <span class="sd">        - Create the staging image</span>
 <span class="sd">        - Allocate the staging memory</span>
-<span class="sd">        - Create the final image</span>
-<span class="sd">        - Allocate the final memory</span>
+<span class="sd">        - Bind the memory to the image</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
 <span class="sd">        - `format`: `VkFormat` of the image</span>
-<span class="sd">        - `extent`: `Extent3D`</span>
+<span class="sd">        - `width`: Image width</span>
+<span class="sd">        - `heigth`: Image height</span>
+<span class="sd">        - `depth`: Image depth</span>
 <span class="sd">        - `mip_level`: Level of mip (`int`)</span>
 <span class="sd">        - `layers`: Number of layers (`int`)</span>
 <span class="sd">        - `samples`: This `VkSampleCountFlagBits` flag is related</span>
@@ -2025,17 +1981,23 @@ module.</p>
 <span class="sd">        - `usage`: `VkImageUsageFlags`</span>
 <span class="sd">        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
 
         <span class="c1"># Create the VkImage</span>
-        <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
-                                  <span class="n">height</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                                  <span class="n">depth</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+        <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                                  <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                                  <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">)</span>
 
         <span class="n">image_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">imageType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">),</span>
-            <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">),</span>
+            <span class="n">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
             <span class="n">extent</span><span class="o">=</span><span class="n">vk_extent</span><span class="p">,</span>
             <span class="n">mipLevels</span><span class="o">=</span><span class="n">mip_level</span><span class="p">,</span>
             <span class="n">arrayLayers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
@@ -2045,13 +2007,14 @@ module.</p>
             <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
             <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
             <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
-            <span class="n">initialLayout</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+            <span class="n">initialLayout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
         <span class="p">)</span>
 
-        <span class="n">image</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImage</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image_create</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImage</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image_create</span><span class="p">)</span>
 
         <span class="c1"># Get memory requirements</span>
-        <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetImageMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+        <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetImageMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
 
         <span class="n">alloc_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMemoryAllocateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><span class="p">,</span>
@@ -2059,42 +2022,39 @@ module.</p>
             <span class="n">memoryTypeIndex</span><span class="o">=</span><span class="n">find_memory_type</span><span class="p">(</span>
                 <span class="n">context</span><span class="p">,</span>
                 <span class="n">requirements</span><span class="o">.</span><span class="n">memoryTypeBits</span><span class="p">,</span>
-                <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
 
         <span class="c1"># Bind device memory to the image</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">memory</span>
-
-    <span class="k">def</span> <span class="nf">_transition_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">old_layout</span><span class="p">,</span>
-                           <span class="n">new_layout</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">new_layout</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Update the image layout.</span>
+<span class="sd">        Command to update layout are registered in the commandbuffer</span>
+<span class="sd">        but it&#39;s up to you to submit the command buffer to the execution</span>
+<span class="sd">        queue. You should use buffer specifically created for this function.</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `commandbuffer`: `CommandBuffer` used to register commands</span>
-<span class="sd">        - `image`: The `VkImage`</span>
-<span class="sd">        - `old_layout`: `VkImageLayout`</span>
 <span class="sd">        - `new_layout`: `VkImageLayout`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">old_layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">old_layout</span><span class="p">)</span>
         <span class="n">new_layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">new_layout</span><span class="p">)</span>
 
         <span class="c1"># Set access masks</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">old_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
            <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">):</span>
             <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
             <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">old_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
               <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">):</span>
             <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
             <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">old_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span> <span class="ow">and</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span> <span class="ow">and</span>
               <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL</span><span class="p">):</span>
             <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
             <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_SHADER_READ_BIT</span>
@@ -2117,11 +2077,11 @@ module.</p>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER</span><span class="p">,</span>
                 <span class="n">srcAccessMask</span><span class="o">=</span><span class="n">src_mask</span><span class="p">,</span>
                 <span class="n">dstAccessMask</span><span class="o">=</span><span class="n">dst_mask</span><span class="p">,</span>
-                <span class="n">oldLayout</span><span class="o">=</span><span class="n">old_layout</span><span class="p">,</span>
+                <span class="n">oldLayout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span>
                 <span class="n">newLayout</span><span class="o">=</span><span class="n">new_layout</span><span class="p">,</span>
                 <span class="n">srcQueueFamilyIndex</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_QUEUE_FAMILY_IGNORED</span><span class="p">,</span>
                 <span class="n">dstQueueFamilyIndex</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_QUEUE_FAMILY_IGNORED</span><span class="p">,</span>
-                <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
+                <span class="n">image</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
                 <span class="n">subresourceRange</span><span class="o">=</span><span class="n">subresource_range</span>
             <span class="p">)</span>
 
@@ -2129,17 +2089,24 @@ module.</p>
                                  <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
                                  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">barrier</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">_copy_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">src_image</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">new_layout</span>
+
+    <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Copy the staging image into the final image</span>
+<span class="sd">        Copy this image to the destination image.</span>
+<span class="sd">        Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
+<span class="sd">        you to submit the command buffer to the execution queue.</span>
+<span class="sd">        You should use buffer specifically created for this function.</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `commandbuffer`: `CommandBuffer` used to register commands</span>
-<span class="sd">        - `src_image`: `VkImage` source</span>
-<span class="sd">        - `dst_image`: `VkImage` destination</span>
-<span class="sd">        - `width`: Images width</span>
-<span class="sd">        - `height`: Images height</span>
+<span class="sd">        - `dst_image`: Destination `Image`</span>
+
+<span class="sd">        **Note: Layout of source image should be `TRANSFERT_SRC_OPTIMAL` and</span>
+<span class="sd">                layout of destination image should be `TRANSFERT_DST_OPTIMAL`**</span>
+
+<span class="sd">        **Warning: Format of both images must be compatible**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">flags</span> <span class="o">=</span> <span class="s1">&#39;VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT&#39;</span>
         <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
@@ -2150,7 +2117,7 @@ module.</p>
                 <span class="n">layerCount</span><span class="o">=</span><span class="mi">1</span>
             <span class="p">)</span>
             <span class="n">extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                                   <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                                   <span class="n">depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
             <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCopy</span><span class="p">(</span>
                 <span class="n">srcSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
                 <span class="n">dstSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
@@ -2159,9 +2126,72 @@ module.</p>
                 <span class="n">extent</span><span class="o">=</span><span class="n">extent</span>
             <span class="p">)</span>
 
-            <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span><span class="n">src_image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
-                           <span class="n">dst_image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
-                           <span class="p">[</span><span class="n">region</span><span class="p">])</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">dst_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                           <span class="n">dst_image</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Map this image to upload data in it.</span>
+<span class="sd">        This function is a context manager and must be called with `with`.</span>
+<span class="sd">        It return a python buffer and let you do what you want with it,</span>
+<span class="sd">        be careful!</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: The `VulkContext`</span>
+
+<span class="sd">        **Warning: Image memory must be host visible**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">compatible_memories</span> <span class="o">=</span> <span class="p">{</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_CACHED_BIT</span><span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">&amp;</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">compatible_memories</span><span class="p">]):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this image, memory must be host visible&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">format_size</span> <span class="o">=</span> <span class="n">vulkanconstant</span><span class="o">.</span><span class="n">VK_FORMAT_SIZE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">]</span> <span class="o">/</span> <span class="mi">8</span>
+        <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                  <span class="n">image_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">data</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">HighPerformanceImage</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `HighPerformanceImage` allows to use high performance image to be</span>
+<span class="sd">    sampled in your shaders.</span>
+
+<span class="sd">    To get the maximum performance, we are going to create two `Image`,</span>
+<span class="sd">    a staging image which memory can be updated (with our texture) and</span>
+<span class="sd">    a final image with very fast memory that we will use in shaders.</span>
+<span class="sd">    When we create an image, we first upload the pixels in the staging</span>
+<span class="sd">    image and then copy the memory in the final image. Of course, both of</span>
+<span class="sd">    the image have the same properties.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+                 <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -2176,25 +2206,22 @@ module.</p>
 
         <span class="c1"># Transition the staging image to optimal source transfert layout</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transition_layout</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
 
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transition_layout</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
 
         <span class="c1"># Copy staging image into final image</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_images</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="p">)</span>
 
         <span class="c1"># Set the best layout for the final image</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transition_layout</span><span class="p">(</span>
-                <span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">_manage_commandbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">):</span>
@@ -2211,61 +2238,28 @@ module.</p>
                 <span class="n">context</span><span class="p">,</span> <span class="s1">&#39;VK_COMMAND_BUFFER_LEVEL_PRIMARY&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">commandbuffers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_submit_commandbuffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
+            <span class="n">submit</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSubmitInfo</span><span class="p">(</span>
+                <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SUBMIT_INFO</span><span class="p">,</span>
+                <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">pWaitDstStgeMask</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">commandBufferCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">commandbuffers</span><span class="p">),</span>
+                <span class="n">pCommandBuffers</span><span class="o">=</span><span class="n">commandbuffers</span><span class="p">,</span>
+                <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="bp">None</span>
+            <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_submit_commandbuffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Submit and free the commandbuffer.</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `commandpool`: `CommandPool`</span>
-<span class="sd">        - `commandbuffers`: `list` of `CommandBuffer` to submit</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">submit</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSubmitInfo</span><span class="p">(</span>
-            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SUBMIT_INFO</span><span class="p">,</span>
-            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">commandBufferCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">commandbuffers</span><span class="p">),</span>
-            <span class="n">pCommandBuffers</span><span class="o">=</span><span class="n">commandbuffers</span><span class="p">,</span>
-            <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="bp">None</span>
-        <span class="p">)</span>
-
-        <span class="c1"># TODO: submit must be an array (cvulkan bug!)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueWaitIdle</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">)</span>
-        <span class="n">commandpool</span><span class="o">.</span><span class="n">free_buffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
+            <span class="c1"># TODO: submit must be an array (cvulkan bug!)</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueWaitIdle</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">)</span>
+            <span class="n">commandpool</span><span class="o">.</span><span class="n">free_buffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Map this image to upload data in it.</span>
-<span class="sd">        This function is a context manager and must be called with `with`.</span>
-<span class="sd">        It return a python buffer and let you do what you want with it,</span>
-<span class="sd">        be careful!</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: The `VulkContext`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this image, no staging memory&quot;</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-        <span class="n">format_size</span> <span class="o">=</span> <span class="n">vulkanconstant</span><span class="o">.</span><span class="n">VK_FORMAT_SIZE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">]</span> <span class="o">/</span> <span class="mi">8</span>
-        <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span>
-                      <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
-
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-                                  <span class="n">image_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="k">yield</span> <span class="n">data</span>
+            <span class="k">with</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">b</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
 
@@ -3817,103 +3811,255 @@ represent the attachments of a <code>Renderpass</code>.</p>
       </div>
       
       <div class="item">
+      <p id="vulk.vulkanobject.HighPerformanceImage" class="name">class <span class="ident">HighPerformanceImage</span></p>
+      
+  
+    <div class="desc"><p><code>HighPerformanceImage</code> allows to use high performance image to be
+sampled in your shaders.</p>
+
+<p>To get the maximum performance, we are going to create two <code>Image</code>,
+a staging image which memory can be updated (with our texture) and
+a final image with very fast memory that we will use in shaders.
+When we create an image, we first upload the pixels in the staging
+image and then copy the memory in the final image. Of course, both of
+the image have the same properties.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceImage', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.HighPerformanceImage" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">HighPerformanceImage</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `HighPerformanceImage` allows to use high performance image to be</span>
+<span class="sd">    sampled in your shaders.</span>
+
+<span class="sd">    To get the maximum performance, we are going to create two `Image`,</span>
+<span class="sd">    a staging image which memory can be updated (with our texture) and</span>
+<span class="sd">    a final image with very fast memory that we will use in shaders.</span>
+<span class="sd">    When we create an image, we first upload the pixels in the staging</span>
+<span class="sd">    image and then copy the memory in the final image. Of course, both of</span>
+<span class="sd">    the image have the same properties.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+                 <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Prepare and copy the staging image to the final image.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Transition the staging image to optimal source transfert layout</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Transition the final image to optimal destination transfert layout</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Copy staging image into final image</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="p">)</span>
+
+        <span class="c1"># Set the best layout for the final image</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">_manage_commandbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Manage creation and destruction of commandbuffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `commandpool`: `CommandPool`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">commandpool</span><span class="o">.</span><span class="n">allocate_buffers</span><span class="p">(</span>
+                <span class="n">context</span><span class="p">,</span> <span class="s1">&#39;VK_COMMAND_BUFFER_LEVEL_PRIMARY&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">commandbuffers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">submit</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSubmitInfo</span><span class="p">(</span>
+                <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SUBMIT_INFO</span><span class="p">,</span>
+                <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">pWaitDstStgeMask</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">commandBufferCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">commandbuffers</span><span class="p">),</span>
+                <span class="n">pCommandBuffers</span><span class="o">=</span><span class="n">commandbuffers</span><span class="p">,</span>
+                <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="bp">None</span>
+            <span class="p">)</span>
+
+            <span class="c1"># TODO: submit must be an array (cvulkan bug!)</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueWaitIdle</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">)</span>
+            <span class="n">commandpool</span><span class="o">.</span><span class="n">free_buffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">b</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.HighPerformanceImage">HighPerformanceImage</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.HighPerformanceImage.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, format, width, height, depth, mip_level, layers, samples, sharing_mode, queue_families)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceImage.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.HighPerformanceImage.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+             <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
+             <span class="n">queue_families</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+        <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+        <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
+    <span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.HighPerformanceImage.bind">
+    <p>def <span class="ident">bind</span>(</p><p>*args, **kwds)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceImage.bind', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.HighPerformanceImage.bind" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">b</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.HighPerformanceImage.staging_image" class="name">var <span class="ident">staging_image</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.HighPerformanceImage.texture_image" class="name">var <span class="ident">texture_image</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
       <p id="vulk.vulkanobject.Image" class="name">class <span class="ident">Image</span></p>
       
   
-    <div class="desc"><p>Image can be initialized in two ways:</p>
-
-<ul>
-<li>In the classic ways passing all the properties</li>
-<li>Directly by passing a real vulkan image</li>
-</ul>
-
-<p>This is useful because image can be created by swapchain and can be
-converted to vulk Image object. If the Image is created from VkImage,
-<code>staging_image</code>, <code>staging_memory</code> and <code>memory</code> are set to <code>None</code>.</p>
+    <div class="desc"><p><code>Image</code> is a wrapper around a <code>VkImage</code> and a <code>VkMemory</code></p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.Image" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Image</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Image can be initialized in two ways:</span>
-
-<span class="sd">      - In the classic ways passing all the properties</span>
-<span class="sd">      - Directly by passing a real vulkan image</span>
-
-<span class="sd">    This is useful because image can be created by swapchain and can be</span>
-<span class="sd">    converted to vulk Image object. If the Image is created from VkImage,</span>
-<span class="sd">    `staging_image`, `staging_memory` and `memory` are set to `None`.</span>
+<span class="sd">    `Image` is a wrapper around a `VkImage` and a `VkMemory`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;If only one non-named arg, we create from `VkImage`,</span>
-<span class="sd">        else from parameters</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">None</span>
-
-        <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_image</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_init_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        To get the maximum performance, we are going to create two `VkImage`,</span>
-<span class="sd">        a staging image which memory can be updated (with our texture) and</span>
-<span class="sd">        a final image with very fast memory that we will use in shaders.</span>
-<span class="sd">        When we create an image, we first upload the pixels in the staging</span>
-<span class="sd">        image and the copy the memory in the final image. Of course, both of</span>
-<span class="sd">        the image have the same properties.</span>
-
-<span class="sd">        This method takes the same arguments as `_create_image` minus the</span>
-<span class="sd">        `memory_properties`, `usage` and `tiling` parameters.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c1"># Create the staging image</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_image</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-            <span class="n">tiling</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
-            <span class="n">usage</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
-            <span class="n">memory_properties</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Create the final image</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_image</span><span class="p">(</span>
-            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-            <span class="n">tiling</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
-            <span class="n">usage</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
-            <span class="n">memory_properties</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Set others properties</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;extent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">width</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;extent&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">height</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">])</span>
-
-    <span class="k">def</span> <span class="nf">_create_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">extent</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
-                      <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span>
-                      <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
+                 <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+                 <span class="n">layout</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a new image</span>
 
 <span class="sd">        Creating an image is made of several steps:</span>
 
 <span class="sd">        - Create the staging image</span>
 <span class="sd">        - Allocate the staging memory</span>
-<span class="sd">        - Create the final image</span>
-<span class="sd">        - Allocate the final memory</span>
+<span class="sd">        - Bind the memory to the image</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
 <span class="sd">        - `format`: `VkFormat` of the image</span>
-<span class="sd">        - `extent`: `Extent3D`</span>
+<span class="sd">        - `width`: Image width</span>
+<span class="sd">        - `heigth`: Image height</span>
+<span class="sd">        - `depth`: Image depth</span>
 <span class="sd">        - `mip_level`: Level of mip (`int`)</span>
 <span class="sd">        - `layers`: Number of layers (`int`)</span>
 <span class="sd">        - `samples`: This `VkSampleCountFlagBits` flag is related</span>
@@ -3927,17 +4073,23 @@ converted to vulk Image object. If the Image is created from VkImage,
 <span class="sd">        - `usage`: `VkImageUsageFlags`</span>
 <span class="sd">        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
 
         <span class="c1"># Create the VkImage</span>
-        <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
-                                  <span class="n">height</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                                  <span class="n">depth</span><span class="o">=</span><span class="n">extent</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+        <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                                  <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                                  <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">)</span>
 
         <span class="n">image_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">imageType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">),</span>
-            <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">),</span>
+            <span class="n">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
             <span class="n">extent</span><span class="o">=</span><span class="n">vk_extent</span><span class="p">,</span>
             <span class="n">mipLevels</span><span class="o">=</span><span class="n">mip_level</span><span class="p">,</span>
             <span class="n">arrayLayers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
@@ -3947,13 +4099,14 @@ converted to vulk Image object. If the Image is created from VkImage,
             <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
             <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
             <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
-            <span class="n">initialLayout</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+            <span class="n">initialLayout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
         <span class="p">)</span>
 
-        <span class="n">image</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImage</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image_create</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImage</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image_create</span><span class="p">)</span>
 
         <span class="c1"># Get memory requirements</span>
-        <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetImageMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+        <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetImageMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
 
         <span class="n">alloc_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMemoryAllocateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><span class="p">,</span>
@@ -3961,42 +4114,39 @@ converted to vulk Image object. If the Image is created from VkImage,
             <span class="n">memoryTypeIndex</span><span class="o">=</span><span class="n">find_memory_type</span><span class="p">(</span>
                 <span class="n">context</span><span class="p">,</span>
                 <span class="n">requirements</span><span class="o">.</span><span class="n">memoryTypeBits</span><span class="p">,</span>
-                <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
 
         <span class="c1"># Bind device memory to the image</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">memory</span>
-
-    <span class="k">def</span> <span class="nf">_transition_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">old_layout</span><span class="p">,</span>
-                           <span class="n">new_layout</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">new_layout</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Update the image layout.</span>
+<span class="sd">        Command to update layout are registered in the commandbuffer</span>
+<span class="sd">        but it&#39;s up to you to submit the command buffer to the execution</span>
+<span class="sd">        queue. You should use buffer specifically created for this function.</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `commandbuffer`: `CommandBuffer` used to register commands</span>
-<span class="sd">        - `image`: The `VkImage`</span>
-<span class="sd">        - `old_layout`: `VkImageLayout`</span>
 <span class="sd">        - `new_layout`: `VkImageLayout`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">old_layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">old_layout</span><span class="p">)</span>
         <span class="n">new_layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">new_layout</span><span class="p">)</span>
 
         <span class="c1"># Set access masks</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">old_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
            <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">):</span>
             <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
             <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">old_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
               <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">):</span>
             <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
             <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">old_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span> <span class="ow">and</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span> <span class="ow">and</span>
               <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL</span><span class="p">):</span>
             <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
             <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_SHADER_READ_BIT</span>
@@ -4019,11 +4169,11 @@ converted to vulk Image object. If the Image is created from VkImage,
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER</span><span class="p">,</span>
                 <span class="n">srcAccessMask</span><span class="o">=</span><span class="n">src_mask</span><span class="p">,</span>
                 <span class="n">dstAccessMask</span><span class="o">=</span><span class="n">dst_mask</span><span class="p">,</span>
-                <span class="n">oldLayout</span><span class="o">=</span><span class="n">old_layout</span><span class="p">,</span>
+                <span class="n">oldLayout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span>
                 <span class="n">newLayout</span><span class="o">=</span><span class="n">new_layout</span><span class="p">,</span>
                 <span class="n">srcQueueFamilyIndex</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_QUEUE_FAMILY_IGNORED</span><span class="p">,</span>
                 <span class="n">dstQueueFamilyIndex</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_QUEUE_FAMILY_IGNORED</span><span class="p">,</span>
-                <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
+                <span class="n">image</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
                 <span class="n">subresourceRange</span><span class="o">=</span><span class="n">subresource_range</span>
             <span class="p">)</span>
 
@@ -4031,17 +4181,24 @@ converted to vulk Image object. If the Image is created from VkImage,
                                  <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
                                  <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">barrier</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">_copy_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">src_image</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">new_layout</span>
+
+    <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Copy the staging image into the final image</span>
+<span class="sd">        Copy this image to the destination image.</span>
+<span class="sd">        Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
+<span class="sd">        you to submit the command buffer to the execution queue.</span>
+<span class="sd">        You should use buffer specifically created for this function.</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `commandbuffer`: `CommandBuffer` used to register commands</span>
-<span class="sd">        - `src_image`: `VkImage` source</span>
-<span class="sd">        - `dst_image`: `VkImage` destination</span>
-<span class="sd">        - `width`: Images width</span>
-<span class="sd">        - `height`: Images height</span>
+<span class="sd">        - `dst_image`: Destination `Image`</span>
+
+<span class="sd">        **Note: Layout of source image should be `TRANSFERT_SRC_OPTIMAL` and</span>
+<span class="sd">                layout of destination image should be `TRANSFERT_DST_OPTIMAL`**</span>
+
+<span class="sd">        **Warning: Format of both images must be compatible**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">flags</span> <span class="o">=</span> <span class="s1">&#39;VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT&#39;</span>
         <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
@@ -4052,7 +4209,7 @@ converted to vulk Image object. If the Image is created from VkImage,
                 <span class="n">layerCount</span><span class="o">=</span><span class="mi">1</span>
             <span class="p">)</span>
             <span class="n">extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                                   <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                                   <span class="n">depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
             <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCopy</span><span class="p">(</span>
                 <span class="n">srcSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
                 <span class="n">dstSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
@@ -4061,85 +4218,8 @@ converted to vulk Image object. If the Image is created from VkImage,
                 <span class="n">extent</span><span class="o">=</span><span class="n">extent</span>
             <span class="p">)</span>
 
-            <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span><span class="n">src_image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
-                           <span class="n">dst_image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
-                           <span class="p">[</span><span class="n">region</span><span class="p">])</span>
-
-    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Prepare and copy the staging image to the final image.</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="c1"># Transition the staging image to optimal source transfert layout</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transition_layout</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Transition the final image to optimal destination transfert layout</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transition_layout</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Copy staging image into final image</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_images</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
-
-        <span class="c1"># Set the best layout for the final image</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_transition_layout</span><span class="p">(</span>
-                <span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
-
-    <span class="nd">@contextmanager</span>
-    <span class="k">def</span> <span class="nf">_manage_commandbuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Manage creation and destruction of commandbuffer</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `commandpool`: `CommandPool`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">commandpool</span><span class="o">.</span><span class="n">allocate_buffers</span><span class="p">(</span>
-                <span class="n">context</span><span class="p">,</span> <span class="s1">&#39;VK_COMMAND_BUFFER_LEVEL_PRIMARY&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="k">yield</span> <span class="n">commandbuffers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_submit_commandbuffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_submit_commandbuffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Submit and free the commandbuffer.</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `commandpool`: `CommandPool`</span>
-<span class="sd">        - `commandbuffers`: `list` of `CommandBuffer` to submit</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">submit</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSubmitInfo</span><span class="p">(</span>
-            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SUBMIT_INFO</span><span class="p">,</span>
-            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">commandBufferCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">commandbuffers</span><span class="p">),</span>
-            <span class="n">pCommandBuffers</span><span class="o">=</span><span class="n">commandbuffers</span><span class="p">,</span>
-            <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="bp">None</span>
-        <span class="p">)</span>
-
-        <span class="c1"># TODO: submit must be an array (cvulkan bug!)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueWaitIdle</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">)</span>
-        <span class="n">commandpool</span><span class="o">.</span><span class="n">free_buffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">dst_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                           <span class="n">dst_image</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -4152,23 +4232,26 @@ converted to vulk Image object. If the Image is created from VkImage,
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
+
+<span class="sd">        **Warning: Image memory must be host visible**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this image, no staging memory&quot;</span>
+        <span class="n">compatible_memories</span> <span class="o">=</span> <span class="p">{</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_CACHED_BIT</span><span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">&amp;</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">compatible_memories</span><span class="p">]):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this image, memory must be host visible&quot;</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="n">format_size</span> <span class="o">=</span> <span class="n">vulkanconstant</span><span class="o">.</span><span class="n">VK_FORMAT_SIZE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">]</span> <span class="o">/</span> <span class="mi">8</span>
-        <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span>
-                      <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
+        <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
                                   <span class="n">image_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">data</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -4185,33 +4268,118 @@ converted to vulk Image object. If the Image is created from VkImage,
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.Image.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, *args, **kwargs)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, format, width, height, depth, mip_level, layers, samples, sharing_mode, queue_families, layout, tiling, usage, memory_properties)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>If only one non-named arg, we create from <code>VkImage</code>,
-else from parameters</p>
+    <div class="desc"><p>Create a new image</p>
+
+<p>Creating an image is made of several steps:</p>
+
+<ul>
+<li>Create the staging image</li>
+<li>Allocate the staging memory</li>
+<li>Bind the memory to the image</li>
+</ul>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>image_type</code>: Type of image 1D/2D/3D (<code>VkImageType</code>)</li>
+<li><code>format</code>: <code>VkFormat</code> of the image</li>
+<li><code>width</code>: Image width</li>
+<li><code>heigth</code>: Image height</li>
+<li><code>depth</code>: Image depth</li>
+<li><code>mip_level</code>: Level of mip (<code>int</code>)</li>
+<li><code>layers</code>: Number of layers (<code>int</code>)</li>
+<li><code>samples</code>: This <code>VkSampleCountFlagBits</code> flag is related
+         to multisampling</li>
+<li><code>sharing_mode</code>: <code>VkSharingMode</code></li>
+<li><code>queue_families</code>: List of queue families accessing this image
+                (ignored if sharingMode is not
+                <code>VK_SHARING_MODE_CONCURRENT</code>) (can be [])</li>
+<li><code>layout</code>: <code>VkImageLayout</code></li>
+<li><code>tiling</code>: <code>VkImageTiling</code></li>
+<li><code>usage</code>: <code>VkImageUsageFlags</code></li>
+<li><code>memory_properties</code>: <code>VkMemoryPropertyFlags</code> Vulkan constant</li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.Image.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;If only one non-named arg, we create from `VkImage`,</span>
-<span class="sd">    else from parameters</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
+             <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+             <span class="n">layout</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create a new image</span>
+<span class="sd">    Creating an image is made of several steps:</span>
+<span class="sd">    - Create the staging image</span>
+<span class="sd">    - Allocate the staging memory</span>
+<span class="sd">    - Bind the memory to the image</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
+<span class="sd">    - `format`: `VkFormat` of the image</span>
+<span class="sd">    - `width`: Image width</span>
+<span class="sd">    - `heigth`: Image height</span>
+<span class="sd">    - `depth`: Image depth</span>
+<span class="sd">    - `mip_level`: Level of mip (`int`)</span>
+<span class="sd">    - `layers`: Number of layers (`int`)</span>
+<span class="sd">    - `samples`: This `VkSampleCountFlagBits` flag is related</span>
+<span class="sd">                 to multisampling</span>
+<span class="sd">    - `sharing_mode`: `VkSharingMode`</span>
+<span class="sd">    - `queue_families`: List of queue families accessing this image</span>
+<span class="sd">                        (ignored if sharingMode is not</span>
+<span class="sd">                        `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
+<span class="sd">    - `layout`: `VkImageLayout`</span>
+<span class="sd">    - `tiling`: `VkImageTiling`</span>
+<span class="sd">    - `usage`: `VkImageUsageFlags`</span>
+<span class="sd">    - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_init_image</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+    <span class="c1"># Create the VkImage</span>
+    <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                              <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+                              <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">)</span>
+    <span class="n">image_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">imageType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">),</span>
+        <span class="n">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
+        <span class="n">extent</span><span class="o">=</span><span class="n">vk_extent</span><span class="p">,</span>
+        <span class="n">mipLevels</span><span class="o">=</span><span class="n">mip_level</span><span class="p">,</span>
+        <span class="n">arrayLayers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
+        <span class="n">samples</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span>
+        <span class="n">tiling</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">tiling</span><span class="p">),</span>
+        <span class="n">usage</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span>
+        <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
+        <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
+        <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">initialLayout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImage</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image_create</span><span class="p">)</span>
+    <span class="c1"># Get memory requirements</span>
+    <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetImageMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">alloc_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMemoryAllocateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><span class="p">,</span>
+        <span class="n">allocationSize</span><span class="o">=</span><span class="n">requirements</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+        <span class="n">memoryTypeIndex</span><span class="o">=</span><span class="n">find_memory_type</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">requirements</span><span class="o">.</span><span class="n">memoryTypeBits</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+    <span class="c1"># Bind device memory to the image</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -4238,6 +4406,8 @@ be careful!</p>
 <ul>
 <li><code>context</code>: The <code>VulkContext</code></li>
 </ul>
+
+<p><strong>Warning: Image memory must be host visible</strong></p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.bind', this);">Show source &equiv;</a></p>
@@ -4251,21 +4421,174 @@ be careful!</p>
 <span class="sd">    be careful!</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: The `VulkContext`</span>
+<span class="sd">    **Warning: Image memory must be host visible**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">:</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this image, no staging memory&quot;</span>
+    <span class="n">compatible_memories</span> <span class="o">=</span> <span class="p">{</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span><span class="p">,</span>
+                           <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span><span class="p">,</span>
+                           <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_CACHED_BIT</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">&amp;</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">compatible_memories</span><span class="p">]):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this image, memory must be host visible&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="n">format_size</span> <span class="o">=</span> <span class="n">vulkanconstant</span><span class="o">.</span><span class="n">VK_FORMAT_SIZE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">]</span> <span class="o">/</span> <span class="mi">8</span>
-    <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span>
-                  <span class="bp">self</span><span class="o">.</span><span class="n">extent</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
+    <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
                               <span class="n">image_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">yield</span> <span class="n">data</span>
     <span class="k">finally</span><span class="p">:</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_memory</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Image.copy_to">
+    <p>def <span class="ident">copy_to</span>(</p><p>self, commandbuffer, dst_image)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Copy this image to the destination image.
+Commands to copy are registered in the commandbuffer but it's up to
+you to submit the command buffer to the execution queue.
+You should use buffer specifically created for this function.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>commandbuffer</code>: <code>CommandBuffer</code> used to register commands</li>
+<li><code>dst_image</code>: Destination <code>Image</code></li>
+</ul>
+
+<p><strong>Note: Layout of source image should be <code>TRANSFERT_SRC_OPTIMAL</code> and
+        layout of destination image should be <code>TRANSFERT_DST_OPTIMAL</code></strong></p>
+
+<p><strong>Warning: Format of both images must be compatible</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.copy_to', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Image.copy_to" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Copy this image to the destination image.</span>
+<span class="sd">    Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
+<span class="sd">    you to submit the command buffer to the execution queue.</span>
+<span class="sd">    You should use buffer specifically created for this function.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `commandbuffer`: `CommandBuffer` used to register commands</span>
+<span class="sd">    - `dst_image`: Destination `Image`</span>
+<span class="sd">    **Note: Layout of source image should be `TRANSFERT_SRC_OPTIMAL` and</span>
+<span class="sd">            layout of destination image should be `TRANSFERT_DST_OPTIMAL`**</span>
+<span class="sd">    **Warning: Format of both images must be compatible**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">flags</span> <span class="o">=</span> <span class="s1">&#39;VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT&#39;</span>
+    <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+        <span class="n">subresource</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceLayers</span><span class="p">(</span>
+            <span class="n">aspectMask</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_ASPECT_COLOR_BIT</span><span class="p">,</span>
+            <span class="n">baseArrayLayer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">mipLevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">layerCount</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                               <span class="n">depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCopy</span><span class="p">(</span>
+            <span class="n">srcSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
+            <span class="n">dstSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
+            <span class="n">srcOffset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset3D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">dstOffset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset3D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">extent</span><span class="o">=</span><span class="n">extent</span>
+        <span class="p">)</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">dst_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                       <span class="n">dst_image</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Image.update_layout">
+    <p>def <span class="ident">update_layout</span>(</p><p>self, commandbuffer, new_layout)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Update the image layout.
+Command to update layout are registered in the commandbuffer
+but it's up to you to submit the command buffer to the execution
+queue. You should use buffer specifically created for this function.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>commandbuffer</code>: <code>CommandBuffer</code> used to register commands</li>
+<li><code>new_layout</code>: <code>VkImageLayout</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.update_layout', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Image.update_layout" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">update_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandbuffer</span><span class="p">,</span> <span class="n">new_layout</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Update the image layout.</span>
+<span class="sd">    Command to update layout are registered in the commandbuffer</span>
+<span class="sd">    but it&#39;s up to you to submit the command buffer to the execution</span>
+<span class="sd">    queue. You should use buffer specifically created for this function.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `commandbuffer`: `CommandBuffer` used to register commands</span>
+<span class="sd">    - `new_layout`: `VkImageLayout`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">new_layout</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">new_layout</span><span class="p">)</span>
+    <span class="c1"># Set access masks</span>
+    <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
+       <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">):</span>
+        <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
+        <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span> <span class="ow">and</span>
+          <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">):</span>
+        <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
+        <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span> <span class="ow">and</span>
+          <span class="n">new_layout</span> <span class="o">==</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL</span><span class="p">):</span>
+        <span class="n">src_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
+        <span class="n">dst_mask</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_SHADER_READ_BIT</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Unsupported layout transition&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">flags</span> <span class="o">=</span> <span class="s1">&#39;VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT&#39;</span>
+    <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">flags</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+        <span class="n">subresource_range</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceRange</span><span class="p">(</span>
+            <span class="n">aspectMask</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_ASPECT_COLOR_BIT</span><span class="p">,</span>
+            <span class="n">baseMipLevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">levelCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">baseArrayLayer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">layerCount</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">barrier</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageMemoryBarrier</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER</span><span class="p">,</span>
+            <span class="n">srcAccessMask</span><span class="o">=</span><span class="n">src_mask</span><span class="p">,</span>
+            <span class="n">dstAccessMask</span><span class="o">=</span><span class="n">dst_mask</span><span class="p">,</span>
+            <span class="n">oldLayout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span>
+            <span class="n">newLayout</span><span class="o">=</span><span class="n">new_layout</span><span class="p">,</span>
+            <span class="n">srcQueueFamilyIndex</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_QUEUE_FAMILY_IGNORED</span><span class="p">,</span>
+            <span class="n">dstQueueFamilyIndex</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_QUEUE_FAMILY_IGNORED</span><span class="p">,</span>
+            <span class="n">image</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+            <span class="n">subresourceRange</span><span class="o">=</span><span class="n">subresource_range</span>
+        <span class="p">)</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">pipeline_barrier</span><span class="p">(</span><span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                             <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">barrier</span><span class="p">])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">new_layout</span>
 </pre></div>
 
   </div>
@@ -4274,6 +4597,16 @@ be careful!</p>
   </div>
   
           <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.Image.depth" class="name">var <span class="ident">depth</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
             <div class="item">
             <p id="vulk.vulkanobject.Image.format" class="name">var <span class="ident">format</span></p>
             
@@ -4305,6 +4638,16 @@ be careful!</p>
 
             </div>
             <div class="item">
+            <p id="vulk.vulkanobject.Image.layout" class="name">var <span class="ident">layout</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="vulk.vulkanobject.Image.memory" class="name">var <span class="ident">memory</span></p>
             
 
@@ -4315,17 +4658,7 @@ be careful!</p>
 
             </div>
             <div class="item">
-            <p id="vulk.vulkanobject.Image.staging_image" class="name">var <span class="ident">staging_image</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="vulk.vulkanobject.Image.staging_memory" class="name">var <span class="ident">staging_memory</span></p>
+            <p id="vulk.vulkanobject.Image.memory_properties" class="name">var <span class="ident">memory_properties</span></p>
             
 
             
