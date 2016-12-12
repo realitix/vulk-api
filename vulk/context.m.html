@@ -1600,12 +1600,11 @@ swapchain's image.</p>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> device selected&quot;</span>
                      <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span><span class="o">.</span><span class="n">deviceName</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan logical device</span>
 
 <span class="sd">        *Parameters:*</span>
 
-<span class="sd">        - `window`: The window for Vulkan</span>
 <span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_device_extensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
@@ -1792,7 +1791,7 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_debug_callback</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_surface</span><span class="p">(</span><span class="n">window</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_physical_device</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain_images_views</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffer</span><span class="p">()</span>
@@ -2292,12 +2291,11 @@ swapchain's image.</p>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> device selected&quot;</span>
                      <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span><span class="o">.</span><span class="n">deviceName</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan logical device</span>
 
 <span class="sd">        *Parameters:*</span>
 
-<span class="sd">        - `window`: The window for Vulkan</span>
 <span class="sd">        - `configuration`: Configuration from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_device_extensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
@@ -2484,7 +2482,7 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_debug_callback</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_surface</span><span class="p">(</span><span class="n">window</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_physical_device</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain_images_views</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffer</span><span class="p">()</span>
@@ -2640,7 +2638,7 @@ swapchain's image.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_debug_callback</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_surface</span><span class="p">(</span><span class="n">window</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_physical_device</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_create_device</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain_images_views</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffer</span><span class="p">()</span>
