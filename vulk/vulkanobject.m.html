@@ -2205,21 +2205,21 @@ module.</p>
             <span class="n">context</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Transition the staging image to optimal source transfert layout</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
 
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
 
         <span class="c1"># Copy staging image into final image</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="p">)</span>
 
         <span class="c1"># Set the best layout for the final image</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
 
@@ -3870,21 +3870,21 @@ the image have the same properties.</p>
             <span class="n">context</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Transition the staging image to optimal source transfert layout</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
 
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
 
         <span class="c1"># Copy staging image into final image</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="p">)</span>
 
         <span class="c1"># Set the best layout for the final image</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manage_commandbuffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cb</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
 
