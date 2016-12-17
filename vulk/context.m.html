@@ -1131,7 +1131,8 @@ swapchain's image.</p>
 <span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>
 
 <span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span>
-<span class="kn">from</span> <span class="nn">vulk.vulkanobject</span> <span class="kn">import</span> <span class="n">CommandPool</span><span class="p">,</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">vulk.vulkanobject</span> <span class="kn">import</span> <span class="n">CommandPool</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageView</span><span class="p">,</span> \
+        <span class="n">ImageSubresourceRange</span><span class="p">,</span> <span class="n">Semaphore</span><span class="p">,</span> <span class="n">immediate_buffer</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 <span class="n">ENGINE_NAME</span> <span class="o">=</span> <span class="s2">&quot;Vulk 3D Engine&quot;</span>
@@ -1219,14 +1220,21 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c1"># Swapchain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c1"># Images in swapchain</span>
+        <span class="c1"># Swapchain images (vulkanobject.Image type)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c1"># Swapchain extent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c1"># Swapchain format</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Width of the window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Height of the window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># Final image which is copied into swapchain image</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Image view of the final image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Internal semaphores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
@@ -1338,6 +1346,12 @@ swapchain's image.</p>
                   <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateInstanceLayerProperties</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available layers: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">layers</span><span class="p">)</span>
 
+        <span class="c1"># Standard validation is a meta layer containing the others</span>
+        <span class="n">standard</span> <span class="o">=</span> <span class="s1">&#39;VK_LAYER_LUNARG_standard_validation&#39;</span>
+        <span class="k">if</span> <span class="n">standard</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Selecting only </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">standard</span><span class="p">)</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">standard</span><span class="p">]</span>
+
         <span class="k">return</span> <span class="n">layers</span>
 
     <span class="nd">@staticmethod</span>
@@ -1409,7 +1423,9 @@ swapchain's image.</p>
             <span class="s1">&#39;vkGetPhysicalDeviceSurfaceFormatsKHR&#39;</span><span class="p">,</span>
             <span class="s1">&#39;vkGetPhysicalDeviceSurfacePresentModesKHR&#39;</span><span class="p">,</span>
             <span class="s1">&#39;vkCreateSwapchainKHR&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span>
+            <span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;vkQueuePresentKHR&#39;</span>
         <span class="p">}</span>
 
         <span class="n">debug_extension_functions</span> <span class="o">=</span> <span class="p">{</span>
@@ -1467,11 +1483,23 @@ swapchain's image.</p>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">configuration</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="k">return</span>
 
+        <span class="n">vulkan_debug_mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_DEBUG_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_ERROR_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_INFORMATION_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span>
+        <span class="p">}</span>
+
         <span class="k">def</span> <span class="nf">debug_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;VULKAN WARNING: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vulkan_debug_mapping</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="s2">&quot;VULKAN: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
 
         <span class="n">flags</span> <span class="o">=</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_ERROR_BIT_EXT</span> <span class="o">|</span>
-                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span><span class="p">)</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span> <span class="o">|</span>
+                 <span class="c1"># vk.VK_DEBUG_REPORT_INFORMATION_BIT_EXT |</span>
+                 <span class="c1"># vk.VK_DEBUG_REPORT_DEBUG_BIT_EXT |</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT</span><span class="p">)</span>
+
         <span class="n">debug_create_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDebugReportCallbackCreateInfoEXT</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
@@ -1719,66 +1747,92 @@ swapchain's image.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkCreateSwapchainKHR&#39;</span><span class="p">](</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">swapchain_create</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span><span class="p">](</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span> <span class="o">=</span> <span class="n">extent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">extent</span><span class="o">.</span><span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">extent</span><span class="o">.</span><span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span> <span class="o">=</span> <span class="n">surface_format</span><span class="o">.</span><span class="n">format</span>
+
+        <span class="n">swapchain_raw_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span><span class="p">](</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">swapchain_raw_images</span><span class="p">:</span>
+            <span class="c1"># Put swapchain image in Image</span>
+            <span class="c1"># It&#39;s a bad practice but for this specific use case, it&#39;s good</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">Image</span><span class="p">)</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">raw_image</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">surface_format</span><span class="o">.</span><span class="n">format</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+        <span class="c1"># Update layout of all swapchain images to dst transfert</span>
+        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+                <span class="n">image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span>
+                <span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Swapchain created with </span><span class="si">%s</span><span class="s2"> images&quot;</span><span class="p">,</span>
                      <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">))</span>
 
+    <span class="k">def</span> <span class="nf">_create_final_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">usage</span> <span class="o">=</span> <span class="s1">&#39;VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT&#39;</span> <span class="c1"># noqa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_TYPE_2D&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;VK_SAMPLE_COUNT_1_BIT&#39;</span><span class="p">,</span> <span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span> <span class="p">[],</span>
+            <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_TILING_OPTIMAL&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span>
+            <span class="s1">&#39;VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT&#39;</span>
+        <span class="p">)</span>
+
+        <span class="n">subresource_range</span> <span class="o">=</span> <span class="n">ImageSubresourceRange</span><span class="p">(</span>
+            <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;VK_IMAGE_ASPECT_COLOR_BIT&#39;</span><span class="p">,</span>
+            <span class="n">base_miplevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">level_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">base_layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">layer_count</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="n">ImageView</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_VIEW_TYPE_2D&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">,</span> <span class="n">subresource_range</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_create_commandbuffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create the command buffers used to copy image&#39;&#39;&#39;</span>
-        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">],</span>
-                                  <span class="mi">0</span><span class="p">)</span>
+        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">commandpool</span><span class="o">.</span><span class="n">allocate_buffers</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;VK_COMMAND_BUFFER_LEVEL_PRIMARY&#39;</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">))</span>
 
-        <span class="c1"># Parameters for copy command</span>
-        <span class="n">subresource</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceLayers</span><span class="p">(</span>
-            <span class="n">aspectMask</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_ASPECT_COLOR_BIT</span><span class="p">,</span>
-            <span class="n">baseArrayLayer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">mipLevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">layerCount</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span>
-        <span class="n">extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                               <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCopy</span><span class="p">(</span>
-            <span class="n">srcSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
-            <span class="n">dstSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
-            <span class="n">srcOffset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset3D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-            <span class="n">dstOffset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset3D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-            <span class="n">extent</span><span class="o">=</span><span class="n">extent</span>
-        <span class="p">)</span>
-
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">commandbuffer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">):</span>
-            <span class="k">with</span> <span class="n">commandbuffer</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
-
-                <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
-                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_PRESENT_SRC_KHR&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
-                    <span class="p">[</span><span class="n">region</span><span class="p">]</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_MEMORY_READ_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PRESENT_SRC_KHR&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_MEMORY_READ_BIT&#39;</span>
                 <span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL&#39;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_create_final_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">usage</span> <span class="o">=</span> <span class="s1">&#39;VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT&#39;</span><span class="p">,</span> <span class="c1"># noqa</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_TYPE_2D&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;VK_SAMPLE_COUNT_1_BIT&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;VK_IMAGE_TILING_OPTIMAL&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span>
-            <span class="s1">&#39;VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT&#39;</span>
-        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_create_semaphores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create semaphores used during image swaping&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
@@ -1799,47 +1853,64 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_final_image</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_semaphores</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&#39;&#39;&#39;Display final image on screen.</span>
 
-<span class="sd">        This function makes all the rendering work.</span>
-<span class="sd">        To proceed, it copies the `final_image` into the current swapchain</span>
-<span class="sd">        image previously acquired.</span>
+<span class="sd">        This function makes all the rendering work. To proceed, it copies the</span>
+<span class="sd">        `final_image` into the current swapchain image previously acquired.</span>
+<span class="sd">        You can pass custom semaphores (and you should) to synchronize the</span>
+<span class="sd">        command.</span>
 
-<span class="sd">        **Note: The final_image layout is automatically updated.</span>
-<span class="sd">                You need to use the final image as color attachment**</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `semaphore`: A `list` of `Semaphore` to wait on</span>
+
+<span class="sd">        **Note: The `final_image` layout must be set to</span>
+<span class="sd">                VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL before calling `swap`.</span>
+<span class="sd">                `VulkContext` never update the `final_image` layout**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Acquire image</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAcquireNextImageKHR</span><span class="p">(</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">](</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">UINT64_MAX</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="o">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="n">wait_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">]</span>
+        <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
+
+        <span class="n">wait_masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">]</span>
+        <span class="n">wait_masks</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">)</span>
+
+        <span class="n">copied_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="o">.</span><span class="n">semaphore</span><span class="p">]</span>
 
         <span class="c1"># Transfer final image to swapchain image</span>
         <span class="n">submit</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSubmitInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SUBMIT_INFO</span><span class="p">,</span>
-            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">],</span>
-            <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">],</span> <span class="c1"># noqa</span>
+            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">),</span>
+            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">semaphore</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">wait_semaphores</span><span class="p">],</span>
+            <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="n">wait_masks</span><span class="p">,</span>
             <span class="n">commandBufferCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pCommandBuffers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">[</span><span class="n">index</span><span class="p">]],</span>
-            <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="p">]</span>
+            <span class="n">pCommandBuffers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">],</span>
+            <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
+            <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span>
         <span class="p">)</span>
         <span class="c1"># TODO: submit should be an array</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
-        <span class="c1"># Present swapchain image on scree</span>
+        <span class="c1"># Present swapchain image on screen</span>
         <span class="n">present</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPresentInfoKHR</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PRESENT_INFO_KHR</span><span class="p">,</span>
-            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="p">],</span>
+            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
+            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span><span class="p">,</span>
             <span class="n">swapchainCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">pSwapchains</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">],</span>
             <span class="n">pImageIndices</span><span class="o">=</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
             <span class="n">pResults</span><span class="o">=</span><span class="bp">None</span>
         <span class="p">)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueuePresentKHR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkQueuePresentKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
+
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkDeviceWaitIdle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1941,14 +2012,21 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c1"># Swapchain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c1"># Images in swapchain</span>
+        <span class="c1"># Swapchain images (vulkanobject.Image type)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c1"># Swapchain extent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c1"># Swapchain format</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Width of the window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Height of the window</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># Final image which is copied into swapchain image</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Image view of the final image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Internal semaphores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
@@ -2060,6 +2138,12 @@ swapchain's image.</p>
                   <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateInstanceLayerProperties</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available layers: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">layers</span><span class="p">)</span>
 
+        <span class="c1"># Standard validation is a meta layer containing the others</span>
+        <span class="n">standard</span> <span class="o">=</span> <span class="s1">&#39;VK_LAYER_LUNARG_standard_validation&#39;</span>
+        <span class="k">if</span> <span class="n">standard</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Selecting only </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">standard</span><span class="p">)</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">standard</span><span class="p">]</span>
+
         <span class="k">return</span> <span class="n">layers</span>
 
     <span class="nd">@staticmethod</span>
@@ -2131,7 +2215,9 @@ swapchain's image.</p>
             <span class="s1">&#39;vkGetPhysicalDeviceSurfaceFormatsKHR&#39;</span><span class="p">,</span>
             <span class="s1">&#39;vkGetPhysicalDeviceSurfacePresentModesKHR&#39;</span><span class="p">,</span>
             <span class="s1">&#39;vkCreateSwapchainKHR&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span>
+            <span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;vkQueuePresentKHR&#39;</span>
         <span class="p">}</span>
 
         <span class="n">debug_extension_functions</span> <span class="o">=</span> <span class="p">{</span>
@@ -2189,11 +2275,23 @@ swapchain's image.</p>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">configuration</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="k">return</span>
 
+        <span class="n">vulkan_debug_mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_DEBUG_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_ERROR_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_INFORMATION_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span>
+        <span class="p">}</span>
+
         <span class="k">def</span> <span class="nf">debug_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;VULKAN WARNING: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vulkan_debug_mapping</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="s2">&quot;VULKAN: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
 
         <span class="n">flags</span> <span class="o">=</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_ERROR_BIT_EXT</span> <span class="o">|</span>
-                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span><span class="p">)</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span> <span class="o">|</span>
+                 <span class="c1"># vk.VK_DEBUG_REPORT_INFORMATION_BIT_EXT |</span>
+                 <span class="c1"># vk.VK_DEBUG_REPORT_DEBUG_BIT_EXT |</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT</span><span class="p">)</span>
+
         <span class="n">debug_create_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDebugReportCallbackCreateInfoEXT</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="n">flags</span><span class="p">,</span>
@@ -2441,66 +2539,92 @@ swapchain's image.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkCreateSwapchainKHR&#39;</span><span class="p">](</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">swapchain_create</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span><span class="p">](</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span> <span class="o">=</span> <span class="n">extent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">extent</span><span class="o">.</span><span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">extent</span><span class="o">.</span><span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span> <span class="o">=</span> <span class="n">surface_format</span><span class="o">.</span><span class="n">format</span>
+
+        <span class="n">swapchain_raw_images</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkGetSwapchainImagesKHR&#39;</span><span class="p">](</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">swapchain_raw_images</span><span class="p">:</span>
+            <span class="c1"># Put swapchain image in Image</span>
+            <span class="c1"># It&#39;s a bad practice but for this specific use case, it&#39;s good</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">Image</span><span class="p">)</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">raw_image</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">surface_format</span><span class="o">.</span><span class="n">format</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+        <span class="c1"># Update layout of all swapchain images to dst transfert</span>
+        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+                <span class="n">image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span>
+                <span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Swapchain created with </span><span class="si">%s</span><span class="s2"> images&quot;</span><span class="p">,</span>
                      <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">))</span>
 
+    <span class="k">def</span> <span class="nf">_create_final_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">usage</span> <span class="o">=</span> <span class="s1">&#39;VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT&#39;</span> <span class="c1"># noqa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_TYPE_2D&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;VK_SAMPLE_COUNT_1_BIT&#39;</span><span class="p">,</span> <span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span> <span class="p">[],</span>
+            <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_TILING_OPTIMAL&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span>
+            <span class="s1">&#39;VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT&#39;</span>
+        <span class="p">)</span>
+
+        <span class="n">subresource_range</span> <span class="o">=</span> <span class="n">ImageSubresourceRange</span><span class="p">(</span>
+            <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;VK_IMAGE_ASPECT_COLOR_BIT&#39;</span><span class="p">,</span>
+            <span class="n">base_miplevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">level_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">base_layer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">layer_count</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="n">ImageView</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_VIEW_TYPE_2D&#39;</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">,</span> <span class="n">subresource_range</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_create_commandbuffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create the command buffers used to copy image&#39;&#39;&#39;</span>
-        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                                  <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">],</span>
-                                  <span class="mi">0</span><span class="p">)</span>
+        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">commandpool</span><span class="o">.</span><span class="n">allocate_buffers</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;VK_COMMAND_BUFFER_LEVEL_PRIMARY&#39;</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">))</span>
 
-        <span class="c1"># Parameters for copy command</span>
-        <span class="n">subresource</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceLayers</span><span class="p">(</span>
-            <span class="n">aspectMask</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_ASPECT_COLOR_BIT</span><span class="p">,</span>
-            <span class="n">baseArrayLayer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">mipLevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">layerCount</span><span class="o">=</span><span class="mi">1</span>
-        <span class="p">)</span>
-        <span class="n">extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                               <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCopy</span><span class="p">(</span>
-            <span class="n">srcSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
-            <span class="n">dstSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
-            <span class="n">srcOffset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset3D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-            <span class="n">dstOffset</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VkOffset3D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-            <span class="n">extent</span><span class="o">=</span><span class="n">extent</span>
-        <span class="p">)</span>
-
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">commandbuffer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">):</span>
-            <span class="k">with</span> <span class="n">commandbuffer</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
-
-                <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
-                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_PRESENT_SRC_KHR&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
-                    <span class="p">[</span><span class="n">region</span><span class="p">]</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_MEMORY_READ_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PRESENT_SRC_KHR&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_ACCESS_MEMORY_READ_BIT&#39;</span>
                 <span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                    <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL&#39;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_create_final_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">usage</span> <span class="o">=</span> <span class="s1">&#39;VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT&#39;</span><span class="p">,</span> <span class="c1"># noqa</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_TYPE_2D&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;VK_SAMPLE_COUNT_1_BIT&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span> <span class="p">[],</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;VK_IMAGE_TILING_OPTIMAL&#39;</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span>
-            <span class="s1">&#39;VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT&#39;</span>
-        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_create_semaphores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create semaphores used during image swaping&#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
@@ -2521,47 +2645,64 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_final_image</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_semaphores</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="p">[]):</span>
         <span class="sd">&#39;&#39;&#39;Display final image on screen.</span>
 
-<span class="sd">        This function makes all the rendering work.</span>
-<span class="sd">        To proceed, it copies the `final_image` into the current swapchain</span>
-<span class="sd">        image previously acquired.</span>
+<span class="sd">        This function makes all the rendering work. To proceed, it copies the</span>
+<span class="sd">        `final_image` into the current swapchain image previously acquired.</span>
+<span class="sd">        You can pass custom semaphores (and you should) to synchronize the</span>
+<span class="sd">        command.</span>
 
-<span class="sd">        **Note: The final_image layout is automatically updated.</span>
-<span class="sd">                You need to use the final image as color attachment**</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `semaphore`: A `list` of `Semaphore` to wait on</span>
+
+<span class="sd">        **Note: The `final_image` layout must be set to</span>
+<span class="sd">                VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL before calling `swap`.</span>
+<span class="sd">                `VulkContext` never update the `final_image` layout**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Acquire image</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAcquireNextImageKHR</span><span class="p">(</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">](</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">UINT64_MAX</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="o">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="n">wait_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">]</span>
+        <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
+
+        <span class="n">wait_masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">]</span>
+        <span class="n">wait_masks</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">)</span>
+
+        <span class="n">copied_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="o">.</span><span class="n">semaphore</span><span class="p">]</span>
 
         <span class="c1"># Transfer final image to swapchain image</span>
         <span class="n">submit</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSubmitInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SUBMIT_INFO</span><span class="p">,</span>
-            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">],</span>
-            <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">],</span> <span class="c1"># noqa</span>
+            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">),</span>
+            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">semaphore</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">wait_semaphores</span><span class="p">],</span>
+            <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="n">wait_masks</span><span class="p">,</span>
             <span class="n">commandBufferCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pCommandBuffers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">[</span><span class="n">index</span><span class="p">]],</span>
-            <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="p">]</span>
+            <span class="n">pCommandBuffers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">],</span>
+            <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
+            <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span>
         <span class="p">)</span>
         <span class="c1"># TODO: submit should be an array</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
-        <span class="c1"># Present swapchain image on scree</span>
+        <span class="c1"># Present swapchain image on screen</span>
         <span class="n">present</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPresentInfoKHR</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PRESENT_INFO_KHR</span><span class="p">,</span>
-            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="p">],</span>
+            <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
+            <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span><span class="p">,</span>
             <span class="n">swapchainCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">pSwapchains</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">],</span>
             <span class="n">pImageIndices</span><span class="o">=</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
             <span class="n">pResults</span><span class="o">=</span><span class="bp">None</span>
         <span class="p">)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueuePresentKHR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkQueuePresentKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
+
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkDeviceWaitIdle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2614,14 +2755,21 @@ swapchain's image.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="c1"># Swapchain</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="c1"># Images in swapchain</span>
+    <span class="c1"># Swapchain images (vulkanobject.Image type)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="c1"># Swapchain extent</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_extent</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="c1"># Swapchain format</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># Width of the window</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Height of the window</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="c1"># Final image which is copied into swapchain image</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># Image view of the final image</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># Internal semaphores</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
 </pre></div>
 
   </div>
@@ -2666,6 +2814,7 @@ swapchain's image.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_swapchain</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_final_image</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffers</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_create_semaphores</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -2676,7 +2825,7 @@ swapchain's image.</p>
             
   <div class="item">
     <div class="name def" id="vulk.context.VulkContext.swap">
-    <p>def <span class="ident">swap</span>(</p><p>self)</p>
+    <p>def <span class="ident">swap</span>(</p><p>self, semaphores=[])</p>
     </div>
     
 
@@ -2684,52 +2833,70 @@ swapchain's image.</p>
   
     <div class="desc"><p>Display final image on screen.</p>
 
-<p>This function makes all the rendering work.
-To proceed, it copies the <code>final_image</code> into the current swapchain
-image previously acquired.</p>
+<p>This function makes all the rendering work. To proceed, it copies the
+<code>final_image</code> into the current swapchain image previously acquired.
+You can pass custom semaphores (and you should) to synchronize the
+command.</p>
 
-<p><strong>Note: The final_image layout is automatically updated.
-        You need to use the final image as color attachment</strong></p>
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>semaphore</code>: A <code>list</code> of <code>Semaphore</code> to wait on</li>
+</ul>
+
+<p><strong>Note: The <code>final_image</code> layout must be set to
+        VK<em>IMAGE</em>LAYOUT<em>TRANSFER</em>SRC_OPTIMAL before calling <code>swap</code>.
+        <code>VulkContext</code> never update the <code>final_image</code> layout</strong></p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkContext.swap', this);">Show source &equiv;</a></p>
   <div id="source-vulk.context.VulkContext.swap" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&#39;&#39;&#39;Display final image on screen.</span>
-<span class="sd">    This function makes all the rendering work.</span>
-<span class="sd">    To proceed, it copies the `final_image` into the current swapchain</span>
-<span class="sd">    image previously acquired.</span>
-<span class="sd">    **Note: The final_image layout is automatically updated.</span>
-<span class="sd">            You need to use the final image as color attachment**</span>
+<span class="sd">    This function makes all the rendering work. To proceed, it copies the</span>
+<span class="sd">    `final_image` into the current swapchain image previously acquired.</span>
+<span class="sd">    You can pass custom semaphores (and you should) to synchronize the</span>
+<span class="sd">    command.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `semaphore`: A `list` of `Semaphore` to wait on</span>
+<span class="sd">    **Note: The `final_image` layout must be set to</span>
+<span class="sd">            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL before calling `swap`.</span>
+<span class="sd">            `VulkContext` never update the `final_image` layout**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Acquire image</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAcquireNextImageKHR</span><span class="p">(</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">](</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">UINT64_MAX</span><span class="p">,</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="o">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">wait_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">]</span>
+    <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
+    <span class="n">wait_masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">]</span>
+    <span class="n">wait_masks</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">)</span>
+    <span class="n">copied_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="o">.</span><span class="n">semaphore</span><span class="p">]</span>
     <span class="c1"># Transfer final image to swapchain image</span>
     <span class="n">submit</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSubmitInfo</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SUBMIT_INFO</span><span class="p">,</span>
-        <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">],</span>
-        <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">],</span> <span class="c1"># noqa</span>
+        <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">),</span>
+        <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">semaphore</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">wait_semaphores</span><span class="p">],</span>
+        <span class="n">pWaitDstStageMask</span><span class="o">=</span><span class="n">wait_masks</span><span class="p">,</span>
         <span class="n">commandBufferCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">pCommandBuffers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">[</span><span class="n">index</span><span class="p">]],</span>
-        <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="p">]</span>
+        <span class="n">pCommandBuffers</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">],</span>
+        <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
+        <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span>
     <span class="p">)</span>
     <span class="c1"># TODO: submit should be an array</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-    <span class="c1"># Present swapchain image on scree</span>
+    <span class="c1"># Present swapchain image on screen</span>
     <span class="n">present</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPresentInfoKHR</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PRESENT_INFO_KHR</span><span class="p">,</span>
-        <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="p">],</span>
+        <span class="n">waitSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
+        <span class="n">pWaitSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span><span class="p">,</span>
         <span class="n">swapchainCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">pSwapchains</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">],</span>
         <span class="n">pImageIndices</span><span class="o">=</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
         <span class="n">pResults</span><span class="o">=</span><span class="bp">None</span>
     <span class="p">)</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">vkQueuePresentKHR</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkQueuePresentKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkDeviceWaitIdle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2769,7 +2936,27 @@ image previously acquired.</p>
 
             </div>
             <div class="item">
+            <p id="vulk.context.VulkContext.final_image_view" class="name">var <span class="ident">final_image_view</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="vulk.context.VulkContext.graphic_queue" class="name">var <span class="ident">graphic_queue</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.context.VulkContext.height" class="name">var <span class="ident">height</span></p>
             
 
             
@@ -2869,16 +3056,6 @@ image previously acquired.</p>
 
             </div>
             <div class="item">
-            <p id="vulk.context.VulkContext.swapchain_extent" class="name">var <span class="ident">swapchain_extent</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
             <p id="vulk.context.VulkContext.swapchain_format" class="name">var <span class="ident">swapchain_format</span></p>
             
 
@@ -2890,6 +3067,16 @@ image previously acquired.</p>
             </div>
             <div class="item">
             <p id="vulk.context.VulkContext.swapchain_images" class="name">var <span class="ident">swapchain_images</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.context.VulkContext.width" class="name">var <span class="ident">width</span></p>
             
 
             

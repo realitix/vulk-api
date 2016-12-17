@@ -1040,6 +1040,9 @@ table {
       
   <ul>
     <li class="mono"><a href="#vulk.vulkanconstant.VK_FORMAT_SIZE">VK_FORMAT_SIZE</a></li>
+    <li class="mono"><a href="#vulk.vulkanconstant.VK_LAYOUT_NAME">VK_LAYOUT_NAME</a></li>
+    <li class="mono"><a href="#vulk.vulkanconstant.fn">fn</a></li>
+    <li class="mono"><a href="#vulk.vulkanconstant.name">name</a></li>
   </ul>
 
     </li>
@@ -1272,11 +1275,19 @@ table {
     <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BEGIN_RANGE</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_END_RANGE</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_RANGE_SIZE</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_MAX_ENUM</span><span class="p">:</span> <span class="mi">0</span>
 <span class="p">}</span>
+
+
+<span class="c1"># Mapping between layout value and its name</span>
+<span class="n">VK_LAYOUT_NAME</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span>
+    <span class="s1">&#39;UNDEFINED&#39;</span><span class="p">,</span> <span class="s1">&#39;GENERAL&#39;</span><span class="p">,</span> <span class="s1">&#39;COLOR_ATTACHMENT_OPTIMAL&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;DEPTH_STENCIL_ATTACHMENT_OPTIMAL&#39;</span><span class="p">,</span> <span class="s1">&#39;DEPTH_STENCIL_READ_ONLY_OPTIMAL&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">,</span> <span class="s1">&#39;TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span> <span class="s1">&#39;PREINITIALIZED&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESENT_SRC_KHR&#39;</span>
+<span class="p">):</span>
+    <span class="n">fn</span> <span class="o">=</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">name</span>
+    <span class="n">VK_LAYOUT_NAME</span><span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">vk</span><span class="p">,</span> <span class="n">fn</span><span class="p">)]</span> <span class="o">=</span> <span class="n">fn</span>
 </pre></div>
 
   </div>
@@ -1287,6 +1298,30 @@ table {
     <h2 class="section-title" id="header-variables">Module variables</h2>
       <div class="item">
       <p id="vulk.vulkanconstant.VK_FORMAT_SIZE" class="name">var <span class="ident">VK_FORMAT_SIZE</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
+      <p id="vulk.vulkanconstant.VK_LAYOUT_NAME" class="name">var <span class="ident">VK_LAYOUT_NAME</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
+      <p id="vulk.vulkanconstant.fn" class="name">var <span class="ident">fn</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
+      <p id="vulk.vulkanconstant.name" class="name">var <span class="ident">name</span></p>
       
   
   <div class="source_cont">
