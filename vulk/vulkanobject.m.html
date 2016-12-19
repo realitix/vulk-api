@@ -1336,7 +1336,7 @@ module.</p>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>
+<span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>  <span class="c1"># pylint: disable=import-error</span>
 
 <span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanconstant</span>
@@ -2056,7 +2056,7 @@ module.</p>
 <span class="sd">    `Image` is a wrapper around a `VkImage` and a `VkMemory`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
                  <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
                  <span class="n">layout</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a new image</span>
@@ -2071,7 +2071,7 @@ module.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
-<span class="sd">        - `format`: `VkFormat` of the image</span>
+<span class="sd">        - `image_format`: `VkFormat` of the image</span>
 <span class="sd">        - `width`: Image width</span>
 <span class="sd">        - `heigth`: Image height</span>
 <span class="sd">        - `depth`: Image depth</span>
@@ -2091,7 +2091,7 @@ module.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
 
         <span class="c1"># Create the VkImage</span>
@@ -2264,7 +2264,7 @@ module.</p>
 <span class="sd">    the image have the same properties.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
                  <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
                  <span class="n">queue_families</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a high performance image</span>
@@ -2273,7 +2273,7 @@ module.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
-<span class="sd">        - `format`: `VkFormat` of the image</span>
+<span class="sd">        - `image_format`: `VkFormat` of the image</span>
 <span class="sd">        - `width`: Image width</span>
 <span class="sd">        - `heigth`: Image height</span>
 <span class="sd">        - `depth`: Image depth</span>
@@ -2287,14 +2287,14 @@ module.</p>
 <span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span>
@@ -2315,14 +2315,24 @@ module.</p>
         <span class="c1"># Transition the staging image to optimal source transfert layout</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span>
+            <span class="p">)</span>
 
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
+            <span class="p">)</span>
 
         <span class="c1"># Copy staging image into final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
@@ -2331,13 +2341,24 @@ module.</p>
         <span class="c1"># Set the best layout for the final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_SHADER_READ_BIT</span>
+            <span class="p">)</span>
 
         <span class="c1"># Set back the layout of staging image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
+            <span class="p">)</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -2385,8 +2406,8 @@ module.</p>
 <span class="sd">    texture without any mipmapping levels.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">view_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">subresource_range</span><span class="p">,</span>
-                 <span class="n">swizzle_r</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">view_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span>
+                 <span class="n">subresource_range</span><span class="p">,</span> <span class="n">swizzle_r</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
                  <span class="n">swizzle_g</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
                  <span class="n">swizzle_b</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
                  <span class="n">swizzle_a</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">):</span>
@@ -2397,7 +2418,7 @@ module.</p>
 <span class="sd">        - `context`: The `VulkContext`</span>
 <span class="sd">        - `image`: The `Image` to work on</span>
 <span class="sd">        - `view_type`: `VkImageViewType` Vulkan constant</span>
-<span class="sd">        - `format`: `VkFormat` Vulkan constant</span>
+<span class="sd">        - `image_format`: `VkFormat` Vulkan constant</span>
 <span class="sd">        - `subresource_range`: The `ImageSubresourceRange` to use</span>
 <span class="sd">        - `swizzle_r`: Swizzle of the red color channel</span>
 <span class="sd">        - `swizzle_g`: Swizzle of the green color channel</span>
@@ -2422,7 +2443,7 @@ module.</p>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
             <span class="n">viewType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">view_type</span><span class="p">),</span>
-            <span class="n">format</span><span class="o">=</span><span class="n">format</span><span class="p">,</span>
+            <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">),</span>
             <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">,</span>
             <span class="n">subresourceRange</span><span class="o">=</span><span class="n">vk_subresource_range</span>
         <span class="p">)</span>
@@ -2584,7 +2605,7 @@ module.</p>
 <span class="k">class</span> <span class="nc">ClearColorValue</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;ClearValue for color clearing&#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">float32</span><span class="o">=</span><span class="p">[],</span> <span class="n">uint32</span><span class="o">=</span><span class="p">[],</span> <span class="n">int32</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">float32</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">uint32</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">int32</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Take only one value depending on the type you want.</span>
 <span class="sd">        `list` must be of size 4.</span>
@@ -2596,11 +2617,18 @@ module.</p>
 <span class="sd">        - `int32`: Type `int`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">uint32</span><span class="p">,</span> <span class="n">int32</span><span class="p">)</span>
+
+        <span class="c1"># Set to list</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">v</span>
+
+        <span class="c1"># Check that only one value is set</span>
         <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">t</span> <span class="k">if</span> <span class="n">i</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Only one value in [float32, uint32, int32] must be given&quot;</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
+        <span class="c1"># Check size of value (must be 4)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">t</span> <span class="k">if</span> <span class="n">t</span><span class="p">])))</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Value must be a list of 4 elements&quot;</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -3455,7 +3483,7 @@ else we return it as is</p>
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ClearColorValue</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;ClearValue for color clearing&#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">float32</span><span class="o">=</span><span class="p">[],</span> <span class="n">uint32</span><span class="o">=</span><span class="p">[],</span> <span class="n">int32</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">float32</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">uint32</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">int32</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Take only one value depending on the type you want.</span>
 <span class="sd">        `list` must be of size 4.</span>
@@ -3467,11 +3495,18 @@ else we return it as is</p>
 <span class="sd">        - `int32`: Type `int`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">uint32</span><span class="p">,</span> <span class="n">int32</span><span class="p">)</span>
+
+        <span class="c1"># Set to list</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">v</span>
+
+        <span class="c1"># Check that only one value is set</span>
         <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">t</span> <span class="k">if</span> <span class="n">i</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Only one value in [float32, uint32, int32] must be given&quot;</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
+        <span class="c1"># Check size of value (must be 4)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">t</span> <span class="k">if</span> <span class="n">t</span><span class="p">])))</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Value must be a list of 4 elements&quot;</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -3501,7 +3536,7 @@ else we return it as is</p>
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.ClearColorValue.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, float32=[], uint32=[], int32=[])</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, float32=None, uint32=None, int32=None)</p>
     </div>
     
 
@@ -3521,7 +3556,7 @@ else we return it as is</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ClearColorValue.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.ClearColorValue.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">float32</span><span class="o">=</span><span class="p">[],</span> <span class="n">uint32</span><span class="o">=</span><span class="p">[],</span> <span class="n">int32</span><span class="o">=</span><span class="p">[]):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">float32</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">uint32</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">int32</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Take only one value depending on the type you want.</span>
 <span class="sd">    `list` must be of size 4.</span>
@@ -3531,10 +3566,15 @@ else we return it as is</p>
 <span class="sd">    - `int32`: Type `int`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">float32</span><span class="p">,</span> <span class="n">uint32</span><span class="p">,</span> <span class="n">int32</span><span class="p">)</span>
+    <span class="c1"># Set to list</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">v</span>
+    <span class="c1"># Check that only one value is set</span>
     <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">t</span> <span class="k">if</span> <span class="n">i</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Only one value in [float32, uint32, int32] must be given&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="c1"># Check size of value (must be 4)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">t</span> <span class="k">if</span> <span class="n">t</span><span class="p">])))</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Value must be a list of 4 elements&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -4945,7 +4985,7 @@ the image have the same properties.</p>
 <span class="sd">    the image have the same properties.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
                  <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
                  <span class="n">queue_families</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a high performance image</span>
@@ -4954,7 +4994,7 @@ the image have the same properties.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
-<span class="sd">        - `format`: `VkFormat` of the image</span>
+<span class="sd">        - `image_format`: `VkFormat` of the image</span>
 <span class="sd">        - `width`: Image width</span>
 <span class="sd">        - `heigth`: Image height</span>
 <span class="sd">        - `depth`: Image depth</span>
@@ -4968,14 +5008,14 @@ the image have the same properties.</p>
 <span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span>
@@ -4996,14 +5036,24 @@ the image have the same properties.</p>
         <span class="c1"># Transition the staging image to optimal source transfert layout</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span>
+            <span class="p">)</span>
 
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span>
+            <span class="p">)</span>
 
         <span class="c1"># Copy staging image into final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
@@ -5012,13 +5062,24 @@ the image have the same properties.</p>
         <span class="c1"># Set the best layout for the final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_WRITE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_SHADER_READ_BIT</span>
+            <span class="p">)</span>
 
         <span class="c1"># Set back the layout of staging image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;VK_IMAGE_LAYOUT_PREINITIALIZED&#39;</span><span class="p">)</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span><span class="p">,</span>
+                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
+            <span class="p">)</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -5052,7 +5113,7 @@ the image have the same properties.</p>
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.HighPerformanceImage.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, format, width, height, depth, mip_level, layers, samples, sharing_mode, queue_families)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, image_format, width, height, depth, mip_level, layers, samples, sharing_mode, queue_families)</p>
     </div>
     
 
@@ -5065,7 +5126,7 @@ the image have the same properties.</p>
 <ul>
 <li><code>context</code>: <code>VulkContext</code></li>
 <li><code>image_type</code>: Type of image 1D/2D/3D (<code>VkImageType</code>)</li>
-<li><code>format</code>: <code>VkFormat</code> of the image</li>
+<li><code>image_format</code>: <code>VkFormat</code> of the image</li>
 <li><code>width</code>: Image width</li>
 <li><code>heigth</code>: Image height</li>
 <li><code>depth</code>: Image depth</li>
@@ -5082,14 +5143,14 @@ the image have the same properties.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceImage.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.HighPerformanceImage.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
              <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
              <span class="n">queue_families</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Create a high performance image</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
 <span class="sd">    - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
-<span class="sd">    - `format`: `VkFormat` of the image</span>
+<span class="sd">    - `image_format`: `VkFormat` of the image</span>
 <span class="sd">    - `width`: Image width</span>
 <span class="sd">    - `heigth`: Image height</span>
 <span class="sd">    - `depth`: Image depth</span>
@@ -5103,14 +5164,14 @@ the image have the same properties.</p>
 <span class="sd">                        `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
         <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_LINEAR</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
         <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_SAMPLED_BIT</span><span class="p">,</span>
@@ -5204,7 +5265,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 <span class="sd">    `Image` is a wrapper around a `VkImage` and a `VkMemory`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
                  <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
                  <span class="n">layout</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a new image</span>
@@ -5219,7 +5280,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
-<span class="sd">        - `format`: `VkFormat` of the image</span>
+<span class="sd">        - `image_format`: `VkFormat` of the image</span>
 <span class="sd">        - `width`: Image width</span>
 <span class="sd">        - `heigth`: Image height</span>
 <span class="sd">        - `depth`: Image depth</span>
@@ -5239,7 +5300,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
 
         <span class="c1"># Create the VkImage</span>
@@ -5413,7 +5474,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.Image.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, format, width, height, depth, mip_level, layers, samples, sharing_mode, queue_families, layout, tiling, usage, memory_properties)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, image_format, width, height, depth, mip_level, layers, samples, sharing_mode, queue_families, layout, tiling, usage, memory_properties)</p>
     </div>
     
 
@@ -5434,7 +5495,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 <ul>
 <li><code>context</code>: <code>VulkContext</code></li>
 <li><code>image_type</code>: Type of image 1D/2D/3D (<code>VkImageType</code>)</li>
-<li><code>format</code>: <code>VkFormat</code> of the image</li>
+<li><code>image_format</code>: <code>VkFormat</code> of the image</li>
 <li><code>width</code>: Image width</li>
 <li><code>heigth</code>: Image height</li>
 <li><code>depth</code>: Image depth</li>
@@ -5455,7 +5516,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.Image.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
              <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
              <span class="n">layout</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Create a new image</span>
@@ -5466,7 +5527,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
 <span class="sd">    - `image_type`: Type of image 1D/2D/3D (`VkImageType`)</span>
-<span class="sd">    - `format`: `VkFormat` of the image</span>
+<span class="sd">    - `image_format`: `VkFormat` of the image</span>
 <span class="sd">    - `width`: Image width</span>
 <span class="sd">    - `heigth`: Image height</span>
 <span class="sd">    - `depth`: Image depth</span>
@@ -5486,7 +5547,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">format</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
     <span class="c1"># Create the VkImage</span>
     <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
@@ -5919,8 +5980,8 @@ texture without any mipmapping levels.</p>
 <span class="sd">    texture without any mipmapping levels.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">view_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">subresource_range</span><span class="p">,</span>
-                 <span class="n">swizzle_r</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">view_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span>
+                 <span class="n">subresource_range</span><span class="p">,</span> <span class="n">swizzle_r</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
                  <span class="n">swizzle_g</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
                  <span class="n">swizzle_b</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
                  <span class="n">swizzle_a</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">):</span>
@@ -5931,7 +5992,7 @@ texture without any mipmapping levels.</p>
 <span class="sd">        - `context`: The `VulkContext`</span>
 <span class="sd">        - `image`: The `Image` to work on</span>
 <span class="sd">        - `view_type`: `VkImageViewType` Vulkan constant</span>
-<span class="sd">        - `format`: `VkFormat` Vulkan constant</span>
+<span class="sd">        - `image_format`: `VkFormat` Vulkan constant</span>
 <span class="sd">        - `subresource_range`: The `ImageSubresourceRange` to use</span>
 <span class="sd">        - `swizzle_r`: Swizzle of the red color channel</span>
 <span class="sd">        - `swizzle_g`: Swizzle of the green color channel</span>
@@ -5956,7 +6017,7 @@ texture without any mipmapping levels.</p>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
             <span class="n">viewType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">view_type</span><span class="p">),</span>
-            <span class="n">format</span><span class="o">=</span><span class="n">format</span><span class="p">,</span>
+            <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">),</span>
             <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">,</span>
             <span class="n">subresourceRange</span><span class="o">=</span><span class="n">vk_subresource_range</span>
         <span class="p">)</span>
@@ -5978,7 +6039,7 @@ texture without any mipmapping levels.</p>
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.ImageView.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, image, view_type, format, subresource_range, swizzle_r=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;, swizzle_g=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;, swizzle_b=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;, swizzle_a=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, image, view_type, image_format, subresource_range, swizzle_r=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;, swizzle_g=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;, swizzle_b=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;, swizzle_a=&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;)</p>
     </div>
     
 
@@ -5992,7 +6053,7 @@ texture without any mipmapping levels.</p>
 <li><code>context</code>: The <code>VulkContext</code></li>
 <li><code>image</code>: The <code>Image</code> to work on</li>
 <li><code>view_type</code>: <code>VkImageViewType</code> Vulkan constant</li>
-<li><code>format</code>: <code>VkFormat</code> Vulkan constant</li>
+<li><code>image_format</code>: <code>VkFormat</code> Vulkan constant</li>
 <li><code>subresource_range</code>: The <code>ImageSubresourceRange</code> to use</li>
 <li><code>swizzle_r</code>: Swizzle of the red color channel</li>
 <li><code>swizzle_g</code>: Swizzle of the green color channel</li>
@@ -6003,8 +6064,8 @@ texture without any mipmapping levels.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ImageView.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.ImageView.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">view_type</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">subresource_range</span><span class="p">,</span>
-             <span class="n">swizzle_r</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">view_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span>
+             <span class="n">subresource_range</span><span class="p">,</span> <span class="n">swizzle_r</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
              <span class="n">swizzle_g</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
              <span class="n">swizzle_b</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">,</span>
              <span class="n">swizzle_a</span><span class="o">=</span><span class="s1">&#39;VK_COMPONENT_SWIZZLE_IDENTITY&#39;</span><span class="p">):</span>
@@ -6013,7 +6074,7 @@ texture without any mipmapping levels.</p>
 <span class="sd">    - `context`: The `VulkContext`</span>
 <span class="sd">    - `image`: The `Image` to work on</span>
 <span class="sd">    - `view_type`: `VkImageViewType` Vulkan constant</span>
-<span class="sd">    - `format`: `VkFormat` Vulkan constant</span>
+<span class="sd">    - `image_format`: `VkFormat` Vulkan constant</span>
 <span class="sd">    - `subresource_range`: The `ImageSubresourceRange` to use</span>
 <span class="sd">    - `swizzle_r`: Swizzle of the red color channel</span>
 <span class="sd">    - `swizzle_g`: Swizzle of the green color channel</span>
@@ -6036,7 +6097,7 @@ texture without any mipmapping levels.</p>
         <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
         <span class="n">viewType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">view_type</span><span class="p">),</span>
-        <span class="n">format</span><span class="o">=</span><span class="n">format</span><span class="p">,</span>
+        <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">),</span>
         <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">,</span>
         <span class="n">subresourceRange</span><span class="o">=</span><span class="n">vk_subresource_range</span>
     <span class="p">)</span>

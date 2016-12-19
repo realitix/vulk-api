@@ -1241,9 +1241,9 @@ table {
     <span class="k">def</span> <span class="nf">to_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idt</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M03</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">x</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M13</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">y</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M23</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">13</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">23</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">z</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 
@@ -1253,7 +1253,7 @@ table {
         <span class="n">mb</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span>
 
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">viewkeys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">k0</span> <span class="o">=</span> <span class="n">key</span> <span class="o">//</span> <span class="mi">10</span>
             <span class="n">k1</span> <span class="o">=</span> <span class="n">key</span> <span class="o">%</span> <span class="mi">10</span>
             <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ma</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="n">k0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">mb</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="n">k1</span><span class="p">]]</span> <span class="o">+</span>
@@ -1679,9 +1679,9 @@ and column 1.</p>
     <span class="k">def</span> <span class="nf">to_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idt</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M03</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">x</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M13</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">y</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M23</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">13</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">23</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">z</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 
@@ -1691,7 +1691,7 @@ and column 1.</p>
         <span class="n">mb</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span>
 
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">viewkeys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">k0</span> <span class="o">=</span> <span class="n">key</span> <span class="o">//</span> <span class="mi">10</span>
             <span class="n">k1</span> <span class="o">=</span> <span class="n">key</span> <span class="o">%</span> <span class="mi">10</span>
             <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ma</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="n">k0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">mb</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="n">k1</span><span class="p">]]</span> <span class="o">+</span>
@@ -1823,7 +1823,7 @@ and column 1.</p>
     <span class="n">ma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span>
     <span class="n">mb</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">viewkeys</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">k0</span> <span class="o">=</span> <span class="n">key</span> <span class="o">//</span> <span class="mi">10</span>
         <span class="n">k1</span> <span class="o">=</span> <span class="n">key</span> <span class="o">%</span> <span class="mi">10</span>
         <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ma</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="n">k0</span><span class="p">]]</span> <span class="o">*</span> <span class="n">mb</span><span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="n">k1</span><span class="p">]]</span> <span class="o">+</span>
@@ -1971,9 +1971,9 @@ and column 1.</p>
   <div id="source-vulk.math.matrix.Matrix4.to_translation" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">idt</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M03</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">x</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M13</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">y</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M23</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">z</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">13</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">23</span><span class="p">]]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">z</span>
     <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 

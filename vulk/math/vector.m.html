@@ -1046,6 +1046,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.vector.Vector.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector.add">add</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector.dot">dot</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector.nor">nor</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector.set">set</a></li>
@@ -1059,6 +1060,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.vector.Vector2.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector2.add">add</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector2.dot">dot</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector2.nor">nor</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector2.set">set</a></li>
@@ -1072,6 +1074,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.vector.Vector3.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector3.add">add</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector3.crs">crs</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector3.dot">dot</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector3.nor">nor</a></li>
@@ -1230,6 +1233,9 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="bp">self</span>
 
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sub__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
@@ -1305,15 +1311,15 @@ table {
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M30</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M31</span><span class="p">]</span> <span class="o">+</span>
-                 <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M32</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M33</span><span class="p">])</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">30</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">31</span><span class="p">]]</span> <span class="o">+</span>
+                 <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">32</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">33</span><span class="p">]])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M00</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M01</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M02</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M03</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M10</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M11</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M12</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M13</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M20</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M21</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M22</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M23</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span>
+                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">10</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">11</span><span class="p">]]</span> <span class="o">+</span>
+                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">12</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">13</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">20</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">21</span><span class="p">]]</span> <span class="o">+</span>
+                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">22</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">23</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 
@@ -1454,6 +1460,9 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">return</span> <span class="bp">self</span>
 
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sub__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </pre></div>
@@ -1485,6 +1494,27 @@ table {
   <div id="source-vulk.math.vector.Vector.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector.add">
+    <p>def <span class="ident">add</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.add', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector.add" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1726,6 +1756,27 @@ table {
   
             
   <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector2.add">
+    <p>def <span class="ident">add</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.add', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector2.add" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.math.vector.Vector2.dot">
     <p>def <span class="ident">dot</span>(</p><p>self, value)</p>
     </div>
@@ -1927,15 +1978,15 @@ table {
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M30</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M31</span><span class="p">]</span> <span class="o">+</span>
-                 <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M32</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M33</span><span class="p">])</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">30</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">31</span><span class="p">]]</span> <span class="o">+</span>
+                 <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">32</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">33</span><span class="p">]])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M00</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M01</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M02</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M03</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M10</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M11</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M12</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M13</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M20</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M21</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M22</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M23</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span>
+                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">10</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">11</span><span class="p">]]</span> <span class="o">+</span>
+                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">12</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">13</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">20</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">21</span><span class="p">]]</span> <span class="o">+</span>
+                  <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">22</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">23</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
 
         <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
@@ -2014,6 +2065,27 @@ table {
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector3 needs 3 components&quot;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector3.add">
+    <p>def <span class="ident">add</span>(</p><p>self, value)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.add', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector3.add" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2127,14 +2199,14 @@ project/unproject vectors via a perspective projection matrix.</p>
     <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
     <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
     <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M30</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M31</span><span class="p">]</span> <span class="o">+</span>
-             <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M32</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M33</span><span class="p">])</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M00</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M01</span><span class="p">]</span> <span class="o">+</span>
-              <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M02</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M03</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M10</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M11</span><span class="p">]</span> <span class="o">+</span>
-              <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M12</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M13</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M20</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M21</span><span class="p">]</span> <span class="o">+</span>
-              <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M22</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M23</span><span class="p">])</span> <span class="o">*</span> <span class="n">w</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">30</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">31</span><span class="p">]]</span> <span class="o">+</span>
+             <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">32</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">33</span><span class="p">]])</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span>
+              <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">10</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">11</span><span class="p">]]</span> <span class="o">+</span>
+              <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">12</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">13</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">20</span><span class="p">]]</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">21</span><span class="p">]]</span> <span class="o">+</span>
+              <span class="n">z</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">22</span><span class="p">]]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">Matrix4</span><span class="o">.</span><span class="n">M</span><span class="p">[</span><span class="mi">23</span><span class="p">]])</span> <span class="o">*</span> <span class="n">w</span>
     <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
@@ -2190,10 +2262,6 @@ project/unproject vectors via a perspective projection matrix.</p>
             <div class="item">
             <p id="vulk.math.vector.Vector3.coordinates" class="name">var <span class="ident">coordinates</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#vulk.math.vector.Vector">Vector</a></code>.<code><a href="#vulk.math.vector.Vector.coordinates">coordinates</a></code>
-    </p>
 
             
   
@@ -2204,6 +2272,10 @@ project/unproject vectors via a perspective projection matrix.</p>
             <div class="item">
             <p id="vulk.math.vector.Vector3.size" class="name">var <span class="ident">size</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.math.vector.Vector">Vector</a></code>.<code><a href="#vulk.math.vector.Vector.size">size</a></code>
+    </p>
 
             
   

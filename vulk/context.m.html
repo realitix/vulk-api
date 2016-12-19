@@ -1128,7 +1128,7 @@ swapchain's image.</p>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sdl2</span>
 <span class="kn">import</span> <span class="nn">sdl2.ext</span>
-<span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>
+<span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>  <span class="c1"># pylint: disable=import-error</span>
 
 <span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span>
 <span class="kn">from</span> <span class="nn">vulk.vulkanobject</span> <span class="kn">import</span> <span class="n">CommandPool</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageView</span><span class="p">,</span> \
@@ -1181,8 +1181,8 @@ swapchain's image.</p>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SDL2 window opened with configuration: </span><span class="si">%s</span><span class="s2">&quot;</span>
-                     <span class="o">%</span> <span class="p">(</span><span class="n">configuration</span><span class="p">,))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SDL2 window opened with configuration: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                     <span class="p">(</span><span class="n">configuration</span><span class="p">,))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_SysWMinfo</span><span class="p">()</span>
         <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_VERSION</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
@@ -1235,6 +1235,8 @@ swapchain's image.</p>
         <span class="c1"># Internal semaphores</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Command buffers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
@@ -1254,7 +1256,7 @@ swapchain's image.</p>
         <span class="n">available_extensions</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">e</span><span class="o">.</span><span class="n">extensionName</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateInstanceExtensionProperties</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available instance extensions: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available instance extensions: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="n">available_extensions</span><span class="p">)</span>
 
         <span class="c1"># Compute needed extensions</span>
@@ -1310,7 +1312,7 @@ swapchain's image.</p>
         <span class="n">available_extensions</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">e</span><span class="o">.</span><span class="n">extensionName</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateDeviceExtensionProperties</span><span class="p">(</span>
                 <span class="n">physical_device</span><span class="p">,</span> <span class="bp">None</span><span class="p">)]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available device extensions: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">available_extensions</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available device extensions: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">available_extensions</span><span class="p">)</span>
 
         <span class="c1"># Select extensions</span>
         <span class="n">enabled_extensions</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1344,12 +1346,12 @@ swapchain's image.</p>
 
         <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">layerName</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span>
                   <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateInstanceLayerProperties</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available layers: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">layers</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available layers: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">layers</span><span class="p">)</span>
 
         <span class="c1"># Standard validation is a meta layer containing the others</span>
         <span class="n">standard</span> <span class="o">=</span> <span class="s1">&#39;VK_LAYER_LUNARG_standard_validation&#39;</span>
         <span class="k">if</span> <span class="n">standard</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Selecting only </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">standard</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Selecting only </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">standard</span><span class="p">)</span>
             <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">standard</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">layers</span>
@@ -1492,7 +1494,7 @@ swapchain's image.</p>
         <span class="p">}</span>
 
         <span class="k">def</span> <span class="nf">debug_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vulkan_debug_mapping</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="s2">&quot;VULKAN: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vulkan_debug_mapping</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="s2">&quot;VULKAN: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
 
         <span class="n">flags</span> <span class="o">=</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_ERROR_BIT_EXT</span> <span class="o">|</span>
                  <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span> <span class="o">|</span>
@@ -1588,7 +1590,7 @@ swapchain's image.</p>
         <span class="n">properties</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceProperties</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
                       <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">physical_devices</span><span class="p">]</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available physical devices: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available physical devices: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">deviceName</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">])</span>
 
         <span class="c1"># Select best physical device based on properties ans features</span>
@@ -1626,8 +1628,8 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">selected_index</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_features</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">selected_index</span><span class="p">]</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> device selected&quot;</span>
-                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span><span class="o">.</span><span class="n">deviceName</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> device selected&quot;</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span><span class="o">.</span><span class="n">deviceName</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan logical device</span>
@@ -1855,7 +1857,7 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffers</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_semaphores</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Display final image on screen.</span>
 
 <span class="sd">        This function makes all the rendering work. To proceed, it copies the</span>
@@ -1877,7 +1879,8 @@ swapchain's image.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="o">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="n">wait_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">]</span>
-        <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">semaphores</span><span class="p">:</span>
+            <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
 
         <span class="n">wait_masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">]</span>
         <span class="n">wait_masks</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">)</span>
@@ -2027,6 +2030,8 @@ swapchain's image.</p>
         <span class="c1"># Internal semaphores</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Command buffers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_instance_extensions</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
@@ -2046,7 +2051,7 @@ swapchain's image.</p>
         <span class="n">available_extensions</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">e</span><span class="o">.</span><span class="n">extensionName</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateInstanceExtensionProperties</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available instance extensions: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available instance extensions: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="n">available_extensions</span><span class="p">)</span>
 
         <span class="c1"># Compute needed extensions</span>
@@ -2102,7 +2107,7 @@ swapchain's image.</p>
         <span class="n">available_extensions</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">e</span><span class="o">.</span><span class="n">extensionName</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateDeviceExtensionProperties</span><span class="p">(</span>
                 <span class="n">physical_device</span><span class="p">,</span> <span class="bp">None</span><span class="p">)]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available device extensions: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">available_extensions</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available device extensions: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">available_extensions</span><span class="p">)</span>
 
         <span class="c1"># Select extensions</span>
         <span class="n">enabled_extensions</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2136,12 +2141,12 @@ swapchain's image.</p>
 
         <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">layerName</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span>
                   <span class="n">vk</span><span class="o">.</span><span class="n">vkEnumerateInstanceLayerProperties</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available layers: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">layers</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available layers: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">layers</span><span class="p">)</span>
 
         <span class="c1"># Standard validation is a meta layer containing the others</span>
         <span class="n">standard</span> <span class="o">=</span> <span class="s1">&#39;VK_LAYER_LUNARG_standard_validation&#39;</span>
         <span class="k">if</span> <span class="n">standard</span> <span class="ow">in</span> <span class="n">layers</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Selecting only </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">standard</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Selecting only </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">standard</span><span class="p">)</span>
             <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">standard</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">layers</span>
@@ -2284,7 +2289,7 @@ swapchain's image.</p>
         <span class="p">}</span>
 
         <span class="k">def</span> <span class="nf">debug_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vulkan_debug_mapping</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="s2">&quot;VULKAN: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">vulkan_debug_mapping</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="s2">&quot;VULKAN: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
 
         <span class="n">flags</span> <span class="o">=</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_ERROR_BIT_EXT</span> <span class="o">|</span>
                  <span class="n">vk</span><span class="o">.</span><span class="n">VK_DEBUG_REPORT_WARNING_BIT_EXT</span> <span class="o">|</span>
@@ -2380,7 +2385,7 @@ swapchain's image.</p>
         <span class="n">properties</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceProperties</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
                       <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">physical_devices</span><span class="p">]</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available physical devices: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Available physical devices: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">deviceName</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">])</span>
 
         <span class="c1"># Select best physical device based on properties ans features</span>
@@ -2418,8 +2423,8 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">selected_index</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_features</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">selected_index</span><span class="p">]</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> device selected&quot;</span>
-                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span><span class="o">.</span><span class="n">deviceName</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> device selected&quot;</span><span class="p">,</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">physical_device_properties</span><span class="o">.</span><span class="n">deviceName</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan logical device</span>
@@ -2647,7 +2652,7 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffers</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_semaphores</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Display final image on screen.</span>
 
 <span class="sd">        This function makes all the rendering work. To proceed, it copies the</span>
@@ -2669,7 +2674,8 @@ swapchain's image.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="o">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="n">wait_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">]</span>
-        <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">semaphores</span><span class="p">:</span>
+            <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
 
         <span class="n">wait_masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">]</span>
         <span class="n">wait_masks</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">)</span>
@@ -2770,6 +2776,8 @@ swapchain's image.</p>
     <span class="c1"># Internal semaphores</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># Command buffers</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="bp">None</span>
 </pre></div>
 
   </div>
@@ -2825,7 +2833,7 @@ swapchain's image.</p>
             
   <div class="item">
     <div class="name def" id="vulk.context.VulkContext.swap">
-    <p>def <span class="ident">swap</span>(</p><p>self, semaphores=[])</p>
+    <p>def <span class="ident">swap</span>(</p><p>self, semaphores=None)</p>
     </div>
     
 
@@ -2851,7 +2859,7 @@ command.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkContext.swap', this);">Show source &equiv;</a></p>
   <div id="source-vulk.context.VulkContext.swap" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="p">[]):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Display final image on screen.</span>
 <span class="sd">    This function makes all the rendering work. To proceed, it copies the</span>
 <span class="sd">    `final_image` into the current swapchain image previously acquired.</span>
@@ -2868,7 +2876,8 @@ command.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">UINT64_MAX</span><span class="p">,</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="o">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
     <span class="n">wait_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span><span class="p">]</span>
-    <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">semaphores</span><span class="p">:</span>
+        <span class="n">wait_semaphores</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
     <span class="n">wait_masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT</span><span class="p">]</span>
     <span class="n">wait_masks</span> <span class="o">*=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wait_semaphores</span><span class="p">)</span>
     <span class="n">copied_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span><span class="o">.</span><span class="n">semaphore</span><span class="p">]</span>
@@ -2905,6 +2914,16 @@ command.</p>
   </div>
   
           <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.context.VulkContext.commandbuffers" class="name">var <span class="ident">commandbuffers</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
             <div class="item">
             <p id="vulk.context.VulkContext.debug_callback" class="name">var <span class="ident">debug_callback</span></p>
             
@@ -3134,8 +3153,8 @@ command.</p>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SDL2 window opened with configuration: </span><span class="si">%s</span><span class="s2">&quot;</span>
-                     <span class="o">%</span> <span class="p">(</span><span class="n">configuration</span><span class="p">,))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SDL2 window opened with configuration: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                     <span class="p">(</span><span class="n">configuration</span><span class="p">,))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_SysWMinfo</span><span class="p">()</span>
         <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_VERSION</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
@@ -3253,8 +3272,8 @@ command.</p>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t open window: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SDL2 window opened with configuration: </span><span class="si">%s</span><span class="s2">&quot;</span>
-                 <span class="o">%</span> <span class="p">(</span><span class="n">configuration</span><span class="p">,))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;SDL2 window opened with configuration: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="p">(</span><span class="n">configuration</span><span class="p">,))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_SysWMinfo</span><span class="p">()</span>
     <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_VERSION</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
     <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetWindowWMInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">))</span>

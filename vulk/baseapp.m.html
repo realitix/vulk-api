@@ -1097,6 +1097,7 @@ table {
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Vulk&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">640</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">480</span><span class="p">,</span>
                  <span class="n">fullscreen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">decorated</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                  <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=W0612,W0613</span>
         <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -1121,6 +1122,8 @@ table {
 
         <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">def</span> <span class="nf">_init_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
@@ -1150,7 +1153,6 @@ table {
         <span class="sd">&#39;&#39;&#39;Clean Vulkan resource&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Start the game loop&#39;&#39;&#39;</span>
@@ -1212,6 +1214,7 @@ cycle of the program.</p>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Vulk&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">640</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">480</span><span class="p">,</span>
                  <span class="n">fullscreen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">decorated</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
                  <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=W0612,W0613</span>
         <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -1236,6 +1239,8 @@ cycle of the program.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">def</span> <span class="nf">_init_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
@@ -1265,7 +1270,6 @@ cycle of the program.</p>
         <span class="sd">&#39;&#39;&#39;Clean Vulkan resource&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Start the game loop&#39;&#39;&#39;</span>
@@ -1344,6 +1348,7 @@ cycle of the program.</p>
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Vulk&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">640</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">480</span><span class="p">,</span>
              <span class="n">fullscreen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">decorated</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
              <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="c1"># pylint: disable=W0612,W0613</span>
     <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `name`: Name of the application</span>
@@ -1364,6 +1369,8 @@ cycle of the program.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AppConfiguration&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
 </pre></div>
 
   </div>
@@ -1496,7 +1503,27 @@ cycle of the program.</p>
 
             </div>
             <div class="item">
+            <p id="vulk.baseapp.BaseApp.context" class="name">var <span class="ident">context</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="vulk.baseapp.BaseApp.last_time" class="name">var <span class="ident">last_time</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.baseapp.BaseApp.window" class="name">var <span class="ident">window</span></p>
             
 
             
