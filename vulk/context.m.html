@@ -1768,15 +1768,15 @@ swapchain's image.</p>
             <span class="n">img</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 
-        <span class="c1"># Update layout of all swapchain images to dst transfert</span>
+        <span class="c1"># Update layout of all swapchain images to present khr</span>
         <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
                 <span class="n">image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                     <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PRESENT_SRC_KHR&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
-                    <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;VK_ACCESS_MEMORY_READ_BIT&#39;</span>
                 <span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Swapchain created with </span><span class="si">%s</span><span class="s2"> images&quot;</span><span class="p">,</span>
@@ -2563,15 +2563,15 @@ swapchain's image.</p>
             <span class="n">img</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 
-        <span class="c1"># Update layout of all swapchain images to dst transfert</span>
+        <span class="c1"># Update layout of all swapchain images to present khr</span>
         <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
                 <span class="n">image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                     <span class="n">cmd</span><span class="p">,</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_UNDEFINED&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;VK_IMAGE_LAYOUT_PRESENT_SRC_KHR&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
                     <span class="s1">&#39;VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT&#39;</span><span class="p">,</span>
-                    <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;VK_ACCESS_TRANSFER_WRITE_BIT&#39;</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;VK_ACCESS_MEMORY_READ_BIT&#39;</span>
                 <span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Swapchain created with </span><span class="si">%s</span><span class="s2"> images&quot;</span><span class="p">,</span>
