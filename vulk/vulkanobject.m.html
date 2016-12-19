@@ -1448,8 +1448,7 @@ module.</p>
             <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="bp">None</span>
         <span class="p">)</span>
 
-        <span class="c1"># TODO: submit must be an array (cvulkan bug!)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">submit</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueWaitIdle</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">)</span>
         <span class="n">commandpool</span><span class="o">.</span><span class="n">free_buffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
 
@@ -2020,7 +2019,7 @@ module.</p>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateGraphicsPipelines</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
-                                                     <span class="mi">1</span><span class="p">,</span> <span class="n">pipeline_create</span><span class="p">)</span>
+                                                     <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">pipeline_create</span><span class="p">])</span>
 
 
 <span class="n">Offset2D</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Offset2D&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">])</span>
@@ -2555,13 +2554,10 @@ module.</p>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="c1"># TODO: buffer must be an array, cvulkan bug</span>
-        <span class="c1"># vk.vkFreeCommandBuffers(</span>
-        <span class="c1">#     context.device, self.commandpool, len(buffers),</span>
-        <span class="c1">#     [b.commandbuffer for b in buffers]</span>
-        <span class="c1"># )</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkFreeCommandBuffers</span><span class="p">(</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">buffers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span>
+            <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">free</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -2829,16 +2825,10 @@ module.</p>
         <span class="n">vk_memories</span> <span class="o">=</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">memories</span> <span class="k">else</span> <span class="bp">None</span>
         <span class="n">vk_buffers</span> <span class="o">=</span> <span class="n">buffers</span> <span class="k">if</span> <span class="n">buffers</span> <span class="k">else</span> <span class="bp">None</span>
         <span class="n">vk_images</span> <span class="o">=</span> <span class="n">images</span> <span class="k">if</span> <span class="n">images</span> <span class="k">else</span> <span class="bp">None</span>
-        <span class="c1"># TODO: CVulkan bug, can&#39;t pass array barriers</span>
-        <span class="c1"># vk.vkCmdPipelineBarrier(</span>
-        <span class="c1">#     self.commandbuffer, vk_const(src_stage), vk_const(dst_stage),</span>
-        <span class="c1">#     vk_const(dependency), len(memories), vk_memories,</span>
-        <span class="c1">#     len(buffers), vk_buffers, len(images), vk_images</span>
-        <span class="c1"># )</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdPipelineBarrier</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">src_stage</span><span class="p">),</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_stage</span><span class="p">),</span>
             <span class="n">vk_const</span><span class="p">(</span><span class="n">dependency</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">memories</span><span class="p">),</span> <span class="n">vk_memories</span><span class="p">,</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span> <span class="n">vk_buffers</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span> <span class="n">vk_buffers</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">vk_images</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">copy_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_image</span><span class="p">,</span> <span class="n">src_layout</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">,</span>
@@ -2856,10 +2846,9 @@ module.</p>
 
 <span class="sd">        **Note: `VkImage` is raw Vulkan object, not vulk `Image`**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c1"># TODO: CVULKAN BUG regions should be an array, fuck cvulkan</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdCopyImage</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">src_image</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">src_layout</span><span class="p">),</span> <span class="n">dst_image</span><span class="p">,</span>
-            <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_layout</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_layout</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">end_renderpass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -2942,8 +2931,7 @@ module.</p>
             <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">signal_semaphores</span>
         <span class="p">))</span>
 
-    <span class="c1"># TODO: vk_submits must be an array (cvulkan bug)</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_submits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_submits</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">submit_to_graphic_queue</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">submits</span><span class="p">):</span>
@@ -3132,8 +3120,7 @@ If commandpool is not given, it is created here.</p>
             <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="bp">None</span>
         <span class="p">)</span>
 
-        <span class="c1"># TODO: submit must be an array (cvulkan bug!)</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">submit</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueWaitIdle</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">)</span>
         <span class="n">commandpool</span><span class="o">.</span><span class="n">free_buffers</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandbuffers</span><span class="p">)</span>
 
@@ -3239,8 +3226,7 @@ If commandpool is not given, it is created here.</p>
             <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">signal_semaphores</span>
         <span class="p">))</span>
 
-    <span class="c1"># TODO: vk_submits must be an array (cvulkan bug)</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_submits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_submits</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -4008,16 +3994,10 @@ buffer. You should not use it directly but with <code>bind</code> method of
         <span class="n">vk_memories</span> <span class="o">=</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">memories</span> <span class="k">else</span> <span class="bp">None</span>
         <span class="n">vk_buffers</span> <span class="o">=</span> <span class="n">buffers</span> <span class="k">if</span> <span class="n">buffers</span> <span class="k">else</span> <span class="bp">None</span>
         <span class="n">vk_images</span> <span class="o">=</span> <span class="n">images</span> <span class="k">if</span> <span class="n">images</span> <span class="k">else</span> <span class="bp">None</span>
-        <span class="c1"># TODO: CVulkan bug, can&#39;t pass array barriers</span>
-        <span class="c1"># vk.vkCmdPipelineBarrier(</span>
-        <span class="c1">#     self.commandbuffer, vk_const(src_stage), vk_const(dst_stage),</span>
-        <span class="c1">#     vk_const(dependency), len(memories), vk_memories,</span>
-        <span class="c1">#     len(buffers), vk_buffers, len(images), vk_images</span>
-        <span class="c1"># )</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdPipelineBarrier</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">src_stage</span><span class="p">),</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_stage</span><span class="p">),</span>
             <span class="n">vk_const</span><span class="p">(</span><span class="n">dependency</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">memories</span><span class="p">),</span> <span class="n">vk_memories</span><span class="p">,</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span> <span class="n">vk_buffers</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span> <span class="n">vk_buffers</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">vk_images</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">copy_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_image</span><span class="p">,</span> <span class="n">src_layout</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">,</span>
@@ -4035,10 +4015,9 @@ buffer. You should not use it directly but with <code>bind</code> method of
 
 <span class="sd">        **Note: `VkImage` is raw Vulkan object, not vulk `Image`**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c1"># TODO: CVULKAN BUG regions should be an array, fuck cvulkan</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdCopyImage</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">src_image</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">src_layout</span><span class="p">),</span> <span class="n">dst_image</span><span class="p">,</span>
-            <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_layout</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_layout</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">end_renderpass</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -4240,10 +4219,9 @@ buffer. You should not use it directly but with <code>bind</code> method of
 <span class="sd">    - `regions`: `list` of `VkImageCopy`</span>
 <span class="sd">    **Note: `VkImage` is raw Vulkan object, not vulk `Image`**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1"># TODO: CVULKAN BUG regions should be an array, fuck cvulkan</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdCopyImage</span><span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">src_image</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">src_layout</span><span class="p">),</span> <span class="n">dst_image</span><span class="p">,</span>
-        <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_layout</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_layout</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span>
     <span class="p">)</span>
 </pre></div>
 
@@ -4373,16 +4351,10 @@ graphics pipeline.</p>
     <span class="n">vk_memories</span> <span class="o">=</span> <span class="n">memories</span> <span class="k">if</span> <span class="n">memories</span> <span class="k">else</span> <span class="bp">None</span>
     <span class="n">vk_buffers</span> <span class="o">=</span> <span class="n">buffers</span> <span class="k">if</span> <span class="n">buffers</span> <span class="k">else</span> <span class="bp">None</span>
     <span class="n">vk_images</span> <span class="o">=</span> <span class="n">images</span> <span class="k">if</span> <span class="n">images</span> <span class="k">else</span> <span class="bp">None</span>
-    <span class="c1"># TODO: CVulkan bug, can&#39;t pass array barriers</span>
-    <span class="c1"># vk.vkCmdPipelineBarrier(</span>
-    <span class="c1">#     self.commandbuffer, vk_const(src_stage), vk_const(dst_stage),</span>
-    <span class="c1">#     vk_const(dependency), len(memories), vk_memories,</span>
-    <span class="c1">#     len(buffers), vk_buffers, len(images), vk_images</span>
-    <span class="c1"># )</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdPipelineBarrier</span><span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">src_stage</span><span class="p">),</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">dst_stage</span><span class="p">),</span>
         <span class="n">vk_const</span><span class="p">(</span><span class="n">dependency</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">memories</span><span class="p">),</span> <span class="n">vk_memories</span><span class="p">,</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span> <span class="n">vk_buffers</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span> <span class="n">vk_buffers</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span> <span class="n">vk_images</span>
     <span class="p">)</span>
 </pre></div>
 
@@ -4486,13 +4458,10 @@ command buffers are allocated from them.</p>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="c1"># TODO: buffer must be an array, cvulkan bug</span>
-        <span class="c1"># vk.vkFreeCommandBuffers(</span>
-        <span class="c1">#     context.device, self.commandpool, len(buffers),</span>
-        <span class="c1">#     [b.commandbuffer for b in buffers]</span>
-        <span class="c1"># )</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkFreeCommandBuffers</span><span class="p">(</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">buffers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span>
+            <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">]</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">free</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -4683,13 +4652,10 @@ command buffers are allocated from them.</p>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t free a commandbuffer not allocated by this pool&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="c1"># TODO: buffer must be an array, cvulkan bug</span>
-    <span class="c1"># vk.vkFreeCommandBuffers(</span>
-    <span class="c1">#     context.device, self.commandpool, len(buffers),</span>
-    <span class="c1">#     [b.commandbuffer for b in buffers]</span>
-    <span class="c1"># )</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkFreeCommandBuffers</span><span class="p">(</span>
-        <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">buffers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffers</span><span class="p">),</span>
+        <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">]</span>
+    <span class="p">)</span>
 </pre></div>
 
   </div>
@@ -6408,7 +6374,7 @@ the render targets. The pipeline combines the following elements:</p>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateGraphicsPipelines</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
-                                                     <span class="mi">1</span><span class="p">,</span> <span class="n">pipeline_create</span><span class="p">)</span>
+                                                     <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">pipeline_create</span><span class="p">])</span>
 </pre></div>
 
   </div>
@@ -6620,7 +6586,7 @@ the render targets. The pipeline combines the following elements:</p>
         <span class="n">basePipelineIndex</span><span class="o">=-</span><span class="mi">1</span>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateGraphicsPipelines</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
-                                                 <span class="mi">1</span><span class="p">,</span> <span class="n">pipeline_create</span><span class="p">)</span>
+                                                 <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">pipeline_create</span><span class="p">])</span>
 </pre></div>
 
   </div>

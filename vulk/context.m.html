@@ -1898,8 +1898,7 @@ swapchain's image.</p>
             <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
             <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span>
         <span class="p">)</span>
-        <span class="c1"># TODO: submit should be an array</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">submit</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="c1"># Present swapchain image on screen</span>
         <span class="n">present</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPresentInfoKHR</span><span class="p">(</span>
@@ -2693,8 +2692,7 @@ swapchain's image.</p>
             <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
             <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span>
         <span class="p">)</span>
-        <span class="c1"># TODO: submit should be an array</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">submit</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
 
         <span class="c1"># Present swapchain image on screen</span>
         <span class="n">present</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPresentInfoKHR</span><span class="p">(</span>
@@ -2892,8 +2890,7 @@ command.</p>
         <span class="n">signalSemaphoreCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">copied_semaphores</span><span class="p">),</span>
         <span class="n">pSignalSemaphores</span><span class="o">=</span><span class="n">copied_semaphores</span>
     <span class="p">)</span>
-    <span class="c1"># TODO: submit should be an array</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">submit</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graphic_queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">submit</span><span class="p">],</span> <span class="bp">None</span><span class="p">)</span>
     <span class="c1"># Present swapchain image on screen</span>
     <span class="n">present</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPresentInfoKHR</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PRESENT_INFO_KHR</span><span class="p">,</span>
