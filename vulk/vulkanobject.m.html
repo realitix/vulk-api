@@ -1072,6 +1072,17 @@ table {
         
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.Buffer">Buffer</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.Buffer.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.Buffer.bind">bind</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.Buffer.copy_to">copy_to</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.ClearColorValue">ClearColorValue</a></span>
         
           
@@ -1140,6 +1151,16 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.vulkanobject.Framebuffer.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.HighPerformanceBuffer">HighPerformanceBuffer</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.HighPerformanceBuffer.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.HighPerformanceBuffer.bind">bind</a></li>
   </ul>
 
         </li>
@@ -2062,8 +2083,8 @@ module.</p>
 
 <span class="sd">        Creating an image is made of several steps:</span>
 
-<span class="sd">        - Create the staging image</span>
-<span class="sd">        - Allocate the staging memory</span>
+<span class="sd">        - Create the image</span>
+<span class="sd">        - Allocate the memory</span>
 <span class="sd">        - Bind the memory to the image</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -2292,7 +2313,7 @@ module.</p>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
@@ -2324,7 +2345,7 @@ module.</p>
 
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
@@ -2335,11 +2356,11 @@ module.</p>
 
         <span class="c1"># Copy staging image into final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="p">)</span>
 
         <span class="c1"># Set the best layout for the final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
@@ -2448,6 +2469,192 @@ module.</p>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">imageview</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImageView</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">imageview_create</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Buffer</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `Buffer` wrap a `VkBuffer` and a `VkMemory`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create a new buffer</span>
+
+<span class="sd">        Creating a buffer is made of several steps:</span>
+
+<span class="sd">        - Create the buffer</span>
+<span class="sd">        - Allocate the memory</span>
+<span class="sd">        - Bind the memory to the buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `flags`: `VkBufferCreateFlags`</span>
+<span class="sd">        - `size`: Buffer size in bytes</span>
+<span class="sd">        - `usage`: `VkBufferUsageFlags`</span>
+<span class="sd">        - `sharing_mode`: `VkSharingMode`</span>
+<span class="sd">        - `queue_families`: List of queue families accessing this image</span>
+<span class="sd">                            (ignored if sharingMode is not</span>
+<span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
+<span class="sd">        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+
+        <span class="c1"># Create VkBuffer</span>
+        <span class="n">buffer_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkBufferCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+            <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">usage</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span>
+            <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
+            <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
+            <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateBuffer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">buffer_create</span><span class="p">)</span>
+
+        <span class="c1"># Get memory requirements</span>
+        <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetBufferMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span>
+
+        <span class="n">alloc_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMemoryAllocateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><span class="p">,</span>
+            <span class="n">allocationSize</span><span class="o">=</span><span class="n">requirements</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">memoryTypeIndex</span><span class="o">=</span><span class="n">find_memory_type</span><span class="p">(</span>
+                <span class="n">context</span><span class="p">,</span>
+                <span class="n">requirements</span><span class="o">.</span><span class="n">memoryTypeBits</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+
+        <span class="c1"># Bind device memory to the buffer</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Copy this buffer to the destination buffer.</span>
+<span class="sd">        Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
+<span class="sd">        you to start and submit the command buffer to the execution queue.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `cmd`: `CommandBufferRegister` used to register commands</span>
+<span class="sd">        - `dst_buffer`: Destination `Buffer`</span>
+
+<span class="sd">        **Note: Buffers must have the same size**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">dst_buffer</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Buffers must have the same size&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkBufferCopy</span><span class="p">(</span>
+            <span class="n">srcOffset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">dstOffset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+        <span class="p">)</span>
+
+        <span class="n">cmd</span><span class="o">.</span><span class="n">copy_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Map this buffer to upload data in it.</span>
+<span class="sd">        This function is a context manager and must be called with `with`.</span>
+<span class="sd">        It return a python buffer and let you do what you want with it,</span>
+<span class="sd">        be careful!</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: The `VulkContext`</span>
+
+<span class="sd">        **Warning: Buffer memory must be host visible**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">compatible_memories</span> <span class="o">=</span> <span class="p">{</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_CACHED_BIT</span><span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">&amp;</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">compatible_memories</span><span class="p">]):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this buffer, memory must be host visible&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">data</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">HighPerformanceBuffer</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `HighPerformanceBuffer` allows to use high performance buffer to be</span>
+<span class="sd">    accessed in your vertex stage.</span>
+
+<span class="sd">    To get the maximum performance, we are going to create two `Buffer`,</span>
+<span class="sd">    a staging buffer which memory can be updated and a final buffer with</span>
+<span class="sd">    very fast memory that we will use in pipeline.</span>
+<span class="sd">    When we create a buffer, we first upload data in the staging buffer</span>
+<span class="sd">    and then copy the memory in the final buffer. Of course, both of the</span>
+<span class="sd">    buffer have the same properties.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create a high performance buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `size`: Buffer size in bytes</span>
+<span class="sd">        - `sharing_mode`: `VkSharingMode`</span>
+<span class="sd">        - `queue_families`: List of queue families accessing this image</span>
+<span class="sd">                            (ignored if sharingMode is not</span>
+<span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
+            <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
+            <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Copy the staging buffer to the final buffer.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Bind buffer for writing</span>
+
+<span class="sd">        It calls `bind` method of the staging buffer and copy the buffer</span>
+<span class="sd">        when the contextmanager is released. Must be used with `with`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">b</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Framebuffer</span><span class="p">():</span>
@@ -3450,6 +3657,387 @@ else we return it as is</p>
   
     <div class="desc"><p>Alias for field number 1</p>
 </div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.Buffer" class="name">class <span class="ident">Buffer</span></p>
+      
+  
+    <div class="desc"><p><code>Buffer</code> wrap a <code>VkBuffer</code> and a <code>VkMemory</code></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Buffer', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Buffer" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Buffer</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `Buffer` wrap a `VkBuffer` and a `VkMemory`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create a new buffer</span>
+
+<span class="sd">        Creating a buffer is made of several steps:</span>
+
+<span class="sd">        - Create the buffer</span>
+<span class="sd">        - Allocate the memory</span>
+<span class="sd">        - Bind the memory to the buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `flags`: `VkBufferCreateFlags`</span>
+<span class="sd">        - `size`: Buffer size in bytes</span>
+<span class="sd">        - `usage`: `VkBufferUsageFlags`</span>
+<span class="sd">        - `sharing_mode`: `VkSharingMode`</span>
+<span class="sd">        - `queue_families`: List of queue families accessing this image</span>
+<span class="sd">                            (ignored if sharingMode is not</span>
+<span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
+<span class="sd">        - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+
+        <span class="c1"># Create VkBuffer</span>
+        <span class="n">buffer_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkBufferCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+            <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">usage</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span>
+            <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
+            <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
+            <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateBuffer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">buffer_create</span><span class="p">)</span>
+
+        <span class="c1"># Get memory requirements</span>
+        <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetBufferMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span>
+
+        <span class="n">alloc_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMemoryAllocateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><span class="p">,</span>
+            <span class="n">allocationSize</span><span class="o">=</span><span class="n">requirements</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">memoryTypeIndex</span><span class="o">=</span><span class="n">find_memory_type</span><span class="p">(</span>
+                <span class="n">context</span><span class="p">,</span>
+                <span class="n">requirements</span><span class="o">.</span><span class="n">memoryTypeBits</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+
+        <span class="c1"># Bind device memory to the buffer</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Copy this buffer to the destination buffer.</span>
+<span class="sd">        Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
+<span class="sd">        you to start and submit the command buffer to the execution queue.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `cmd`: `CommandBufferRegister` used to register commands</span>
+<span class="sd">        - `dst_buffer`: Destination `Buffer`</span>
+
+<span class="sd">        **Note: Buffers must have the same size**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">dst_buffer</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Buffers must have the same size&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkBufferCopy</span><span class="p">(</span>
+            <span class="n">srcOffset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">dstOffset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+        <span class="p">)</span>
+
+        <span class="n">cmd</span><span class="o">.</span><span class="n">copy_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Map this buffer to upload data in it.</span>
+<span class="sd">        This function is a context manager and must be called with `with`.</span>
+<span class="sd">        It return a python buffer and let you do what you want with it,</span>
+<span class="sd">        be careful!</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: The `VulkContext`</span>
+
+<span class="sd">        **Warning: Buffer memory must be host visible**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">compatible_memories</span> <span class="o">=</span> <span class="p">{</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span><span class="p">,</span>
+                               <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_CACHED_BIT</span><span class="p">}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">&amp;</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">compatible_memories</span><span class="p">]):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this buffer, memory must be host visible&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                  <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">data</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.Buffer">Buffer</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Buffer.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, flags, size, usage, sharing_mode, queue_families, memory_properties)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a new buffer</p>
+
+<p>Creating a buffer is made of several steps:</p>
+
+<ul>
+<li>Create the buffer</li>
+<li>Allocate the memory</li>
+<li>Bind the memory to the buffer</li>
+</ul>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>flags</code>: <code>VkBufferCreateFlags</code></li>
+<li><code>size</code>: Buffer size in bytes</li>
+<li><code>usage</code>: <code>VkBufferUsageFlags</code></li>
+<li><code>sharing_mode</code>: <code>VkSharingMode</code></li>
+<li><code>queue_families</code>: List of queue families accessing this image
+                (ignored if sharingMode is not
+                <code>VK_SHARING_MODE_CONCURRENT</code>) (can be [])</li>
+<li><code>memory_properties</code>: <code>VkMemoryPropertyFlags</code> Vulkan constant</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Buffer.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Buffer.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
+             <span class="n">queue_families</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create a new buffer</span>
+<span class="sd">    Creating a buffer is made of several steps:</span>
+<span class="sd">    - Create the buffer</span>
+<span class="sd">    - Allocate the memory</span>
+<span class="sd">    - Bind the memory to the buffer</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `flags`: `VkBufferCreateFlags`</span>
+<span class="sd">    - `size`: Buffer size in bytes</span>
+<span class="sd">    - `usage`: `VkBufferUsageFlags`</span>
+<span class="sd">    - `sharing_mode`: `VkSharingMode`</span>
+<span class="sd">    - `queue_families`: List of queue families accessing this image</span>
+<span class="sd">                        (ignored if sharingMode is not</span>
+<span class="sd">                        `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
+<span class="sd">    - `memory_properties`: `VkMemoryPropertyFlags` Vulkan constant</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+    <span class="c1"># Create VkBuffer</span>
+    <span class="n">buffer_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkBufferCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+        <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+        <span class="n">usage</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span>
+        <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
+        <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
+        <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateBuffer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">buffer_create</span><span class="p">)</span>
+    <span class="c1"># Get memory requirements</span>
+    <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetBufferMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span>
+    <span class="n">alloc_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMemoryAllocateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO</span><span class="p">,</span>
+        <span class="n">allocationSize</span><span class="o">=</span><span class="n">requirements</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+        <span class="n">memoryTypeIndex</span><span class="o">=</span><span class="n">find_memory_type</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span>
+            <span class="n">requirements</span><span class="o">.</span><span class="n">memoryTypeBits</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># Create memory</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+    <span class="c1"># Bind device memory to the buffer</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Buffer.bind">
+    <p>def <span class="ident">bind</span>(</p><p>*args, **kwds)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Map this buffer to upload data in it.
+This function is a context manager and must be called with <code>with</code>.
+It return a python buffer and let you do what you want with it,
+be careful!</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: The <code>VulkContext</code></li>
+</ul>
+
+<p><strong>Warning: Buffer memory must be host visible</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Buffer.bind', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Buffer.bind" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Map this buffer to upload data in it.</span>
+<span class="sd">    This function is a context manager and must be called with `with`.</span>
+<span class="sd">    It return a python buffer and let you do what you want with it,</span>
+<span class="sd">    be careful!</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: The `VulkContext`</span>
+<span class="sd">    **Warning: Buffer memory must be host visible**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">compatible_memories</span> <span class="o">=</span> <span class="p">{</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span><span class="p">,</span>
+                           <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span><span class="p">,</span>
+                           <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_CACHED_BIT</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">&amp;</span> <span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">compatible_memories</span><span class="p">]):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this buffer, memory must be host visible&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">data</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkUnmapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Buffer.copy_to">
+    <p>def <span class="ident">copy_to</span>(</p><p>self, cmd, dst_buffer)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Copy this buffer to the destination buffer.
+Commands to copy are registered in the commandbuffer but it's up to
+you to start and submit the command buffer to the execution queue.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>cmd</code>: <code>CommandBufferRegister</code> used to register commands</li>
+<li><code>dst_buffer</code>: Destination <code>Buffer</code></li>
+</ul>
+
+<p><strong>Note: Buffers must have the same size</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Buffer.copy_to', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Buffer.copy_to" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Copy this buffer to the destination buffer.</span>
+<span class="sd">    Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
+<span class="sd">    you to start and submit the command buffer to the execution queue.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `cmd`: `CommandBufferRegister` used to register commands</span>
+<span class="sd">    - `dst_buffer`: Destination `Buffer`</span>
+<span class="sd">    **Note: Buffers must have the same size**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">dst_buffer</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Buffers must have the same size&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkBufferCopy</span><span class="p">(</span>
+        <span class="n">srcOffset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">dstOffset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+    <span class="p">)</span>
+    <span class="n">cmd</span><span class="o">.</span><span class="n">copy_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.Buffer.buffer" class="name">var <span class="ident">buffer</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.Buffer.memory" class="name">var <span class="ident">memory</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.Buffer.memory_properties" class="name">var <span class="ident">memory_properties</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.Buffer.size" class="name">var <span class="ident">size</span></p>
+            
+
+            
+  
   <div class="source_cont">
 </div>
 
@@ -4922,6 +5510,221 @@ represent the attachments of a <code>Renderpass</code>.</p>
       </div>
       
       <div class="item">
+      <p id="vulk.vulkanobject.HighPerformanceBuffer" class="name">class <span class="ident">HighPerformanceBuffer</span></p>
+      
+  
+    <div class="desc"><p><code>HighPerformanceBuffer</code> allows to use high performance buffer to be
+accessed in your vertex stage.</p>
+
+<p>To get the maximum performance, we are going to create two <code>Buffer</code>,
+a staging buffer which memory can be updated and a final buffer with
+very fast memory that we will use in pipeline.
+When we create a buffer, we first upload data in the staging buffer
+and then copy the memory in the final buffer. Of course, both of the
+buffer have the same properties.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceBuffer', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.HighPerformanceBuffer" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">HighPerformanceBuffer</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `HighPerformanceBuffer` allows to use high performance buffer to be</span>
+<span class="sd">    accessed in your vertex stage.</span>
+
+<span class="sd">    To get the maximum performance, we are going to create two `Buffer`,</span>
+<span class="sd">    a staging buffer which memory can be updated and a final buffer with</span>
+<span class="sd">    very fast memory that we will use in pipeline.</span>
+<span class="sd">    When we create a buffer, we first upload data in the staging buffer</span>
+<span class="sd">    and then copy the memory in the final buffer. Of course, both of the</span>
+<span class="sd">    buffer have the same properties.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create a high performance buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `size`: Buffer size in bytes</span>
+<span class="sd">        - `sharing_mode`: `VkSharingMode`</span>
+<span class="sd">        - `queue_families`: List of queue families accessing this image</span>
+<span class="sd">                            (ignored if sharingMode is not</span>
+<span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
+            <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
+            <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Copy the staging buffer to the final buffer.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">)</span>
+
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Bind buffer for writing</span>
+
+<span class="sd">        It calls `bind` method of the staging buffer and copy the buffer</span>
+<span class="sd">        when the contextmanager is released. Must be used with `with`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">b</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.HighPerformanceBuffer">HighPerformanceBuffer</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.HighPerformanceBuffer.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, size, sharing_mode, queue_families)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a high performance buffer</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>size</code>: Buffer size in bytes</li>
+<li><code>sharing_mode</code>: <code>VkSharingMode</code></li>
+<li><code>queue_families</code>: List of queue families accessing this image
+                (ignored if sharingMode is not
+                <code>VK_SHARING_MODE_CONCURRENT</code>) (can be [])</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceBuffer.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.HighPerformanceBuffer.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create a high performance buffer</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `size`: Buffer size in bytes</span>
+<span class="sd">    - `sharing_mode`: `VkSharingMode`</span>
+<span class="sd">    - `queue_families`: List of queue families accessing this image</span>
+<span class="sd">                        (ignored if sharingMode is not</span>
+<span class="sd">                        `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
+        <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
+        <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
+    <span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.HighPerformanceBuffer.bind">
+    <p>def <span class="ident">bind</span>(</p><p>*args, **kwds)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Bind buffer for writing</p>
+
+<p>It calls <code>bind</code> method of the staging buffer and copy the buffer
+when the contextmanager is released. Must be used with <code>with</code>.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceBuffer.bind', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.HighPerformanceBuffer.bind" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Bind buffer for writing</span>
+<span class="sd">    It calls `bind` method of the staging buffer and copy the buffer</span>
+<span class="sd">    when the contextmanager is released. Must be used with `with`.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">b</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.HighPerformanceBuffer.final_buffer" class="name">var <span class="ident">final_buffer</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.HighPerformanceBuffer.staging_buffer" class="name">var <span class="ident">staging_buffer</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
       <p id="vulk.vulkanobject.HighPerformanceImage" class="name">class <span class="ident">HighPerformanceImage</span></p>
       
   
@@ -4980,7 +5783,7 @@ the image have the same properties.</p>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
@@ -5012,7 +5815,7 @@ the image have the same properties.</p>
 
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
@@ -5023,11 +5826,11 @@ the image have the same properties.</p>
 
         <span class="c1"># Copy staging image into final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="p">)</span>
 
         <span class="c1"># Set the best layout for the final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL</span><span class="p">,</span>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
@@ -5136,7 +5939,7 @@ the image have the same properties.</p>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_HOST_COHERENT_BIT</span> <span class="c1"># noqa</span>
     <span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">texture_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
         <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
         <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_TILING_OPTIMAL</span><span class="p">,</span>
@@ -5195,7 +5998,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="vulk.vulkanobject.HighPerformanceImage.staging_image" class="name">var <span class="ident">staging_image</span></p>
+            <p id="vulk.vulkanobject.HighPerformanceImage.final_image" class="name">var <span class="ident">final_image</span></p>
             
 
             
@@ -5205,7 +6008,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 
             </div>
             <div class="item">
-            <p id="vulk.vulkanobject.HighPerformanceImage.texture_image" class="name">var <span class="ident">texture_image</span></p>
+            <p id="vulk.vulkanobject.HighPerformanceImage.staging_image" class="name">var <span class="ident">staging_image</span></p>
             
 
             
@@ -5238,8 +6041,8 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 
 <span class="sd">        Creating an image is made of several steps:</span>
 
-<span class="sd">        - Create the staging image</span>
-<span class="sd">        - Allocate the staging memory</span>
+<span class="sd">        - Create the image</span>
+<span class="sd">        - Allocate the memory</span>
 <span class="sd">        - Bind the memory to the image</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -5451,8 +6254,8 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 <p>Creating an image is made of several steps:</p>
 
 <ul>
-<li>Create the staging image</li>
-<li>Allocate the staging memory</li>
+<li>Create the image</li>
+<li>Allocate the memory</li>
 <li>Bind the memory to the image</li>
 </ul>
 
@@ -5487,8 +6290,8 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
              <span class="n">layout</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Create a new image</span>
 <span class="sd">    Creating an image is made of several steps:</span>
-<span class="sd">    - Create the staging image</span>
-<span class="sd">    - Allocate the staging memory</span>
+<span class="sd">    - Create the image</span>
+<span class="sd">    - Allocate the memory</span>
 <span class="sd">    - Bind the memory to the image</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>

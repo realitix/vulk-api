@@ -1524,6 +1524,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">xlib</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create XLIB surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkXlibSurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">dpy</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">x11</span><span class="o">.</span><span class="n">display</span><span class="p">,</span>
@@ -1533,6 +1534,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">mir</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create MIR surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMirSurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">connection</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">mir</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span>
@@ -1542,6 +1544,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">wayland</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create WAYLAND surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkWaylandSurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">display</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">wl</span><span class="o">.</span><span class="n">display</span><span class="p">,</span>
@@ -1551,6 +1554,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">windows</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create WINDOWS surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkWin32SurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">hinstance</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">win</span><span class="o">.</span><span class="n">hinstance</span><span class="p">,</span>
@@ -2318,6 +2322,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">xlib</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create XLIB surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkXlibSurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">dpy</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">x11</span><span class="o">.</span><span class="n">display</span><span class="p">,</span>
@@ -2327,6 +2332,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">mir</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create MIR surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkMirSurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">connection</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">mir</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span>
@@ -2336,6 +2342,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">wayland</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create WAYLAND surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkWaylandSurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">display</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">wl</span><span class="o">.</span><span class="n">display</span><span class="p">,</span>
@@ -2345,6 +2352,7 @@ swapchain's image.</p>
 
         <span class="k">def</span> <span class="nf">windows</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Create WINDOWS surface&quot;</span><span class="p">)</span>
+            <span class="c1"># pylint: disable=no-member</span>
             <span class="n">surface_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkWin32SurfaceCreateInfoKHR</span><span class="p">(</span>
                 <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR</span><span class="p">,</span>
                 <span class="n">hinstance</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">win</span><span class="o">.</span><span class="n">hinstance</span><span class="p">,</span>
