@@ -1117,11 +1117,13 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.begin_renderpass">begin_renderpass</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_index_buffer">bind_index_buffer</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_pipeline">bind_pipeline</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers">bind_vertex_buffers</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_buffer">copy_buffer</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_image">copy_image</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.draw">draw</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.draw_indexed">draw_indexed</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.end_renderpass">end_renderpass</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.pipeline_barrier">pipeline_barrier</a></li>
   </ul>
@@ -2203,6 +2205,19 @@ module.</p>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindVertexBuffers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span>
                                   <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">buffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">],</span> <span class="n">offsets</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">bind_index_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">index_type</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind an index buffer to a command buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `buffer`: Index `Buffer`</span>
+<span class="sd">        - `offset`: Offset (`int`)</span>
+<span class="sd">        - `index_type`: `VkIndexType`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindIndexBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
+                                <span class="n">vk_const</span><span class="p">(</span><span class="n">index_type</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
              <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -2225,6 +2240,45 @@ module.</p>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDraw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
                      <span class="n">first_vertex</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw_indexed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_count</span><span class="p">,</span> <span class="n">first_index</span><span class="p">,</span> <span class="n">vertex_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw the index buffer.</span>
+
+<span class="sd">        When the command is executed, primitives are assembled using the</span>
+<span class="sd">        current primitive topology and indexCount vertices whose indices are</span>
+<span class="sd">        retrieved from the index buffer. The index buffer is treated as an</span>
+<span class="sd">        array of tightly packed unsigned integers of size defined by the</span>
+<span class="sd">        vkCmdBindIndexBuffer::indexType parameter with which the buffer</span>
+<span class="sd">        was bound.</span>
+
+<span class="sd">        The first vertex index is at an offset of</span>
+<span class="sd">        firstIndex * indexSize + offset within the currently bound index</span>
+<span class="sd">        buffer, where offset is the offset specified by vkCmdBindIndexBuffer</span>
+<span class="sd">        and indexSize is the byte size of the type specified by indexType.</span>
+<span class="sd">        Subsequent index values are retrieved from consecutive locations in</span>
+<span class="sd">        the index buffer. Indices are first compared to the primitive restart</span>
+<span class="sd">        value, then zero extended to 32 bits</span>
+<span class="sd">        (if the indexType is VK_INDEX_TYPE_UINT16) and have vertexOffset added</span>
+<span class="sd">        to them, before being supplied as the vertexIndex value.</span>
+
+<span class="sd">        The primitives are drawn instanceCount times with instanceIndex</span>
+<span class="sd">        starting with firstInstance and increasing sequentially for each</span>
+<span class="sd">        instance. The assembled primitives execute the currently bound</span>
+<span class="sd">        graphics pipeline.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `index_count`: Number of vertices to draw</span>
+<span class="sd">        - `first_index`: Base index within the index buffer</span>
+<span class="sd">        - `vertex_offset`: Value added to the vertex index before indexing</span>
+<span class="sd">                           into the vertex buffer (default: 0)</span>
+<span class="sd">        - `instance_count`: Number of instance to draw (default: 1)</span>
+<span class="sd">        - `first_instance`: First instance to draw (default: 0)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDrawIndexed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">index_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
+                            <span class="n">first_index</span><span class="p">,</span> <span class="n">vertex_offset</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">pipeline_barrier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_stage</span><span class="p">,</span> <span class="n">dst_stage</span><span class="p">,</span> <span class="n">dependency</span><span class="p">,</span> <span class="n">memories</span><span class="p">,</span>
                          <span class="n">buffers</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
@@ -2420,18 +2474,34 @@ module.</p>
 <span class="sd">    buffer have the same properties.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">):</span>
+    <span class="n">USAGE_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_INDEX_BUFFER_BIT</span><span class="p">,</span>
+        <span class="s1">&#39;uniform&#39;</span><span class="p">:</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT</span><span class="p">,</span>
+        <span class="s1">&#39;vertex&#39;</span><span class="p">:</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">buffer_type</span><span class="p">,</span>
+                 <span class="n">sharing_mode</span><span class="o">=</span><span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a high performance buffer</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `size`: Buffer size in bytes</span>
+<span class="sd">        - &#39;buffer_type&#39;: `str` in [&#39;index&#39;, &#39;uniform&#39;, &#39;vertex&#39;]</span>
 <span class="sd">        - `sharing_mode`: `VkSharingMode`</span>
 <span class="sd">        - `queue_families`: List of queue families accessing this image</span>
 <span class="sd">                            (ignored if sharingMode is not</span>
 <span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">buffer_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;vertex&#39;</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Buffer type must be in [&#39;index&#39;, &#39;uniform&#39;, &#39;vertex&#39;]&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">queue_families</span> <span class="o">=</span> <span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="p">[]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
             <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
@@ -2440,7 +2510,7 @@ module.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span>
-            <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">HighPerformanceBuffer</span><span class="o">.</span><span class="n">USAGE_MAPPING</span><span class="p">[</span><span class="n">buffer_type</span><span class="p">],</span> <span class="c1"># noqa</span>
             <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
         <span class="p">)</span>
@@ -4671,6 +4741,19 @@ buffer. You should not use it directly but with <code>bind</code> method of
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindVertexBuffers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span>
                                   <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">buffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">],</span> <span class="n">offsets</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">bind_index_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">index_type</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind an index buffer to a command buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `buffer`: Index `Buffer`</span>
+<span class="sd">        - `offset`: Offset (`int`)</span>
+<span class="sd">        - `index_type`: `VkIndexType`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindIndexBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
+                                <span class="n">vk_const</span><span class="p">(</span><span class="n">index_type</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
              <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -4693,6 +4776,45 @@ buffer. You should not use it directly but with <code>bind</code> method of
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDraw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
                      <span class="n">first_vertex</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw_indexed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_count</span><span class="p">,</span> <span class="n">first_index</span><span class="p">,</span> <span class="n">vertex_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw the index buffer.</span>
+
+<span class="sd">        When the command is executed, primitives are assembled using the</span>
+<span class="sd">        current primitive topology and indexCount vertices whose indices are</span>
+<span class="sd">        retrieved from the index buffer. The index buffer is treated as an</span>
+<span class="sd">        array of tightly packed unsigned integers of size defined by the</span>
+<span class="sd">        vkCmdBindIndexBuffer::indexType parameter with which the buffer</span>
+<span class="sd">        was bound.</span>
+
+<span class="sd">        The first vertex index is at an offset of</span>
+<span class="sd">        firstIndex * indexSize + offset within the currently bound index</span>
+<span class="sd">        buffer, where offset is the offset specified by vkCmdBindIndexBuffer</span>
+<span class="sd">        and indexSize is the byte size of the type specified by indexType.</span>
+<span class="sd">        Subsequent index values are retrieved from consecutive locations in</span>
+<span class="sd">        the index buffer. Indices are first compared to the primitive restart</span>
+<span class="sd">        value, then zero extended to 32 bits</span>
+<span class="sd">        (if the indexType is VK_INDEX_TYPE_UINT16) and have vertexOffset added</span>
+<span class="sd">        to them, before being supplied as the vertexIndex value.</span>
+
+<span class="sd">        The primitives are drawn instanceCount times with instanceIndex</span>
+<span class="sd">        starting with firstInstance and increasing sequentially for each</span>
+<span class="sd">        instance. The assembled primitives execute the currently bound</span>
+<span class="sd">        graphics pipeline.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `index_count`: Number of vertices to draw</span>
+<span class="sd">        - `first_index`: Base index within the index buffer</span>
+<span class="sd">        - `vertex_offset`: Value added to the vertex index before indexing</span>
+<span class="sd">                           into the vertex buffer (default: 0)</span>
+<span class="sd">        - `instance_count`: Number of instance to draw (default: 1)</span>
+<span class="sd">        - `first_instance`: First instance to draw (default: 0)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDrawIndexed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">index_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
+                            <span class="n">first_index</span><span class="p">,</span> <span class="n">vertex_offset</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">pipeline_barrier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_stage</span><span class="p">,</span> <span class="n">dst_stage</span><span class="p">,</span> <span class="n">dependency</span><span class="p">,</span> <span class="n">memories</span><span class="p">,</span>
                          <span class="n">buffers</span><span class="p">,</span> <span class="n">images</span><span class="p">):</span>
@@ -4864,6 +4986,45 @@ buffer. You should not use it directly but with <code>bind</code> method of
     <span class="p">)</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBeginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">renderpass_begin</span><span class="p">,</span>
                             <span class="n">vk_const</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBufferRegister.bind_index_buffer">
+    <p>def <span class="ident">bind_index_buffer</span>(</p><p>self, buffer, offset, index_type)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Bind an index buffer to a command buffer</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>buffer</code>: Index <code>Buffer</code></li>
+<li><code>offset</code>: Offset (<code>int</code>)</li>
+<li><code>index_type</code>: <code>VkIndexType</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBufferRegister.bind_index_buffer', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBufferRegister.bind_index_buffer" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">bind_index_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">index_type</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Bind an index buffer to a command buffer</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `buffer`: Index `Buffer`</span>
+<span class="sd">    - `offset`: Offset (`int`)</span>
+<span class="sd">    - `index_type`: `VkIndexType`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindIndexBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
+                            <span class="n">vk_const</span><span class="p">(</span><span class="n">index_type</span><span class="p">))</span>
 </pre></div>
 
   </div>
@@ -5098,6 +5259,93 @@ graphics pipeline.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDraw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
                  <span class="n">first_vertex</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBufferRegister.draw_indexed">
+    <p>def <span class="ident">draw_indexed</span>(</p><p>self, index_count, first_index, vertex_offset=0, instance_count=1, first_instance=0)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Draw the index buffer.</p>
+
+<p>When the command is executed, primitives are assembled using the
+current primitive topology and indexCount vertices whose indices are
+retrieved from the index buffer. The index buffer is treated as an
+array of tightly packed unsigned integers of size defined by the
+vkCmdBindIndexBuffer::indexType parameter with which the buffer
+was bound.</p>
+
+<p>The first vertex index is at an offset of
+firstIndex * indexSize + offset within the currently bound index
+buffer, where offset is the offset specified by vkCmdBindIndexBuffer
+and indexSize is the byte size of the type specified by indexType.
+Subsequent index values are retrieved from consecutive locations in
+the index buffer. Indices are first compared to the primitive restart
+value, then zero extended to 32 bits
+(if the indexType is VK<em>INDEX</em>TYPE_UINT16) and have vertexOffset added
+to them, before being supplied as the vertexIndex value.</p>
+
+<p>The primitives are drawn instanceCount times with instanceIndex
+starting with firstInstance and increasing sequentially for each
+instance. The assembled primitives execute the currently bound
+graphics pipeline.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>index_count</code>: Number of vertices to draw</li>
+<li><code>first_index</code>: Base index within the index buffer</li>
+<li><code>vertex_offset</code>: Value added to the vertex index before indexing
+               into the vertex buffer (default: 0)</li>
+<li><code>instance_count</code>: Number of instance to draw (default: 1)</li>
+<li><code>first_instance</code>: First instance to draw (default: 0)</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBufferRegister.draw_indexed', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBufferRegister.draw_indexed" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw_indexed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_count</span><span class="p">,</span> <span class="n">first_index</span><span class="p">,</span> <span class="n">vertex_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Draw the index buffer.</span>
+<span class="sd">    When the command is executed, primitives are assembled using the</span>
+<span class="sd">    current primitive topology and indexCount vertices whose indices are</span>
+<span class="sd">    retrieved from the index buffer. The index buffer is treated as an</span>
+<span class="sd">    array of tightly packed unsigned integers of size defined by the</span>
+<span class="sd">    vkCmdBindIndexBuffer::indexType parameter with which the buffer</span>
+<span class="sd">    was bound.</span>
+<span class="sd">    The first vertex index is at an offset of</span>
+<span class="sd">    firstIndex * indexSize + offset within the currently bound index</span>
+<span class="sd">    buffer, where offset is the offset specified by vkCmdBindIndexBuffer</span>
+<span class="sd">    and indexSize is the byte size of the type specified by indexType.</span>
+<span class="sd">    Subsequent index values are retrieved from consecutive locations in</span>
+<span class="sd">    the index buffer. Indices are first compared to the primitive restart</span>
+<span class="sd">    value, then zero extended to 32 bits</span>
+<span class="sd">    (if the indexType is VK_INDEX_TYPE_UINT16) and have vertexOffset added</span>
+<span class="sd">    to them, before being supplied as the vertexIndex value.</span>
+<span class="sd">    The primitives are drawn instanceCount times with instanceIndex</span>
+<span class="sd">    starting with firstInstance and increasing sequentially for each</span>
+<span class="sd">    instance. The assembled primitives execute the currently bound</span>
+<span class="sd">    graphics pipeline.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `index_count`: Number of vertices to draw</span>
+<span class="sd">    - `first_index`: Base index within the index buffer</span>
+<span class="sd">    - `vertex_offset`: Value added to the vertex index before indexing</span>
+<span class="sd">                       into the vertex buffer (default: 0)</span>
+<span class="sd">    - `instance_count`: Number of instance to draw (default: 1)</span>
+<span class="sd">    - `first_instance`: First instance to draw (default: 0)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdDrawIndexed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">index_count</span><span class="p">,</span> <span class="n">instance_count</span><span class="p">,</span>
+                        <span class="n">first_index</span><span class="p">,</span> <span class="n">vertex_offset</span><span class="p">,</span> <span class="n">first_instance</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -5769,18 +6017,34 @@ buffer have the same properties.</p>
 <span class="sd">    buffer have the same properties.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">):</span>
+    <span class="n">USAGE_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_INDEX_BUFFER_BIT</span><span class="p">,</span>
+        <span class="s1">&#39;uniform&#39;</span><span class="p">:</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT</span><span class="p">,</span>
+        <span class="s1">&#39;vertex&#39;</span><span class="p">:</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">buffer_type</span><span class="p">,</span>
+                 <span class="n">sharing_mode</span><span class="o">=</span><span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a high performance buffer</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `size`: Buffer size in bytes</span>
+<span class="sd">        - &#39;buffer_type&#39;: `str` in [&#39;index&#39;, &#39;uniform&#39;, &#39;vertex&#39;]</span>
 <span class="sd">        - `sharing_mode`: `VkSharingMode`</span>
 <span class="sd">        - `queue_families`: List of queue families accessing this image</span>
 <span class="sd">                            (ignored if sharingMode is not</span>
 <span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">buffer_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;vertex&#39;</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Buffer type must be in [&#39;index&#39;, &#39;uniform&#39;, &#39;vertex&#39;]&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">queue_families</span> <span class="o">=</span> <span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="p">[]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
             <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
@@ -5789,7 +6053,7 @@ buffer have the same properties.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span>
-            <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">HighPerformanceBuffer</span><span class="o">.</span><span class="n">USAGE_MAPPING</span><span class="p">[</span><span class="n">buffer_type</span><span class="p">],</span> <span class="c1"># noqa</span>
             <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
         <span class="p">)</span>
@@ -5833,11 +6097,22 @@ buffer have the same properties.</p>
           <li><a href="#vulk.vulkanobject.HighPerformanceBuffer">HighPerformanceBuffer</a></li>
           <li>builtins.object</li>
           </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.HighPerformanceBuffer.USAGE_MAPPING" class="name">var <span class="ident">USAGE_MAPPING</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
           <h3>Static methods</h3>
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.HighPerformanceBuffer.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, size, sharing_mode, queue_families)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, size, buffer_type, sharing_mode=&#39;VK_SHARING_MODE_EXCLUSIVE&#39;, queue_families=None)</p>
     </div>
     
 
@@ -5850,6 +6125,7 @@ buffer have the same properties.</p>
 <ul>
 <li><code>context</code>: <code>VulkContext</code></li>
 <li><code>size</code>: Buffer size in bytes</li>
+<li>'buffer_type': <code>str</code> in ['index', 'uniform', 'vertex']</li>
 <li><code>sharing_mode</code>: <code>VkSharingMode</code></li>
 <li><code>queue_families</code>: List of queue families accessing this image
                 (ignored if sharingMode is not
@@ -5859,16 +6135,24 @@ buffer have the same properties.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceBuffer.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.HighPerformanceBuffer.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">buffer_type</span><span class="p">,</span>
+             <span class="n">sharing_mode</span><span class="o">=</span><span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span>
+             <span class="n">queue_families</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Create a high performance buffer</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
 <span class="sd">    - `size`: Buffer size in bytes</span>
+<span class="sd">    - &#39;buffer_type&#39;: `str` in [&#39;index&#39;, &#39;uniform&#39;, &#39;vertex&#39;]</span>
 <span class="sd">    - `sharing_mode`: `VkSharingMode`</span>
 <span class="sd">    - `queue_families`: List of queue families accessing this image</span>
 <span class="sd">                        (ignored if sharingMode is not</span>
 <span class="sd">                        `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">buffer_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;vertex&#39;</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Buffer type must be in [&#39;index&#39;, &#39;uniform&#39;, &#39;vertex&#39;]&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">queue_families</span> <span class="o">=</span> <span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
         <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_SRC_BIT</span><span class="p">,</span>
         <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
@@ -5876,7 +6160,7 @@ buffer have the same properties.</p>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
         <span class="n">context</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_VERTEX_BUFFER_BIT</span><span class="p">,</span> <span class="c1"># noqa</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">VK_BUFFER_USAGE_TRANSFER_DST_BIT</span> <span class="o">|</span> <span class="n">HighPerformanceBuffer</span><span class="o">.</span><span class="n">USAGE_MAPPING</span><span class="p">[</span><span class="n">buffer_type</span><span class="p">],</span> <span class="c1"># noqa</span>
         <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT</span>
     <span class="p">)</span>
