@@ -1118,6 +1118,7 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.begin_renderpass">begin_renderpass</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_pipeline">bind_pipeline</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers">bind_vertex_buffers</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_buffer">copy_buffer</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_image">copy_image</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.draw">draw</a></li>
@@ -1294,6 +1295,14 @@ table {
         </li>
         <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.SubpassDescription">SubpassDescription</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.VertexInputAttributeDescription">VertexInputAttributeDescription</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.VertexInputBindingDescription">VertexInputBindingDescription</a></span>
         
         </li>
         <li class="mono">
@@ -1734,8 +1743,8 @@ module.</p>
 <span class="n">PipelineVertexInputState</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">    *Parameters:*</span>
 
-<span class="s1">    - `bindings`: List of vertice bindings</span>
-<span class="s1">    - `attributes`: List of vertice attributes</span>
+<span class="s1">    - `bindings`: List of `VertexInputBindingDescription`</span>
+<span class="s1">    - `attributes`: List of `VertexInputAttributeDescription`</span>
 
 <span class="s1">    **Note: `bindings` and `attributes` can be empty `list`**</span>
 <span class="s1">    &#39;&#39;&#39;</span>
@@ -1818,6 +1827,35 @@ module.</p>
 <span class="s1">    - `depth_stencil`: `list` containing only one attachment</span>
 <span class="s1">    &#39;&#39;&#39;</span>
 
+
+<span class="n">VertexInputAttributeDescription</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;VertexInputAttributeDescription&#39;</span><span class="p">,</span>
+                                             <span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">,</span> <span class="s1">&#39;binding&#39;</span><span class="p">,</span> <span class="s1">&#39;format&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;offset&#39;</span><span class="p">])</span>
+<span class="n">VertexInputAttributeDescription</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">     Structure specifying vertex input attribute description</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `location`: Shader binding location number for this attribute (`int`)</span>
+<span class="s1">    - `binding`: Binding number which this attribute takes its data from</span>
+<span class="s1">    - `format`: `VkFormat` of the vertex attribute data</span>
+<span class="s1">    - `offset`: Byte offset of this attribute relative to the start of an</span>
+<span class="s1">                element in the vertex input binding (`int`)</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
+<span class="n">VertexInputBindingDescription</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;VertexInputBindingDescription&#39;</span><span class="p">,</span>
+                                           <span class="p">[</span><span class="s1">&#39;binding&#39;</span><span class="p">,</span> <span class="s1">&#39;stride&#39;</span><span class="p">,</span> <span class="s1">&#39;rate&#39;</span><span class="p">])</span>
+<span class="n">VertexInputBindingDescription</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    Structure specifying vertex input binding description</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `binding`: Binding number (`int`)</span>
+<span class="s1">    - `stride`: Distance in bytes between two consecutive elements within</span>
+<span class="s1">                the buffer (`int`)</span>
+<span class="s1">    - `rate`: `VkVertexInputRate`</span>
+<span class="s1">    &#39;&#39;&#39;</span>
 
 <span class="n">Viewport</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Viewport&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span>
                                    <span class="s1">&#39;min_depth&#39;</span><span class="p">,</span> <span class="s1">&#39;max_depth&#39;</span><span class="p">])</span>
@@ -2145,6 +2183,25 @@ module.</p>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span>
                              <span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">bind_vertex_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buffers</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind vertex buffers to a command buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `first`: Index of the first vertex input binding</span>
+<span class="sd">        - `count`: Number of vertex input bindings</span>
+<span class="sd">        - `buffers`: `list` of `Buffer`</span>
+<span class="sd">        - `offsets`: `list` of offset (`int`)</span>
+
+<span class="sd">        **Note: I don&#39;t understand what is the point with offset but you</span>
+<span class="sd">                must pass an array of the same size as `buffers`.**</span>
+
+<span class="sd">        **Note: Generally, `count = len(buffers)` and `first = 0`**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindVertexBuffers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span>
+                                  <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">buffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">],</span> <span class="n">offsets</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
              <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -2852,13 +2909,30 @@ module.</p>
                 <span class="n">pName</span><span class="o">=</span><span class="s1">&#39;main&#39;</span>
             <span class="p">))</span>
 
+        <span class="n">vk_vertex_bindings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+            <span class="n">vk_vertex_bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkVertexInputBindingDescription</span><span class="p">(</span>
+                <span class="n">binding</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+                <span class="n">stride</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span>
+                <span class="n">inputRate</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+            <span class="p">))</span>
+
+        <span class="n">vk_vertex_attributes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="n">vk_vertex_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkVertexInputAttributeDescription</span><span class="p">(</span>
+                <span class="n">location</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                <span class="n">binding</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+                <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">attribute</span><span class="o">.</span><span class="n">format</span><span class="p">),</span>
+                <span class="n">offset</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">offset</span>
+            <span class="p">))</span>
+
         <span class="n">vk_vertex_input</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineVertexInputStateCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">vertexBindingDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span><span class="p">),</span>
-            <span class="n">pVertexBindingDescriptions</span><span class="o">=</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
-            <span class="n">vertexAttributeDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span><span class="p">),</span>
-            <span class="n">pVertexAttributeDescriptions</span><span class="o">=</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">or</span> <span class="bp">None</span>
+            <span class="n">vertexBindingDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_vertex_bindings</span><span class="p">),</span>
+            <span class="n">pVertexBindingDescriptions</span><span class="o">=</span><span class="n">vk_vertex_bindings</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="n">vertexAttributeDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_vertex_attributes</span><span class="p">),</span>
+            <span class="n">pVertexAttributeDescriptions</span><span class="o">=</span><span class="n">vk_vertex_attributes</span> <span class="ow">or</span> <span class="bp">None</span>
         <span class="p">)</span>
 
         <span class="n">vk_input_assembly</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineInputAssemblyStateCreateInfo</span><span class="p">(</span>
@@ -4578,6 +4652,25 @@ buffer. You should not use it directly but with <code>bind</code> method of
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span>
                              <span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">bind_vertex_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buffers</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Bind vertex buffers to a command buffer</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `first`: Index of the first vertex input binding</span>
+<span class="sd">        - `count`: Number of vertex input bindings</span>
+<span class="sd">        - `buffers`: `list` of `Buffer`</span>
+<span class="sd">        - `offsets`: `list` of offset (`int`)</span>
+
+<span class="sd">        **Note: I don&#39;t understand what is the point with offset but you</span>
+<span class="sd">                must pass an array of the same size as `buffers`.**</span>
+
+<span class="sd">        **Note: Generally, `count = len(buffers)` and `first = 0`**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindVertexBuffers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span>
+                                  <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">buffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">],</span> <span class="n">offsets</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
              <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -4811,6 +4904,55 @@ buffer. You should not use it directly but with <code>bind</code> method of
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindPipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span>
                          <span class="n">pipeline</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers">
+    <p>def <span class="ident">bind_vertex_buffers</span>(</p><p>self, first, count, buffers, offsets)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Bind vertex buffers to a command buffer</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>first</code>: Index of the first vertex input binding</li>
+<li><code>count</code>: Number of vertex input bindings</li>
+<li><code>buffers</code>: <code>list</code> of <code>Buffer</code></li>
+<li><code>offsets</code>: <code>list</code> of offset (<code>int</code>)</li>
+</ul>
+
+<p><strong>Note: I don't understand what is the point with offset but you
+        must pass an array of the same size as <code>buffers</code>.</strong></p>
+
+<p><strong>Note: Generally, <code>count = len(buffers)</code> and <code>first = 0</code></strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">bind_vertex_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">buffers</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Bind vertex buffers to a command buffer</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `first`: Index of the first vertex input binding</span>
+<span class="sd">    - `count`: Number of vertex input bindings</span>
+<span class="sd">    - `buffers`: `list` of `Buffer`</span>
+<span class="sd">    - `offsets`: `list` of offset (`int`)</span>
+<span class="sd">    **Note: I don&#39;t understand what is the point with offset but you</span>
+<span class="sd">            must pass an array of the same size as `buffers`.**</span>
+<span class="sd">    **Note: Generally, `count = len(buffers)` and `first = 0`**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindVertexBuffers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span>
+                              <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">buffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">],</span> <span class="n">offsets</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -7111,13 +7253,30 @@ the render targets. The pipeline combines the following elements:</p>
                 <span class="n">pName</span><span class="o">=</span><span class="s1">&#39;main&#39;</span>
             <span class="p">))</span>
 
+        <span class="n">vk_vertex_bindings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+            <span class="n">vk_vertex_bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkVertexInputBindingDescription</span><span class="p">(</span>
+                <span class="n">binding</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+                <span class="n">stride</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span>
+                <span class="n">inputRate</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+            <span class="p">))</span>
+
+        <span class="n">vk_vertex_attributes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="n">vk_vertex_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkVertexInputAttributeDescription</span><span class="p">(</span>
+                <span class="n">location</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                <span class="n">binding</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+                <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">attribute</span><span class="o">.</span><span class="n">format</span><span class="p">),</span>
+                <span class="n">offset</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">offset</span>
+            <span class="p">))</span>
+
         <span class="n">vk_vertex_input</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineVertexInputStateCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">vertexBindingDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span><span class="p">),</span>
-            <span class="n">pVertexBindingDescriptions</span><span class="o">=</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
-            <span class="n">vertexAttributeDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span><span class="p">),</span>
-            <span class="n">pVertexAttributeDescriptions</span><span class="o">=</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">or</span> <span class="bp">None</span>
+            <span class="n">vertexBindingDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_vertex_bindings</span><span class="p">),</span>
+            <span class="n">pVertexBindingDescriptions</span><span class="o">=</span><span class="n">vk_vertex_bindings</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="n">vertexAttributeDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_vertex_attributes</span><span class="p">),</span>
+            <span class="n">pVertexAttributeDescriptions</span><span class="o">=</span><span class="n">vk_vertex_attributes</span> <span class="ow">or</span> <span class="bp">None</span>
         <span class="p">)</span>
 
         <span class="n">vk_input_assembly</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineInputAssemblyStateCreateInfo</span><span class="p">(</span>
@@ -7337,13 +7496,28 @@ the render targets. The pipeline combines the following elements:</p>
             <span class="n">pSpecializationInfo</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
             <span class="n">pName</span><span class="o">=</span><span class="s1">&#39;main&#39;</span>
         <span class="p">))</span>
+    <span class="n">vk_vertex_bindings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span><span class="p">:</span>
+        <span class="n">vk_vertex_bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkVertexInputBindingDescription</span><span class="p">(</span>
+            <span class="n">binding</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">inputRate</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">rate</span><span class="p">)</span>
+        <span class="p">))</span>
+    <span class="n">vk_vertex_attributes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+        <span class="n">vk_vertex_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkVertexInputAttributeDescription</span><span class="p">(</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+            <span class="n">binding</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+            <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">attribute</span><span class="o">.</span><span class="n">format</span><span class="p">),</span>
+            <span class="n">offset</span><span class="o">=</span><span class="n">attribute</span><span class="o">.</span><span class="n">offset</span>
+        <span class="p">))</span>
     <span class="n">vk_vertex_input</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineVertexInputStateCreateInfo</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO</span><span class="p">,</span>
         <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">vertexBindingDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span><span class="p">),</span>
-        <span class="n">pVertexBindingDescriptions</span><span class="o">=</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">bindings</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
-        <span class="n">vertexAttributeDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span><span class="p">),</span>
-        <span class="n">pVertexAttributeDescriptions</span><span class="o">=</span><span class="n">vertex_input</span><span class="o">.</span><span class="n">attributes</span> <span class="ow">or</span> <span class="bp">None</span>
+        <span class="n">vertexBindingDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_vertex_bindings</span><span class="p">),</span>
+        <span class="n">pVertexBindingDescriptions</span><span class="o">=</span><span class="n">vk_vertex_bindings</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">vertexAttributeDescriptionCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_vertex_attributes</span><span class="p">),</span>
+        <span class="n">pVertexAttributeDescriptions</span><span class="o">=</span><span class="n">vk_vertex_attributes</span> <span class="ow">or</span> <span class="bp">None</span>
     <span class="p">)</span>
     <span class="n">vk_input_assembly</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineInputAssemblyStateCreateInfo</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO</span><span class="p">,</span> <span class="c1"># noqa</span>
@@ -8166,8 +8340,8 @@ the render targets. The pipeline combines the following elements:</p>
     <div class="desc"><p><em>Parameters:</em></p>
 
 <ul>
-<li><code>bindings</code>: List of vertice bindings</li>
-<li><code>attributes</code>: List of vertice attributes</li>
+<li><code>bindings</code>: List of <code>VertexInputBindingDescription</code></li>
+<li><code>attributes</code>: List of <code>VertexInputAttributeDescription</code></li>
 </ul>
 
 <p><strong>Note: <code>bindings</code> and <code>attributes</code> can be empty <code>list</code></strong></p>
@@ -9108,6 +9282,151 @@ an attachment, don't set it, its default value is an empty list.</p>
             
   
     <div class="desc"><p>Alias for field number 2</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.VertexInputAttributeDescription" class="name">class <span class="ident">VertexInputAttributeDescription</span></p>
+      
+  
+    <div class="desc"><p>Structure specifying vertex input attribute description</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>location</code>: Shader binding location number for this attribute (<code>int</code>)</li>
+<li><code>binding</code>: Binding number which this attribute takes its data from</li>
+<li><code>format</code>: <code>VkFormat</code> of the vertex attribute data</li>
+<li><code>offset</code>: Byte offset of this attribute relative to the start of an
+        element in the vertex input binding (<code>int</code>)</li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.VertexInputAttributeDescription">VertexInputAttributeDescription</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.VertexInputAttributeDescription.binding" class="name">var <span class="ident">binding</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.VertexInputAttributeDescription.format" class="name">var <span class="ident">format</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 2</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.VertexInputAttributeDescription.location" class="name">var <span class="ident">location</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.VertexInputAttributeDescription.offset" class="name">var <span class="ident">offset</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 3</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.VertexInputBindingDescription" class="name">class <span class="ident">VertexInputBindingDescription</span></p>
+      
+  
+    <div class="desc"><p>Structure specifying vertex input binding description</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>binding</code>: Binding number (<code>int</code>)</li>
+<li><code>stride</code>: Distance in bytes between two consecutive elements within
+        the buffer (<code>int</code>)</li>
+<li><code>rate</code>: <code>VkVertexInputRate</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.VertexInputBindingDescription">VertexInputBindingDescription</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.VertexInputBindingDescription.binding" class="name">var <span class="ident">binding</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.VertexInputBindingDescription.rate" class="name">var <span class="ident">rate</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 2</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.VertexInputBindingDescription.stride" class="name">var <span class="ident">stride</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
 </div>
   <div class="source_cont">
 </div>
