@@ -1056,6 +1056,7 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.immediate_buffer">immediate_buffer</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.submit_to_graphic_queue">submit_to_graphic_queue</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.submit_to_queue">submit_to_queue</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.update_descriptorsets">update_descriptorsets</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.vk_const">vk_const</a></li>
   </ul>
 
@@ -1117,6 +1118,7 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.begin_renderpass">begin_renderpass</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_descriptor_sets">bind_descriptor_sets</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_index_buffer">bind_index_buffer</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_pipeline">bind_pipeline</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers">bind_vertex_buffers</a></li>
@@ -1140,6 +1142,50 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.CommandPool.free_buffers">free_buffers</a></li>
   </ul>
 
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.DescriptorBufferInfo">DescriptorBufferInfo</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.DescriptorImageInfo">DescriptorImageInfo</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.DescriptorPool">DescriptorPool</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.DescriptorPool.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.DescriptorPool.allocate_descriptorsets">allocate_descriptorsets</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.DescriptorPoolSize">DescriptorPoolSize</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.DescriptorSet">DescriptorSet</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.DescriptorSet.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.DescriptorSetLayout">DescriptorSetLayout</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.DescriptorSetLayout.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.DescriptorSetLayoutBinding">DescriptorSetLayoutBinding</a></span>
+        
         </li>
         <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.Extent2D">Extent2D</a></span>
@@ -1237,6 +1283,15 @@ table {
         
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.PipelineLayout">PipelineLayout</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.PipelineLayout.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.PipelineMultisampleState">PipelineMultisampleState</a></span>
         
         </li>
@@ -1309,6 +1364,10 @@ table {
         </li>
         <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.Viewport">Viewport</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.WriteDescriptorSet">WriteDescriptorSet</a></span>
         
         </li>
       </ul>
@@ -1532,6 +1591,72 @@ module.</p>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_submits</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">update_descriptorsets</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">writes</span><span class="p">,</span> <span class="n">copies</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Update the contents of a descriptor set object</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `writes`: `list` of `WriteDescriptorSet`</span>
+<span class="sd">    - `copies`: `list` of `CopyDescriptorSet`</span>
+
+<span class="sd">    **Todo: `copies` is unusable currently**</span>
+<span class="sd">    **Todo: Only `DescriptorBufferInfo` supported**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pImageInfo&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s1">&#39;pBufferInfo&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+                  <span class="s1">&#39;pTexelBufferView&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
+        <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_SAMPLER</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_IMAGE</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+                <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorImageInfo</span><span class="p">(</span>
+                    <span class="n">sampler</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">sampler</span><span class="p">,</span>
+                    <span class="n">imageView</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">imageview</span><span class="p">,</span>
+                    <span class="n">imageLayout</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">layout</span>
+                <span class="p">))</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pImageInfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vk_descriptors</span>
+
+        <span class="k">elif</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pTexelBufferView&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">view</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_BUFFER</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+                <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorBufferInfo</span><span class="p">(</span>
+                    <span class="nb">buffer</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span>
+                    <span class="n">offset</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span>
+                    <span class="nb">range</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">range</span>
+                <span class="p">))</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pBufferInfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vk_descriptors</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="n">vk_writes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">writes</span><span class="p">:</span>
+        <span class="n">vk_writes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkWriteDescriptorSet</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET</span><span class="p">,</span>
+            <span class="n">dstSet</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">set</span><span class="o">.</span><span class="n">descriptorset</span><span class="p">,</span>
+            <span class="n">dstBinding</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+            <span class="n">dstArrayElement</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">set_offset</span><span class="p">,</span>
+            <span class="n">descriptorCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">descriptors</span><span class="p">),</span>
+            <span class="n">descriptorType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+            <span class="o">**</span><span class="n">get_type</span><span class="p">(</span><span class="n">vk_const</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">w</span><span class="o">.</span><span class="n">descriptors</span><span class="p">)</span>
+        <span class="p">))</span>
+
+    <span class="c1"># TODO: copies must be implemented</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkUpdateDescriptorSets</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vk_writes</span><span class="p">),</span>
+                              <span class="n">vk_writes</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">copies</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span>
+
+
 <span class="k">def</span> <span class="nf">vk_const</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Get constant</span>
 
@@ -1579,6 +1704,63 @@ module.</p>
 
 <span class="s1">    - `index`: Index of attachment description</span>
 <span class="s1">    - `layout`: VkImageLayout vulkan constant</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
+<span class="n">DescriptorBufferInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;DescriptorBufferInfo&#39;</span><span class="p">,</span>
+                                  <span class="p">[</span><span class="s1">&#39;buffer&#39;</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span><span class="p">])</span>
+<span class="n">DescriptorBufferInfo</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    Structure specifying descriptor buffer info</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `buffer`: `Buffer` ressource</span>
+<span class="s1">    - `offset`: Offset in bytes from the start of buffer</span>
+<span class="s1">    - `range`: Size in bytes that is used for this descriptor update</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
+<span class="n">DescriptorImageInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;DescriptorImageInfo&#39;</span><span class="p">,</span>
+                                 <span class="p">[</span><span class="s1">&#39;sampler&#39;</span><span class="p">,</span> <span class="s1">&#39;view&#39;</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">])</span>
+<span class="n">DescriptorImageInfo</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    Structure specifying descriptor image info</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `sampler`: `Sampler` ressource</span>
+<span class="s1">    - `view`: `ImageView`</span>
+<span class="s1">    - `layout`: `ImageLayout`</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
+<span class="n">DescriptorPoolSize</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;DescriptorPoolSize&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">])</span>
+<span class="n">DescriptorPoolSize</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    Structure specifying descriptor pool size.</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `type`: `VkDescriptorType`</span>
+<span class="s1">    - `couont`: Number of descriptors of that type to allocate</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
+<span class="n">DescriptorSetLayoutBinding</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;DescriptorSetLayoutBinding&#39;</span><span class="p">,</span>
+                                        <span class="p">[</span><span class="s1">&#39;binding&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;stage&#39;</span><span class="p">,</span> <span class="s1">&#39;immutable_samplers&#39;</span><span class="p">])</span>
+<span class="n">DescriptorSetLayoutBinding</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    Structure specifying a descriptor set layout binding.</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `binding`: Binding number of this entry and corresponds to a resource</span>
+<span class="s1">                 of the same binding number in the shader stages</span>
+<span class="s1">    - `type`: `VkDescriptorType` specifying which type of resource descriptors</span>
+<span class="s1">              are used for this binding</span>
+<span class="s1">    - `count`:  Number of descriptors contained in the binding,</span>
+<span class="s1">                accessed in a shader as an array</span>
+<span class="s1">    - `stage`: `VkShaderStageFlagBits` specifying which pipeline shader stages</span>
+<span class="s1">               can access a resource for this binding</span>
+<span class="s1">    - `immutable_samplers`: Affects initialization of samplers (can be `None`)</span>
 <span class="s1">    &#39;&#39;&#39;</span>
 
 
@@ -1877,6 +2059,25 @@ module.</p>
 <span class="s1">    &#39;&#39;&#39;</span>
 
 
+<span class="n">WriteDescriptorSet</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;WriteDescriptorSet&#39;</span><span class="p">,</span>
+                                <span class="p">[</span><span class="s1">&#39;set&#39;</span><span class="p">,</span> <span class="s1">&#39;binding&#39;</span><span class="p">,</span> <span class="s1">&#39;set_offset&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;descriptors&#39;</span><span class="p">])</span>
+<span class="n">WriteDescriptorSet</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    Structure specifying the parameters of a descriptor set write operation</span>
+
+<span class="s1">    *Parameters:*</span>
+
+<span class="s1">    - `set`: Destination `DescriptorSet` set to update</span>
+<span class="s1">    - `binding`: Descriptor binding within that set</span>
+<span class="s1">    - `set_offset`: Offset to start with in the descriptor</span>
+<span class="s1">    - `type`: Type of descriptor `VkDescriptorType`</span>
+<span class="s1">    - `descriptors`: `list` of `DescriptorBufferInfo` or `DescriptorImageInfo`</span>
+<span class="s1">                    or `BufferView` depending on `type`</span>
+
+<span class="s1">    **Note: The descriptor type must correspond to the `type` parameter**</span>
+<span class="s1">    &#39;&#39;&#39;</span>
+
+
 <span class="c1"># ----------</span>
 <span class="c1"># CLASSES</span>
 <span class="c1"># ----------</span>
@@ -2075,7 +2276,7 @@ module.</p>
 
 <span class="sd">        *Parameters:*</span>
 
-<span class="sd">        - `commandbuffer`: The `VkCommadBuffer`</span>
+<span class="sd">        - `commandbuffer`: `VkCommandBuffer`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">commandbuffer</span>
 
@@ -2171,6 +2372,25 @@ module.</p>
 
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBeginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">renderpass_begin</span><span class="p">,</span>
                                 <span class="n">vk_const</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">bind_descriptor_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span>
+                             <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Binds descriptor sets to this `CommandBuffer`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `layout`: `PipelineLayout`</span>
+<span class="sd">        - `first`: Number of the first descriptor set to be bound</span>
+<span class="sd">        - `descriptors`: `list` of `DescriptorSet`</span>
+<span class="sd">        - `offsets`: `list` of dynamic offsets</span>
+<span class="sd">        - `bind_point`: `VkPipelineBindPoint`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorset</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">]</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindDescriptorSets</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span> <span class="n">layout</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span> <span class="n">vk_descriptors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span>
+            <span class="n">offsets</span> <span class="k">if</span> <span class="n">offsets</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
                       <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
@@ -2369,14 +2589,13 @@ module.</p>
 
     <span class="k">def</span> <span class="nf">allocate_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Allocate list of `CommandBuffer` from pool.</span>
+<span class="sd">        Allocate `list` of `CommandBuffer` from pool.</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
-<span class="sd">        - `commandpool`: The source `CommandPool`</span>
 <span class="sd">        - `level`: `VkCommandBufferLevel` Vulkan constant</span>
-<span class="sd">        - `count`: Number of buffer to create</span>
+<span class="sd">        - `count`: Number of `CommandBuffer` to create</span>
 
 <span class="sd">        *Returns:*</span>
 
@@ -2426,6 +2645,130 @@ module.</p>
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkDestroyCommandPool</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DescriptorPool</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A descriptor pool maintains a pool of descriptors, from which descriptor</span>
+<span class="sd">    sets are allocated. Descriptor pools are externally synchronized, meaning</span>
+<span class="sd">    that the application must not allocate and/or free descriptor sets from</span>
+<span class="sd">    the same pool in multiple threads simultaneously.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">poolsizes</span><span class="p">,</span> <span class="n">max_sets</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `poolsizes`: `list` of `PoolSize`</span>
+<span class="sd">        - `max_sets`: Maximum number of descriptor sets that can be</span>
+<span class="sd">                      allocated from the pool</span>
+<span class="sd">        - `flags`: `VkDescriptorPoolCreateFlags` (default=0)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_poolsizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">poolsizes</span><span class="p">:</span>
+            <span class="n">vk_poolsizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorPoolSize</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+                <span class="n">descriptorCount</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">count</span>
+            <span class="p">))</span>
+
+        <span class="n">descriptorpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorPoolCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+            <span class="n">maxSets</span><span class="o">=</span><span class="n">max_sets</span><span class="p">,</span>
+            <span class="n">poolSizeCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_poolsizes</span><span class="p">),</span>
+            <span class="n">pPoolSizes</span><span class="o">=</span><span class="n">vk_poolsizes</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorPool</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorpool_create</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">allocate_descriptorsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">layouts</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Allocate `list` of `DescriptorSet` from pool.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `count`: Number of `DescriptorSet` to create</span>
+<span class="sd">        - `layouts`: `list` of `DescriptorSetLayout`</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        `list` of `DescriptorSet`</span>
+
+<span class="sd">        **Note: Size of `layouts` list must be equals to `count`**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">descriptorsets_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetAllocateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO</span><span class="p">,</span>
+            <span class="n">descriptorPool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span><span class="p">,</span>
+            <span class="n">descriptorSetCount</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+            <span class="n">pSetLayouts</span><span class="o">=</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorsetlayout</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">layouts</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">vk_descriptorsets</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateDescriptorSets</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorsets_create</span><span class="p">)</span>
+
+        <span class="n">descriptorsets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DescriptorSet</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span> <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">vk_descriptorsets</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">descriptorsets</span>
+
+
+<span class="k">class</span> <span class="nc">DescriptorSet</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A *descriptor set* specifies the actual buffer or image resources that</span>
+<span class="sd">    will be bound to the descriptors, just like a framebuffer specifies the</span>
+<span class="sd">    actual image views to bind to render pass attachments. The descriptor set</span>
+<span class="sd">    is then bound for the drawing commands just like the vertex buffers</span>
+<span class="sd">    and framebuffer.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descriptorset</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This object must be initialized with an existing `VkDescriptorSet`</span>
+<span class="sd">        because it is generated from `DescriptorPool`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `descriptorset`: `VkDescriptorSet`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorset</span> <span class="o">=</span> <span class="n">descriptorset</span>
+
+
+<span class="k">class</span> <span class="nc">DescriptorSetLayout</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A descriptor set layout object is defined by an array of zero or more</span>
+<span class="sd">    descriptor bindings. Each individual descriptor binding is specified by</span>
+<span class="sd">    a descriptor type, a count (array size) of the number of descriptors in</span>
+<span class="sd">    the binding, a set of shader stages that can access the binding,</span>
+<span class="sd">    and (if using immutable samplers) an array of sampler descriptors.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">bindings</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `bindings`: `list` of `DescriptorSetLayoutBinding`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_bindings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bindings</span><span class="p">:</span>
+            <span class="n">vk_bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetLayoutBinding</span><span class="p">(</span>
+                <span class="n">binding</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+                <span class="n">descriptorType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+                <span class="n">descriptorCount</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+                <span class="n">stageFlags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">stage</span><span class="p">),</span>
+                <span class="n">pImmutableSamplers</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">immutable_samplers</span>
+            <span class="p">))</span>
+
+        <span class="n">layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetLayoutCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">bindingCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_bindings</span><span class="p">),</span>
+            <span class="n">pBindings</span><span class="o">=</span><span class="n">vk_bindings</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsetlayout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorSetLayout</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">layout_create</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Framebuffer</span><span class="p">():</span>
@@ -2945,7 +3288,7 @@ module.</p>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">stages</span><span class="p">,</span> <span class="n">vertex_input</span><span class="p">,</span> <span class="n">input_assembly</span><span class="p">,</span>
                  <span class="n">viewport_state</span><span class="p">,</span> <span class="n">rasterization</span><span class="p">,</span> <span class="n">multisample</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">blend</span><span class="p">,</span>
-                 <span class="n">dynamic</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">):</span>
+                 <span class="n">dynamic</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
@@ -2958,6 +3301,7 @@ module.</p>
 <span class="sd">        - `depth`: `PipelineDepthStencilState` (can be `None`)</span>
 <span class="sd">        - `blend`: `PipelineColorBlendState`</span>
 <span class="sd">        - `dynamic`: `PipelineDynamicState` (may be `None`)</span>
+<span class="sd">        - `layout`: `PipelineLayout`</span>
 <span class="sd">        - `renderpass`: The `Renderpass` of this pipeline</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
@@ -3117,17 +3461,6 @@ module.</p>
                 <span class="n">pDynamicStates</span><span class="o">=</span><span class="n">dynamic</span><span class="o">.</span><span class="n">states</span>
             <span class="p">)</span>
 
-        <span class="c1"># Currently layout is unusable, I have to try it</span>
-        <span class="n">vk_layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineLayoutCreateInfo</span><span class="p">(</span>
-            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO</span><span class="p">,</span>
-            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">setLayoutCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pSetLayouts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">pushConstantRangeCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pPushConstantRanges</span><span class="o">=</span><span class="bp">None</span>
-        <span class="p">)</span>
-        <span class="n">vk_layout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreatePipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">vk_layout_create</span><span class="p">)</span>
-
         <span class="n">pipeline_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkGraphicsPipelineCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -3142,7 +3475,7 @@ module.</p>
             <span class="n">pDepthStencilState</span><span class="o">=</span><span class="n">vk_depth</span><span class="p">,</span>
             <span class="n">pColorBlendState</span><span class="o">=</span><span class="n">vk_blend</span><span class="p">,</span>
             <span class="n">pDynamicState</span><span class="o">=</span><span class="n">vk_dynamic</span><span class="p">,</span>
-            <span class="n">layout</span><span class="o">=</span><span class="n">vk_layout</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span>
             <span class="n">renderPass</span><span class="o">=</span><span class="n">renderpass</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
             <span class="n">subpass</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">basePipelineHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -3151,6 +3484,44 @@ module.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateGraphicsPipelines</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
                                                      <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">pipeline_create</span><span class="p">])</span>
+
+
+<span class="k">class</span> <span class="nc">PipelineLayout</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Pipeline layout object</span>
+
+<span class="sd">    Access to descriptor sets from a pipeline is accomplished through a</span>
+<span class="sd">    pipeline layout. Zero or more descriptor set layouts and zero or more</span>
+<span class="sd">    push constant ranges are combined to form a pipeline layout object which</span>
+<span class="sd">    describes the complete set of resources that can be accessed by a</span>
+<span class="sd">    pipeline. The pipeline layout represents a sequence of descriptor sets</span>
+<span class="sd">    with each having a specific layout. This sequence of layouts is used to</span>
+<span class="sd">    determine the interface between shader stages and shader resources.</span>
+<span class="sd">    Each pipeline is created using a pipeline layout.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `descriptors`: `list` of `DescriptorSetLayout`</span>
+
+<span class="sd">        **Todo: push constant muse be implemented**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+            <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorsetlayout</span><span class="p">)</span>
+
+        <span class="n">layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineLayoutCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">setLayoutCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span>
+            <span class="n">pSetLayouts</span><span class="o">=</span><span class="n">vk_descriptors</span> <span class="k">if</span> <span class="n">vk_descriptors</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="n">pushConstantRangeCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">pPushConstantRanges</span><span class="o">=</span><span class="bp">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreatePipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                <span class="n">layout_create</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Renderpass</span><span class="p">():</span>
@@ -3614,6 +3985,102 @@ If commandpool is not given, it is created here.</p>
         <span class="p">))</span>
 
     <span class="n">vk</span><span class="o">.</span><span class="n">vkQueueSubmit</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vk_submits</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.update_descriptorsets">
+    <p>def <span class="ident">update_descriptorsets</span>(</p><p>context, writes, copies)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Update the contents of a descriptor set object</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>writes</code>: <code>list</code> of <code>WriteDescriptorSet</code></li>
+<li><code>copies</code>: <code>list</code> of <code>CopyDescriptorSet</code></li>
+</ul>
+
+<p><strong>Todo: <code>copies</code> is unusable currently</strong>
+<strong>Todo: Only <code>DescriptorBufferInfo</code> supported</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.update_descriptorsets', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.update_descriptorsets" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">update_descriptorsets</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">writes</span><span class="p">,</span> <span class="n">copies</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Update the contents of a descriptor set object</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `writes`: `list` of `WriteDescriptorSet`</span>
+<span class="sd">    - `copies`: `list` of `CopyDescriptorSet`</span>
+
+<span class="sd">    **Todo: `copies` is unusable currently**</span>
+<span class="sd">    **Todo: Only `DescriptorBufferInfo` supported**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pImageInfo&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s1">&#39;pBufferInfo&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+                  <span class="s1">&#39;pTexelBufferView&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
+        <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_SAMPLER</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_IMAGE</span><span class="p">,</span>
+                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+                <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorImageInfo</span><span class="p">(</span>
+                    <span class="n">sampler</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">sampler</span><span class="p">,</span>
+                    <span class="n">imageView</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">imageview</span><span class="p">,</span>
+                    <span class="n">imageLayout</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">layout</span>
+                <span class="p">))</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pImageInfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vk_descriptors</span>
+
+        <span class="k">elif</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pTexelBufferView&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">view</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_BUFFER</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC</span><span class="p">,</span>
+                   <span class="n">vk</span><span class="o">.</span><span class="n">VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+                <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorBufferInfo</span><span class="p">(</span>
+                    <span class="nb">buffer</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span>
+                    <span class="n">offset</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span>
+                    <span class="nb">range</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">range</span>
+                <span class="p">))</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pBufferInfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vk_descriptors</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="n">vk_writes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">writes</span><span class="p">:</span>
+        <span class="n">vk_writes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkWriteDescriptorSet</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET</span><span class="p">,</span>
+            <span class="n">dstSet</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">set</span><span class="o">.</span><span class="n">descriptorset</span><span class="p">,</span>
+            <span class="n">dstBinding</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+            <span class="n">dstArrayElement</span><span class="o">=</span><span class="n">w</span><span class="o">.</span><span class="n">set_offset</span><span class="p">,</span>
+            <span class="n">descriptorCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">descriptors</span><span class="p">),</span>
+            <span class="n">descriptorType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+            <span class="o">**</span><span class="n">get_type</span><span class="p">(</span><span class="n">vk_const</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">type</span><span class="p">),</span> <span class="n">w</span><span class="o">.</span><span class="n">descriptors</span><span class="p">)</span>
+        <span class="p">))</span>
+
+    <span class="c1"># TODO: copies must be implemented</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkUpdateDescriptorSets</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vk_writes</span><span class="p">),</span>
+                              <span class="n">vk_writes</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">copies</span><span class="p">),</span> <span class="bp">None</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -4480,7 +4947,7 @@ The naming convention is simple:
 
 <span class="sd">        *Parameters:*</span>
 
-<span class="sd">        - `commandbuffer`: The `VkCommadBuffer`</span>
+<span class="sd">        - `commandbuffer`: `VkCommandBuffer`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">commandbuffer</span>
 
@@ -4541,7 +5008,7 @@ because it is generated from <code>CommandPool</code>.</p>
 <p><em>Parameters:</em></p>
 
 <ul>
-<li><code>commandbuffer</code>: The <code>VkCommadBuffer</code></li>
+<li><code>commandbuffer</code>: <code>VkCommandBuffer</code></li>
 </ul>
 </div>
   <div class="source_cont">
@@ -4552,7 +5019,7 @@ because it is generated from <code>CommandPool</code>.</p>
 <span class="sd">    This object must be initialized with an existing `VkCommandBuffer`</span>
 <span class="sd">    because it is generated from `CommandPool`.</span>
 <span class="sd">    *Parameters:*</span>
-<span class="sd">    - `commandbuffer`: The `VkCommadBuffer`</span>
+<span class="sd">    - `commandbuffer`: `VkCommandBuffer`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span> <span class="o">=</span> <span class="n">commandbuffer</span>
 </pre></div>
@@ -4707,6 +5174,25 @@ buffer. You should not use it directly but with <code>bind</code> method of
 
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBeginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">renderpass_begin</span><span class="p">,</span>
                                 <span class="n">vk_const</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">bind_descriptor_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span>
+                             <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Binds descriptor sets to this `CommandBuffer`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `layout`: `PipelineLayout`</span>
+<span class="sd">        - `first`: Number of the first descriptor set to be bound</span>
+<span class="sd">        - `descriptors`: `list` of `DescriptorSet`</span>
+<span class="sd">        - `offsets`: `list` of dynamic offsets</span>
+<span class="sd">        - `bind_point`: `VkPipelineBindPoint`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorset</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">]</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindDescriptorSets</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span> <span class="n">layout</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span> <span class="n">vk_descriptors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span>
+            <span class="n">offsets</span> <span class="k">if</span> <span class="n">offsets</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
                       <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
@@ -4986,6 +5472,53 @@ buffer. You should not use it directly but with <code>bind</code> method of
     <span class="p">)</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBeginRenderPass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">renderpass_begin</span><span class="p">,</span>
                             <span class="n">vk_const</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBufferRegister.bind_descriptor_sets">
+    <p>def <span class="ident">bind_descriptor_sets</span>(</p><p>self, layout, first, descriptors, offsets, bind_point=&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Binds descriptor sets to this <code>CommandBuffer</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>layout</code>: <code>PipelineLayout</code></li>
+<li><code>first</code>: Number of the first descriptor set to be bound</li>
+<li><code>descriptors</code>: <code>list</code> of <code>DescriptorSet</code></li>
+<li><code>offsets</code>: <code>list</code> of dynamic offsets</li>
+<li><code>bind_point</code>: <code>VkPipelineBindPoint</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBufferRegister.bind_descriptor_sets', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBufferRegister.bind_descriptor_sets" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">bind_descriptor_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span>
+                         <span class="n">bind_point</span><span class="o">=</span><span class="s1">&#39;VK_PIPELINE_BIND_POINT_GRAPHICS&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Binds descriptor sets to this `CommandBuffer`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `layout`: `PipelineLayout`</span>
+<span class="sd">    - `first`: Number of the first descriptor set to be bound</span>
+<span class="sd">    - `descriptors`: `list` of `DescriptorSet`</span>
+<span class="sd">    - `offsets`: `list` of dynamic offsets</span>
+<span class="sd">    - `bind_point`: `VkPipelineBindPoint`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorset</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">]</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindDescriptorSets</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">bind_point</span><span class="p">),</span> <span class="n">layout</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span> <span class="n">vk_descriptors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span>
+        <span class="n">offsets</span> <span class="k">if</span> <span class="n">offsets</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -5481,14 +6014,13 @@ command buffers are allocated from them.</p>
 
     <span class="k">def</span> <span class="nf">allocate_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Allocate list of `CommandBuffer` from pool.</span>
+<span class="sd">        Allocate `list` of `CommandBuffer` from pool.</span>
 
 <span class="sd">        *Parameters:*</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
-<span class="sd">        - `commandpool`: The source `CommandPool`</span>
 <span class="sd">        - `level`: `VkCommandBufferLevel` Vulkan constant</span>
-<span class="sd">        - `count`: Number of buffer to create</span>
+<span class="sd">        - `count`: Number of `CommandBuffer` to create</span>
 
 <span class="sd">        *Returns:*</span>
 
@@ -5604,15 +6136,14 @@ command buffers are allocated from them.</p>
 
     
   
-    <div class="desc"><p>Allocate list of <code>CommandBuffer</code> from pool.</p>
+    <div class="desc"><p>Allocate <code>list</code> of <code>CommandBuffer</code> from pool.</p>
 
 <p><em>Parameters:</em></p>
 
 <ul>
 <li><code>context</code>: The <code>VulkContext</code></li>
-<li><code>commandpool</code>: The source <code>CommandPool</code></li>
 <li><code>level</code>: <code>VkCommandBufferLevel</code> Vulkan constant</li>
-<li><code>count</code>: Number of buffer to create</li>
+<li><code>count</code>: Number of <code>CommandBuffer</code> to create</li>
 </ul>
 
 <p><em>Returns:</em></p>
@@ -5624,12 +6155,11 @@ command buffers are allocated from them.</p>
   <div id="source-vulk.vulkanobject.CommandPool.allocate_buffers" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">allocate_buffers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Allocate list of `CommandBuffer` from pool.</span>
+<span class="sd">    Allocate `list` of `CommandBuffer` from pool.</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: The `VulkContext`</span>
-<span class="sd">    - `commandpool`: The source `CommandPool`</span>
 <span class="sd">    - `level`: `VkCommandBufferLevel` Vulkan constant</span>
-<span class="sd">    - `count`: Number of buffer to create</span>
+<span class="sd">    - `count`: Number of `CommandBuffer` to create</span>
 <span class="sd">    *Returns:*</span>
 <span class="sd">    `list` of `CommandBuffer`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -5746,6 +6276,714 @@ command buffers are allocated from them.</p>
 
             
   
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.DescriptorBufferInfo" class="name">class <span class="ident">DescriptorBufferInfo</span></p>
+      
+  
+    <div class="desc"><p>Structure specifying descriptor buffer info</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>buffer</code>: <code>Buffer</code> ressource</li>
+<li><code>offset</code>: Offset in bytes from the start of buffer</li>
+<li><code>range</code>: Size in bytes that is used for this descriptor update</li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.DescriptorBufferInfo">DescriptorBufferInfo</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorBufferInfo.buffer" class="name">var <span class="ident">buffer</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorBufferInfo.offset" class="name">var <span class="ident">offset</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorBufferInfo.range" class="name">var <span class="ident">range</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 2</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.DescriptorImageInfo" class="name">class <span class="ident">DescriptorImageInfo</span></p>
+      
+  
+    <div class="desc"><p>Structure specifying descriptor image info</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>sampler</code>: <code>Sampler</code> ressource</li>
+<li><code>view</code>: <code>ImageView</code></li>
+<li><code>layout</code>: <code>ImageLayout</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.DescriptorImageInfo">DescriptorImageInfo</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorImageInfo.layout" class="name">var <span class="ident">layout</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 2</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorImageInfo.sampler" class="name">var <span class="ident">sampler</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorImageInfo.view" class="name">var <span class="ident">view</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.DescriptorPool" class="name">class <span class="ident">DescriptorPool</span></p>
+      
+  
+    <div class="desc"><p>A descriptor pool maintains a pool of descriptors, from which descriptor
+sets are allocated. Descriptor pools are externally synchronized, meaning
+that the application must not allocate and/or free descriptor sets from
+the same pool in multiple threads simultaneously.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.DescriptorPool', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.DescriptorPool" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DescriptorPool</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A descriptor pool maintains a pool of descriptors, from which descriptor</span>
+<span class="sd">    sets are allocated. Descriptor pools are externally synchronized, meaning</span>
+<span class="sd">    that the application must not allocate and/or free descriptor sets from</span>
+<span class="sd">    the same pool in multiple threads simultaneously.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">poolsizes</span><span class="p">,</span> <span class="n">max_sets</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `poolsizes`: `list` of `PoolSize`</span>
+<span class="sd">        - `max_sets`: Maximum number of descriptor sets that can be</span>
+<span class="sd">                      allocated from the pool</span>
+<span class="sd">        - `flags`: `VkDescriptorPoolCreateFlags` (default=0)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_poolsizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">poolsizes</span><span class="p">:</span>
+            <span class="n">vk_poolsizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorPoolSize</span><span class="p">(</span>
+                <span class="nb">type</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+                <span class="n">descriptorCount</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">count</span>
+            <span class="p">))</span>
+
+        <span class="n">descriptorpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorPoolCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+            <span class="n">maxSets</span><span class="o">=</span><span class="n">max_sets</span><span class="p">,</span>
+            <span class="n">poolSizeCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_poolsizes</span><span class="p">),</span>
+            <span class="n">pPoolSizes</span><span class="o">=</span><span class="n">vk_poolsizes</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorPool</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorpool_create</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">allocate_descriptorsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">layouts</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Allocate `list` of `DescriptorSet` from pool.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `count`: Number of `DescriptorSet` to create</span>
+<span class="sd">        - `layouts`: `list` of `DescriptorSetLayout`</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        `list` of `DescriptorSet`</span>
+
+<span class="sd">        **Note: Size of `layouts` list must be equals to `count`**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">descriptorsets_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetAllocateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO</span><span class="p">,</span>
+            <span class="n">descriptorPool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span><span class="p">,</span>
+            <span class="n">descriptorSetCount</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+            <span class="n">pSetLayouts</span><span class="o">=</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorsetlayout</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">layouts</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">vk_descriptorsets</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateDescriptorSets</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorsets_create</span><span class="p">)</span>
+
+        <span class="n">descriptorsets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DescriptorSet</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span> <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">vk_descriptorsets</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">descriptorsets</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.DescriptorPool">DescriptorPool</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.DescriptorPool.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, poolsizes, max_sets, flags=0)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>poolsizes</code>: <code>list</code> of <code>PoolSize</code></li>
+<li><code>max_sets</code>: Maximum number of descriptor sets that can be
+          allocated from the pool</li>
+<li><code>flags</code>: <code>VkDescriptorPoolCreateFlags</code> (default=0)</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.DescriptorPool.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.DescriptorPool.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">poolsizes</span><span class="p">,</span> <span class="n">max_sets</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `poolsizes`: `list` of `PoolSize`</span>
+<span class="sd">    - `max_sets`: Maximum number of descriptor sets that can be</span>
+<span class="sd">                  allocated from the pool</span>
+<span class="sd">    - `flags`: `VkDescriptorPoolCreateFlags` (default=0)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk_poolsizes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">poolsizes</span><span class="p">:</span>
+        <span class="n">vk_poolsizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorPoolSize</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+            <span class="n">descriptorCount</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">count</span>
+        <span class="p">))</span>
+    <span class="n">descriptorpool_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorPoolCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">flags</span><span class="p">),</span>
+        <span class="n">maxSets</span><span class="o">=</span><span class="n">max_sets</span><span class="p">,</span>
+        <span class="n">poolSizeCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_poolsizes</span><span class="p">),</span>
+        <span class="n">pPoolSizes</span><span class="o">=</span><span class="n">vk_poolsizes</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorPool</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorpool_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.DescriptorPool.allocate_descriptorsets">
+    <p>def <span class="ident">allocate_descriptorsets</span>(</p><p>self, context, count, layouts)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Allocate <code>list</code> of <code>DescriptorSet</code> from pool.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>count</code>: Number of <code>DescriptorSet</code> to create</li>
+<li><code>layouts</code>: <code>list</code> of <code>DescriptorSetLayout</code></li>
+</ul>
+
+<p><em>Returns:</em></p>
+
+<p><code>list</code> of <code>DescriptorSet</code></p>
+
+<p><strong>Note: Size of <code>layouts</code> list must be equals to <code>count</code></strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.DescriptorPool.allocate_descriptorsets', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.DescriptorPool.allocate_descriptorsets" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">allocate_descriptorsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">layouts</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Allocate `list` of `DescriptorSet` from pool.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `count`: Number of `DescriptorSet` to create</span>
+<span class="sd">    - `layouts`: `list` of `DescriptorSetLayout`</span>
+<span class="sd">    *Returns:*</span>
+<span class="sd">    `list` of `DescriptorSet`</span>
+<span class="sd">    **Note: Size of `layouts` list must be equals to `count`**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">descriptorsets_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetAllocateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO</span><span class="p">,</span>
+        <span class="n">descriptorPool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span><span class="p">,</span>
+        <span class="n">descriptorSetCount</span><span class="o">=</span><span class="n">count</span><span class="p">,</span>
+        <span class="n">pSetLayouts</span><span class="o">=</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorsetlayout</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">layouts</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">vk_descriptorsets</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateDescriptorSets</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorsets_create</span><span class="p">)</span>
+    <span class="n">descriptorsets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DescriptorSet</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span> <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">vk_descriptorsets</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">descriptorsets</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorPool.descriptorpool" class="name">var <span class="ident">descriptorpool</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.DescriptorPoolSize" class="name">class <span class="ident">DescriptorPoolSize</span></p>
+      
+  
+    <div class="desc"><p>Structure specifying descriptor pool size.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>type</code>: <code>VkDescriptorType</code></li>
+<li><code>couont</code>: Number of descriptors of that type to allocate</li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.DescriptorPoolSize">DescriptorPoolSize</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorPoolSize.count" class="name">var <span class="ident">count</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorPoolSize.type" class="name">var <span class="ident">type</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.DescriptorSet" class="name">class <span class="ident">DescriptorSet</span></p>
+      
+  
+    <div class="desc"><p>A <em>descriptor set</em> specifies the actual buffer or image resources that
+will be bound to the descriptors, just like a framebuffer specifies the
+actual image views to bind to render pass attachments. The descriptor set
+is then bound for the drawing commands just like the vertex buffers
+and framebuffer.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.DescriptorSet', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.DescriptorSet" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DescriptorSet</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A *descriptor set* specifies the actual buffer or image resources that</span>
+<span class="sd">    will be bound to the descriptors, just like a framebuffer specifies the</span>
+<span class="sd">    actual image views to bind to render pass attachments. The descriptor set</span>
+<span class="sd">    is then bound for the drawing commands just like the vertex buffers</span>
+<span class="sd">    and framebuffer.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descriptorset</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This object must be initialized with an existing `VkDescriptorSet`</span>
+<span class="sd">        because it is generated from `DescriptorPool`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `descriptorset`: `VkDescriptorSet`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorset</span> <span class="o">=</span> <span class="n">descriptorset</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.DescriptorSet">DescriptorSet</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.DescriptorSet.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, descriptorset)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>This object must be initialized with an existing <code>VkDescriptorSet</code>
+because it is generated from <code>DescriptorPool</code>.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>descriptorset</code>: <code>VkDescriptorSet</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.DescriptorSet.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.DescriptorSet.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">descriptorset</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    This object must be initialized with an existing `VkDescriptorSet`</span>
+<span class="sd">    because it is generated from `DescriptorPool`.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `descriptorset`: `VkDescriptorSet`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">descriptorset</span> <span class="o">=</span> <span class="n">descriptorset</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorSet.descriptorset" class="name">var <span class="ident">descriptorset</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.DescriptorSetLayout" class="name">class <span class="ident">DescriptorSetLayout</span></p>
+      
+  
+    <div class="desc"><p>A descriptor set layout object is defined by an array of zero or more
+descriptor bindings. Each individual descriptor binding is specified by
+a descriptor type, a count (array size) of the number of descriptors in
+the binding, a set of shader stages that can access the binding,
+and (if using immutable samplers) an array of sampler descriptors.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.DescriptorSetLayout', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.DescriptorSetLayout" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DescriptorSetLayout</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    A descriptor set layout object is defined by an array of zero or more</span>
+<span class="sd">    descriptor bindings. Each individual descriptor binding is specified by</span>
+<span class="sd">    a descriptor type, a count (array size) of the number of descriptors in</span>
+<span class="sd">    the binding, a set of shader stages that can access the binding,</span>
+<span class="sd">    and (if using immutable samplers) an array of sampler descriptors.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">bindings</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `bindings`: `list` of `DescriptorSetLayoutBinding`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_bindings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bindings</span><span class="p">:</span>
+            <span class="n">vk_bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetLayoutBinding</span><span class="p">(</span>
+                <span class="n">binding</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+                <span class="n">descriptorType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+                <span class="n">descriptorCount</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+                <span class="n">stageFlags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">stage</span><span class="p">),</span>
+                <span class="n">pImmutableSamplers</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">immutable_samplers</span>
+            <span class="p">))</span>
+
+        <span class="n">layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetLayoutCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">bindingCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_bindings</span><span class="p">),</span>
+            <span class="n">pBindings</span><span class="o">=</span><span class="n">vk_bindings</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsetlayout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorSetLayout</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">layout_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.DescriptorSetLayout">DescriptorSetLayout</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.DescriptorSetLayout.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, bindings)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>bindings</code>: <code>list</code> of <code>DescriptorSetLayoutBinding</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.DescriptorSetLayout.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.DescriptorSetLayout.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">bindings</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `bindings`: `list` of `DescriptorSetLayoutBinding`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk_bindings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bindings</span><span class="p">:</span>
+        <span class="n">vk_bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetLayoutBinding</span><span class="p">(</span>
+            <span class="n">binding</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span>
+            <span class="n">descriptorType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">type</span><span class="p">),</span>
+            <span class="n">descriptorCount</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+            <span class="n">stageFlags</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">stage</span><span class="p">),</span>
+            <span class="n">pImmutableSamplers</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">immutable_samplers</span>
+        <span class="p">))</span>
+    <span class="n">layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorSetLayoutCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">bindingCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_bindings</span><span class="p">),</span>
+        <span class="n">pBindings</span><span class="o">=</span><span class="n">vk_bindings</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsetlayout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorSetLayout</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">layout_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorSetLayout.descriptorsetlayout" class="name">var <span class="ident">descriptorsetlayout</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.DescriptorSetLayoutBinding" class="name">class <span class="ident">DescriptorSetLayoutBinding</span></p>
+      
+  
+    <div class="desc"><p>Structure specifying a descriptor set layout binding.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>binding</code>: Binding number of this entry and corresponds to a resource
+         of the same binding number in the shader stages</li>
+<li><code>type</code>: <code>VkDescriptorType</code> specifying which type of resource descriptors
+      are used for this binding</li>
+<li><code>count</code>:  Number of descriptors contained in the binding,
+        accessed in a shader as an array</li>
+<li><code>stage</code>: <code>VkShaderStageFlagBits</code> specifying which pipeline shader stages
+       can access a resource for this binding</li>
+<li><code>immutable_samplers</code>: Affects initialization of samplers (can be <code>None</code>)</li>
+</ul>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.DescriptorSetLayoutBinding">DescriptorSetLayoutBinding</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorSetLayoutBinding.binding" class="name">var <span class="ident">binding</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorSetLayoutBinding.count" class="name">var <span class="ident">count</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 2</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorSetLayoutBinding.immutable_samplers" class="name">var <span class="ident">immutable_samplers</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 4</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorSetLayoutBinding.stage" class="name">var <span class="ident">stage</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 3</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.DescriptorSetLayoutBinding.type" class="name">var <span class="ident">type</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
   <div class="source_cont">
 </div>
 
@@ -7503,7 +8741,7 @@ the render targets. The pipeline combines the following elements:</p>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">stages</span><span class="p">,</span> <span class="n">vertex_input</span><span class="p">,</span> <span class="n">input_assembly</span><span class="p">,</span>
                  <span class="n">viewport_state</span><span class="p">,</span> <span class="n">rasterization</span><span class="p">,</span> <span class="n">multisample</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">blend</span><span class="p">,</span>
-                 <span class="n">dynamic</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">):</span>
+                 <span class="n">dynamic</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 
 <span class="sd">        - `context`: The `VulkContext`</span>
@@ -7516,6 +8754,7 @@ the render targets. The pipeline combines the following elements:</p>
 <span class="sd">        - `depth`: `PipelineDepthStencilState` (can be `None`)</span>
 <span class="sd">        - `blend`: `PipelineColorBlendState`</span>
 <span class="sd">        - `dynamic`: `PipelineDynamicState` (may be `None`)</span>
+<span class="sd">        - `layout`: `PipelineLayout`</span>
 <span class="sd">        - `renderpass`: The `Renderpass` of this pipeline</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
@@ -7675,17 +8914,6 @@ the render targets. The pipeline combines the following elements:</p>
                 <span class="n">pDynamicStates</span><span class="o">=</span><span class="n">dynamic</span><span class="o">.</span><span class="n">states</span>
             <span class="p">)</span>
 
-        <span class="c1"># Currently layout is unusable, I have to try it</span>
-        <span class="n">vk_layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineLayoutCreateInfo</span><span class="p">(</span>
-            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO</span><span class="p">,</span>
-            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">setLayoutCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pSetLayouts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-            <span class="n">pushConstantRangeCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">pPushConstantRanges</span><span class="o">=</span><span class="bp">None</span>
-        <span class="p">)</span>
-        <span class="n">vk_layout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreatePipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">vk_layout_create</span><span class="p">)</span>
-
         <span class="n">pipeline_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkGraphicsPipelineCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -7700,7 +8928,7 @@ the render targets. The pipeline combines the following elements:</p>
             <span class="n">pDepthStencilState</span><span class="o">=</span><span class="n">vk_depth</span><span class="p">,</span>
             <span class="n">pColorBlendState</span><span class="o">=</span><span class="n">vk_blend</span><span class="p">,</span>
             <span class="n">pDynamicState</span><span class="o">=</span><span class="n">vk_dynamic</span><span class="p">,</span>
-            <span class="n">layout</span><span class="o">=</span><span class="n">vk_layout</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span>
             <span class="n">renderPass</span><span class="o">=</span><span class="n">renderpass</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
             <span class="n">subpass</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">basePipelineHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -7725,7 +8953,7 @@ the render targets. The pipeline combines the following elements:</p>
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.Pipeline.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, stages, vertex_input, input_assembly, viewport_state, rasterization, multisample, depth, blend, dynamic, renderpass)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, stages, vertex_input, input_assembly, viewport_state, rasterization, multisample, depth, blend, dynamic, layout, renderpass)</p>
     </div>
     
 
@@ -7742,6 +8970,7 @@ the render targets. The pipeline combines the following elements:</p>
 <li><code>depth</code>: <code>PipelineDepthStencilState</code> (can be <code>None</code>)</li>
 <li><code>blend</code>: <code>PipelineColorBlendState</code></li>
 <li><code>dynamic</code>: <code>PipelineDynamicState</code> (may be <code>None</code>)</li>
+<li><code>layout</code>: <code>PipelineLayout</code></li>
 <li><code>renderpass</code>: The <code>Renderpass</code> of this pipeline</li>
 </ul>
 </div>
@@ -7750,7 +8979,7 @@ the render targets. The pipeline combines the following elements:</p>
   <div id="source-vulk.vulkanobject.Pipeline.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">stages</span><span class="p">,</span> <span class="n">vertex_input</span><span class="p">,</span> <span class="n">input_assembly</span><span class="p">,</span>
              <span class="n">viewport_state</span><span class="p">,</span> <span class="n">rasterization</span><span class="p">,</span> <span class="n">multisample</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">blend</span><span class="p">,</span>
-             <span class="n">dynamic</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">):</span>
+             <span class="n">dynamic</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">renderpass</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    - `context`: The `VulkContext`</span>
 <span class="sd">    - `stages`: List of `PipelineShaderStage`</span>
@@ -7762,6 +8991,7 @@ the render targets. The pipeline combines the following elements:</p>
 <span class="sd">    - `depth`: `PipelineDepthStencilState` (can be `None`)</span>
 <span class="sd">    - `blend`: `PipelineColorBlendState`</span>
 <span class="sd">    - `dynamic`: `PipelineDynamicState` (may be `None`)</span>
+<span class="sd">    - `layout`: `PipelineLayout`</span>
 <span class="sd">    - `renderpass`: The `Renderpass` of this pipeline</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vk_stages</span> <span class="o">=</span> <span class="p">[]</span>
@@ -7904,16 +9134,6 @@ the render targets. The pipeline combines the following elements:</p>
             <span class="n">dynamicStateCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dynamic</span><span class="o">.</span><span class="n">states</span><span class="p">),</span>
             <span class="n">pDynamicStates</span><span class="o">=</span><span class="n">dynamic</span><span class="o">.</span><span class="n">states</span>
         <span class="p">)</span>
-    <span class="c1"># Currently layout is unusable, I have to try it</span>
-    <span class="n">vk_layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineLayoutCreateInfo</span><span class="p">(</span>
-        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO</span><span class="p">,</span>
-        <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">setLayoutCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">pSetLayouts</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-        <span class="n">pushConstantRangeCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">pPushConstantRanges</span><span class="o">=</span><span class="bp">None</span>
-    <span class="p">)</span>
-    <span class="n">vk_layout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreatePipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">vk_layout_create</span><span class="p">)</span>
     <span class="n">pipeline_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkGraphicsPipelineCreateInfo</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO</span><span class="p">,</span>
         <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -7928,7 +9148,7 @@ the render targets. The pipeline combines the following elements:</p>
         <span class="n">pDepthStencilState</span><span class="o">=</span><span class="n">vk_depth</span><span class="p">,</span>
         <span class="n">pColorBlendState</span><span class="o">=</span><span class="n">vk_blend</span><span class="p">,</span>
         <span class="n">pDynamicState</span><span class="o">=</span><span class="n">vk_dynamic</span><span class="p">,</span>
-        <span class="n">layout</span><span class="o">=</span><span class="n">vk_layout</span><span class="p">,</span>
+        <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span>
         <span class="n">renderPass</span><span class="o">=</span><span class="n">renderpass</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
         <span class="n">subpass</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">basePipelineHandle</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
@@ -8368,6 +9588,135 @@ the render targets. The pipeline combines the following elements:</p>
   
     <div class="desc"><p>Alias for field number 0</p>
 </div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.PipelineLayout" class="name">class <span class="ident">PipelineLayout</span></p>
+      
+  
+    <div class="desc"><p>Pipeline layout object</p>
+
+<p>Access to descriptor sets from a pipeline is accomplished through a
+pipeline layout. Zero or more descriptor set layouts and zero or more
+push constant ranges are combined to form a pipeline layout object which
+describes the complete set of resources that can be accessed by a
+pipeline. The pipeline layout represents a sequence of descriptor sets
+with each having a specific layout. This sequence of layouts is used to
+determine the interface between shader stages and shader resources.
+Each pipeline is created using a pipeline layout.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.PipelineLayout', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.PipelineLayout" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">PipelineLayout</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Pipeline layout object</span>
+
+<span class="sd">    Access to descriptor sets from a pipeline is accomplished through a</span>
+<span class="sd">    pipeline layout. Zero or more descriptor set layouts and zero or more</span>
+<span class="sd">    push constant ranges are combined to form a pipeline layout object which</span>
+<span class="sd">    describes the complete set of resources that can be accessed by a</span>
+<span class="sd">    pipeline. The pipeline layout represents a sequence of descriptor sets</span>
+<span class="sd">    with each having a specific layout. This sequence of layouts is used to</span>
+<span class="sd">    determine the interface between shader stages and shader resources.</span>
+<span class="sd">    Each pipeline is created using a pipeline layout.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `descriptors`: `list` of `DescriptorSetLayout`</span>
+
+<span class="sd">        **Todo: push constant muse be implemented**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+            <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorsetlayout</span><span class="p">)</span>
+
+        <span class="n">layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineLayoutCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">setLayoutCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span>
+            <span class="n">pSetLayouts</span><span class="o">=</span><span class="n">vk_descriptors</span> <span class="k">if</span> <span class="n">vk_descriptors</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="n">pushConstantRangeCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">pPushConstantRanges</span><span class="o">=</span><span class="bp">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreatePipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                                <span class="n">layout_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.PipelineLayout">PipelineLayout</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.PipelineLayout.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, descriptors)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>descriptors</code>: <code>list</code> of <code>DescriptorSetLayout</code></li>
+</ul>
+
+<p><strong>Todo: push constant muse be implemented</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.PipelineLayout.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.PipelineLayout.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">descriptors</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `descriptors`: `list` of `DescriptorSetLayout`</span>
+<span class="sd">    **Todo: push constant muse be implemented**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk_descriptors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">descriptors</span><span class="p">:</span>
+        <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">descriptorsetlayout</span><span class="p">)</span>
+    <span class="n">layout_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkPipelineLayoutCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">setLayoutCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span>
+        <span class="n">pSetLayouts</span><span class="o">=</span><span class="n">vk_descriptors</span> <span class="k">if</span> <span class="n">vk_descriptors</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">pushConstantRangeCount</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">pPushConstantRanges</span><span class="o">=</span><span class="bp">None</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreatePipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                            <span class="n">layout_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.PipelineLayout.layout" class="name">var <span class="ident">layout</span></p>
+            
+
+            
+  
   <div class="source_cont">
 </div>
 
@@ -9817,6 +11166,100 @@ an attachment, don't set it, its default value is an empty list.</p>
             
   
     <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.WriteDescriptorSet" class="name">class <span class="ident">WriteDescriptorSet</span></p>
+      
+  
+    <div class="desc"><p>Structure specifying the parameters of a descriptor set write operation</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>set</code>: Destination <code>DescriptorSet</code> set to update</li>
+<li><code>binding</code>: Descriptor binding within that set</li>
+<li><code>set_offset</code>: Offset to start with in the descriptor</li>
+<li><code>type</code>: Type of descriptor <code>VkDescriptorType</code></li>
+<li><code>descriptors</code>: <code>list</code> of <code>DescriptorBufferInfo</code> or <code>DescriptorImageInfo</code>
+            or <code>BufferView</code> depending on <code>type</code></li>
+</ul>
+
+<p><strong>Note: The descriptor type must correspond to the <code>type</code> parameter</strong></p>
+</div>
+  <div class="source_cont">
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.WriteDescriptorSet">WriteDescriptorSet</a></li>
+          <li>builtins.tuple</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.WriteDescriptorSet.binding" class="name">var <span class="ident">binding</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 1</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.WriteDescriptorSet.descriptors" class="name">var <span class="ident">descriptors</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 4</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.WriteDescriptorSet.set" class="name">var <span class="ident">set</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 0</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.WriteDescriptorSet.set_offset" class="name">var <span class="ident">set_offset</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 2</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.WriteDescriptorSet.type" class="name">var <span class="ident">type</span></p>
+            
+
+            
+  
+    <div class="desc"><p>Alias for field number 3</p>
 </div>
   <div class="source_cont">
 </div>
