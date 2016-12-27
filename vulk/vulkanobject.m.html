@@ -1325,6 +1325,15 @@ table {
 
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.Sampler">Sampler</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.Sampler.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.Semaphore">Semaphore</a></span>
         
           
@@ -1618,7 +1627,7 @@ module.</p>
                 <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorImageInfo</span><span class="p">(</span>
                     <span class="n">sampler</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">sampler</span><span class="p">,</span>
                     <span class="n">imageView</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">imageview</span><span class="p">,</span>
-                    <span class="n">imageLayout</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">layout</span>
+                    <span class="n">imageLayout</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">layout</span><span class="p">)</span>
                 <span class="p">))</span>
             <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pImageInfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vk_descriptors</span>
 
@@ -1729,7 +1738,7 @@ module.</p>
 
 <span class="s1">    - `sampler`: `Sampler` ressource</span>
 <span class="s1">    - `view`: `ImageView`</span>
-<span class="s1">    - `layout`: `ImageLayout`</span>
+<span class="s1">    - `layout`: `VkImageLayout`</span>
 <span class="s1">    &#39;&#39;&#39;</span>
 
 
@@ -2901,8 +2910,9 @@ module.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
-                 <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
-                 <span class="n">queue_families</span><span class="p">):</span>
+                 <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span>
+                 <span class="n">sharing_mode</span><span class="o">=</span><span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a high performance image</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -2922,6 +2932,9 @@ module.</p>
 <span class="sd">                            (ignored if sharingMode is not</span>
 <span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">queue_families</span><span class="p">:</span>
+            <span class="n">queue_families</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
@@ -2985,17 +2998,6 @@ module.</p>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_SHADER_READ_BIT</span>
             <span class="p">)</span>
 
-        <span class="c1"># Set back the layout of staging image</span>
-        <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
-            <span class="p">)</span>
-
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Bind image for writing</span>
@@ -3056,6 +3058,19 @@ module.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+        <span class="n">image_type</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">)</span>
+        <span class="n">tiling</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">tiling</span><span class="p">)</span>
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Check that image can be created</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceImageFormatProperties</span><span class="p">(</span>
+                <span class="n">context</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span>
+                <span class="n">usage</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkErrorFormatNotSupported</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t create image, format &quot;</span>
+                            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> not supported&quot;</span> <span class="o">%</span> <span class="n">image_format</span><span class="p">)</span>
 
         <span class="c1"># Create the VkImage</span>
         <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
@@ -3065,14 +3080,14 @@ module.</p>
         <span class="n">image_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">imageType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">),</span>
+            <span class="n">imageType</span><span class="o">=</span><span class="n">image_type</span><span class="p">,</span>
             <span class="n">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
             <span class="n">extent</span><span class="o">=</span><span class="n">vk_extent</span><span class="p">,</span>
             <span class="n">mipLevels</span><span class="o">=</span><span class="n">mip_level</span><span class="p">,</span>
             <span class="n">arrayLayers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
             <span class="n">samples</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span>
-            <span class="n">tiling</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">tiling</span><span class="p">),</span>
-            <span class="n">usage</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span>
+            <span class="n">tiling</span><span class="o">=</span><span class="n">tiling</span><span class="p">,</span>
+            <span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span>
             <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
             <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
             <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
@@ -3257,7 +3272,7 @@ module.</p>
         <span class="n">imageview_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageViewCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
+            <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
             <span class="n">viewType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">view_type</span><span class="p">),</span>
             <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">),</span>
             <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">,</span>
@@ -3645,6 +3660,65 @@ module.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateRenderPass</span><span class="p">(</span>
             <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">renderpass_create</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Sampler</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `Sampler` objects represent the state of an image sampler which is used</span>
+<span class="sd">    by the implementation to read image data and apply filtering and other</span>
+<span class="sd">    transformations for the shader.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">mipmap_mode</span><span class="p">,</span>
+                 <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">address_mode_w</span><span class="p">,</span> <span class="n">mip_lod_bias</span><span class="p">,</span>
+                 <span class="n">anisotropy_enable</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="p">,</span> <span class="n">compare_enable</span><span class="p">,</span>
+                 <span class="n">compare_op</span><span class="p">,</span> <span class="n">min_lod</span><span class="p">,</span> <span class="n">max_lod</span><span class="p">,</span> <span class="n">border_color</span><span class="p">,</span>
+                 <span class="n">unnormalized_coordinates</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `mag_filter`: Magnification filter to apply to lookups (`VkFilter`)`</span>
+<span class="sd">        - `min_filter`: Minification filter to apply to lookups (`VkFilter`)`</span>
+<span class="sd">        - `mipmap_mode`: `VkSamplerMipmapMode` mipmap filter to apply to</span>
+<span class="sd">                         lookups</span>
+<span class="sd">        - `address_mode_u: `VkSamplerAddressMode`</span>
+<span class="sd">        - `address_mode_v: `VkSamplerAddressMode`</span>
+<span class="sd">        - `address_mode_w: `VkSamplerAddressMode`</span>
+<span class="sd">        - `mip_lod_bias`: Bias to be added to mipmap LOD calculation</span>
+<span class="sd">        - `anisotropy_enable`: `True` to enable anisotropic filtering</span>
+<span class="sd">        - `max_anisotropy`: Anisotropy value clamp</span>
+<span class="sd">        - `compare_enable`: `True` to enable comparison against a reference</span>
+<span class="sd">                            value during lookups</span>
+<span class="sd">        - `compare_op`: `VkCompareOp` comparison function to apply to fetched</span>
+<span class="sd">                        data before filtering</span>
+<span class="sd">        - `min_lod`: Value used to clamp the computed level-of-detail value</span>
+<span class="sd">        - `max_lod`: Value used to clamp the computed level-of-detail value</span>
+<span class="sd">        - `border_color`: `VkBorderColor` predefined border color to use</span>
+<span class="sd">        - `unnormalized_coordinates`: `True` to use unnormalized texel</span>
+<span class="sd">                                      coordinates</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">sampler_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSamplerCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">magFilter</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">mag_filter</span><span class="p">),</span>
+            <span class="n">minFilter</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">min_filter</span><span class="p">),</span>
+            <span class="n">mipmapMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">mipmap_mode</span><span class="p">),</span>
+            <span class="n">addressModeU</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_u</span><span class="p">),</span>
+            <span class="n">addressModeV</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_v</span><span class="p">),</span>
+            <span class="n">addressModeW</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_w</span><span class="p">),</span>
+            <span class="n">mipLodBias</span><span class="o">=</span><span class="n">mip_lod_bias</span><span class="p">,</span>
+            <span class="n">anisotropyEnable</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">anisotropy_enable</span><span class="p">),</span>
+            <span class="n">maxAnisotropy</span><span class="o">=</span><span class="n">max_anisotropy</span><span class="p">,</span>
+            <span class="n">compareEnable</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">compare_enable</span><span class="p">),</span>
+            <span class="n">compareOp</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">compare_op</span><span class="p">),</span>
+            <span class="n">minLod</span><span class="o">=</span><span class="n">min_lod</span><span class="p">,</span>
+            <span class="n">maxLod</span><span class="o">=</span><span class="n">max_lod</span><span class="p">,</span>
+            <span class="n">borderColor</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">border_color</span><span class="p">),</span>
+            <span class="n">unnormalizedCoordinates</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">unnormalized_coordinates</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSampler</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">sampler_create</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Semaphore</span><span class="p">():</span>
@@ -4044,7 +4118,7 @@ If commandpool is not given, it is created here.</p>
                 <span class="n">vk_descriptors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkDescriptorImageInfo</span><span class="p">(</span>
                     <span class="n">sampler</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">sampler</span><span class="p">,</span>
                     <span class="n">imageView</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">imageview</span><span class="p">,</span>
-                    <span class="n">imageLayout</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">layout</span>
+                    <span class="n">imageLayout</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">layout</span><span class="p">)</span>
                 <span class="p">))</span>
             <span class="n">result</span><span class="p">[</span><span class="s1">&#39;pImageInfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vk_descriptors</span>
 
@@ -6359,7 +6433,7 @@ command buffers are allocated from them.</p>
 <ul>
 <li><code>sampler</code>: <code>Sampler</code> ressource</li>
 <li><code>view</code>: <code>ImageView</code></li>
-<li><code>layout</code>: <code>ImageLayout</code></li>
+<li><code>layout</code>: <code>VkImageLayout</code></li>
 </ul>
 </div>
   <div class="source_cont">
@@ -7507,8 +7581,9 @@ the image have the same properties.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
-                 <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
-                 <span class="n">queue_families</span><span class="p">):</span>
+                 <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span>
+                 <span class="n">sharing_mode</span><span class="o">=</span><span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span>
+                 <span class="n">queue_families</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a high performance image</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -7528,6 +7603,9 @@ the image have the same properties.</p>
 <span class="sd">                            (ignored if sharingMode is not</span>
 <span class="sd">                            `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">queue_families</span><span class="p">:</span>
+            <span class="n">queue_families</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
@@ -7591,17 +7669,6 @@ the image have the same properties.</p>
                 <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_SHADER_READ_BIT</span>
             <span class="p">)</span>
 
-        <span class="c1"># Set back the layout of staging image</span>
-        <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_IMAGE_LAYOUT_PREINITIALIZED</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_TRANSFER_READ_BIT</span><span class="p">,</span>
-                <span class="n">vk</span><span class="o">.</span><span class="n">VK_ACCESS_HOST_WRITE_BIT</span>
-            <span class="p">)</span>
-
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Bind image for writing</span>
@@ -7634,7 +7701,7 @@ the image have the same properties.</p>
             
   <div class="item">
     <div class="name def" id="vulk.vulkanobject.HighPerformanceImage.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, image_format, width, height, depth, mip_level, layers, samples, sharing_mode, queue_families)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, image_type, image_format, width, height, depth, mip_level, layers, samples, sharing_mode=&#39;VK_SHARING_MODE_EXCLUSIVE&#39;, queue_families=None)</p>
     </div>
     
 
@@ -7665,8 +7732,9 @@ the image have the same properties.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceImage.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanobject.HighPerformanceImage.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
-             <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
-             <span class="n">queue_families</span><span class="p">):</span>
+             <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span>
+             <span class="n">sharing_mode</span><span class="o">=</span><span class="s1">&#39;VK_SHARING_MODE_EXCLUSIVE&#39;</span><span class="p">,</span>
+             <span class="n">queue_families</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Create a high performance image</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
@@ -7684,6 +7752,8 @@ the image have the same properties.</p>
 <span class="sd">                        (ignored if sharingMode is not</span>
 <span class="sd">                        `VK_SHARING_MODE_CONCURRENT`) (can be [])</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">queue_families</span><span class="p">:</span>
+        <span class="n">queue_families</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
         <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
         <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
@@ -7823,6 +7893,19 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+        <span class="n">image_type</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">)</span>
+        <span class="n">tiling</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">tiling</span><span class="p">)</span>
+        <span class="n">usage</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Check that image can be created</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceImageFormatProperties</span><span class="p">(</span>
+                <span class="n">context</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span>
+                <span class="n">usage</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkErrorFormatNotSupported</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t create image, format &quot;</span>
+                            <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> not supported&quot;</span> <span class="o">%</span> <span class="n">image_format</span><span class="p">)</span>
 
         <span class="c1"># Create the VkImage</span>
         <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
@@ -7832,14 +7915,14 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
         <span class="n">image_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">imageType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">),</span>
+            <span class="n">imageType</span><span class="o">=</span><span class="n">image_type</span><span class="p">,</span>
             <span class="n">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
             <span class="n">extent</span><span class="o">=</span><span class="n">vk_extent</span><span class="p">,</span>
             <span class="n">mipLevels</span><span class="o">=</span><span class="n">mip_level</span><span class="p">,</span>
             <span class="n">arrayLayers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
             <span class="n">samples</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span>
-            <span class="n">tiling</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">tiling</span><span class="p">),</span>
-            <span class="n">usage</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span>
+            <span class="n">tiling</span><span class="o">=</span><span class="n">tiling</span><span class="p">,</span>
+            <span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span>
             <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
             <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
             <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
@@ -8070,6 +8153,18 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">memory_properties</span><span class="p">)</span>
+    <span class="n">image_type</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">)</span>
+    <span class="n">tiling</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">tiling</span><span class="p">)</span>
+    <span class="n">usage</span> <span class="o">=</span> <span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">)</span>
+    <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Check that image can be created</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceImageFormatProperties</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">tiling</span><span class="p">,</span>
+            <span class="n">usage</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkErrorFormatNotSupported</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t create image, format &quot;</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> not supported&quot;</span> <span class="o">%</span> <span class="n">image_format</span><span class="p">)</span>
     <span class="c1"># Create the VkImage</span>
     <span class="n">vk_extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
                               <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
@@ -8077,14 +8172,14 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
     <span class="n">image_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageCreateInfo</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO</span><span class="p">,</span>
         <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">imageType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_type</span><span class="p">),</span>
+        <span class="n">imageType</span><span class="o">=</span><span class="n">image_type</span><span class="p">,</span>
         <span class="n">format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span>
         <span class="n">extent</span><span class="o">=</span><span class="n">vk_extent</span><span class="p">,</span>
         <span class="n">mipLevels</span><span class="o">=</span><span class="n">mip_level</span><span class="p">,</span>
         <span class="n">arrayLayers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
         <span class="n">samples</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span>
-        <span class="n">tiling</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">tiling</span><span class="p">),</span>
-        <span class="n">usage</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">usage</span><span class="p">),</span>
+        <span class="n">tiling</span><span class="o">=</span><span class="n">tiling</span><span class="p">,</span>
+        <span class="n">usage</span><span class="o">=</span><span class="n">usage</span><span class="p">,</span>
         <span class="n">sharingMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">sharing_mode</span><span class="p">),</span>
         <span class="n">queueFamilyIndexCount</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queue_families</span><span class="p">),</span>
         <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span>
@@ -8536,7 +8631,7 @@ texture without any mipmapping levels.</p>
         <span class="n">imageview_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageViewCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
+            <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
             <span class="n">viewType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">view_type</span><span class="p">),</span>
             <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">),</span>
             <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">,</span>
@@ -8616,7 +8711,7 @@ texture without any mipmapping levels.</p>
     <span class="n">imageview_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageViewCreateInfo</span><span class="p">(</span>
         <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO</span><span class="p">,</span>
         <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="p">,</span>
+        <span class="n">image</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
         <span class="n">viewType</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">view_type</span><span class="p">),</span>
         <span class="n">format</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">image_format</span><span class="p">),</span>
         <span class="n">components</span><span class="o">=</span><span class="n">components</span><span class="p">,</span>
@@ -10405,6 +10500,193 @@ in a RenderPass object</p>
           <h3>Instance variables</h3>
             <div class="item">
             <p id="vulk.vulkanobject.Renderpass.renderpass" class="name">var <span class="ident">renderpass</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.Sampler" class="name">class <span class="ident">Sampler</span></p>
+      
+  
+    <div class="desc"><p><code>Sampler</code> objects represent the state of an image sampler which is used
+by the implementation to read image data and apply filtering and other
+transformations for the shader.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Sampler', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Sampler" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Sampler</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    `Sampler` objects represent the state of an image sampler which is used</span>
+<span class="sd">    by the implementation to read image data and apply filtering and other</span>
+<span class="sd">    transformations for the shader.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">mipmap_mode</span><span class="p">,</span>
+                 <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">address_mode_w</span><span class="p">,</span> <span class="n">mip_lod_bias</span><span class="p">,</span>
+                 <span class="n">anisotropy_enable</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="p">,</span> <span class="n">compare_enable</span><span class="p">,</span>
+                 <span class="n">compare_op</span><span class="p">,</span> <span class="n">min_lod</span><span class="p">,</span> <span class="n">max_lod</span><span class="p">,</span> <span class="n">border_color</span><span class="p">,</span>
+                 <span class="n">unnormalized_coordinates</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `mag_filter`: Magnification filter to apply to lookups (`VkFilter`)`</span>
+<span class="sd">        - `min_filter`: Minification filter to apply to lookups (`VkFilter`)`</span>
+<span class="sd">        - `mipmap_mode`: `VkSamplerMipmapMode` mipmap filter to apply to</span>
+<span class="sd">                         lookups</span>
+<span class="sd">        - `address_mode_u: `VkSamplerAddressMode`</span>
+<span class="sd">        - `address_mode_v: `VkSamplerAddressMode`</span>
+<span class="sd">        - `address_mode_w: `VkSamplerAddressMode`</span>
+<span class="sd">        - `mip_lod_bias`: Bias to be added to mipmap LOD calculation</span>
+<span class="sd">        - `anisotropy_enable`: `True` to enable anisotropic filtering</span>
+<span class="sd">        - `max_anisotropy`: Anisotropy value clamp</span>
+<span class="sd">        - `compare_enable`: `True` to enable comparison against a reference</span>
+<span class="sd">                            value during lookups</span>
+<span class="sd">        - `compare_op`: `VkCompareOp` comparison function to apply to fetched</span>
+<span class="sd">                        data before filtering</span>
+<span class="sd">        - `min_lod`: Value used to clamp the computed level-of-detail value</span>
+<span class="sd">        - `max_lod`: Value used to clamp the computed level-of-detail value</span>
+<span class="sd">        - `border_color`: `VkBorderColor` predefined border color to use</span>
+<span class="sd">        - `unnormalized_coordinates`: `True` to use unnormalized texel</span>
+<span class="sd">                                      coordinates</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">sampler_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSamplerCreateInfo</span><span class="p">(</span>
+            <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">magFilter</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">mag_filter</span><span class="p">),</span>
+            <span class="n">minFilter</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">min_filter</span><span class="p">),</span>
+            <span class="n">mipmapMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">mipmap_mode</span><span class="p">),</span>
+            <span class="n">addressModeU</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_u</span><span class="p">),</span>
+            <span class="n">addressModeV</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_v</span><span class="p">),</span>
+            <span class="n">addressModeW</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_w</span><span class="p">),</span>
+            <span class="n">mipLodBias</span><span class="o">=</span><span class="n">mip_lod_bias</span><span class="p">,</span>
+            <span class="n">anisotropyEnable</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">anisotropy_enable</span><span class="p">),</span>
+            <span class="n">maxAnisotropy</span><span class="o">=</span><span class="n">max_anisotropy</span><span class="p">,</span>
+            <span class="n">compareEnable</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">compare_enable</span><span class="p">),</span>
+            <span class="n">compareOp</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">compare_op</span><span class="p">),</span>
+            <span class="n">minLod</span><span class="o">=</span><span class="n">min_lod</span><span class="p">,</span>
+            <span class="n">maxLod</span><span class="o">=</span><span class="n">max_lod</span><span class="p">,</span>
+            <span class="n">borderColor</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">border_color</span><span class="p">),</span>
+            <span class="n">unnormalizedCoordinates</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">unnormalized_coordinates</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSampler</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">sampler_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.Sampler">Sampler</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Sampler.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, mag_filter, min_filter, mipmap_mode, address_mode_u, address_mode_v, address_mode_w, mip_lod_bias, anisotropy_enable, max_anisotropy, compare_enable, compare_op, min_lod, max_lod, border_color, unnormalized_coordinates)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>mag_filter</code>: Magnification filter to apply to lookups (<code>VkFilter</code>)`</li>
+<li><code>min_filter</code>: Minification filter to apply to lookups (<code>VkFilter</code>)`</li>
+<li><code>mipmap_mode</code>: <code>VkSamplerMipmapMode</code> mipmap filter to apply to
+             lookups</li>
+<li><code>address_mode_u:</code>VkSamplerAddressMode`</li>
+<li><code>address_mode_v:</code>VkSamplerAddressMode`</li>
+<li><code>address_mode_w:</code>VkSamplerAddressMode`</li>
+<li><code>mip_lod_bias</code>: Bias to be added to mipmap LOD calculation</li>
+<li><code>anisotropy_enable</code>: <code>True</code> to enable anisotropic filtering</li>
+<li><code>max_anisotropy</code>: Anisotropy value clamp</li>
+<li><code>compare_enable</code>: <code>True</code> to enable comparison against a reference
+                value during lookups</li>
+<li><code>compare_op</code>: <code>VkCompareOp</code> comparison function to apply to fetched
+            data before filtering</li>
+<li><code>min_lod</code>: Value used to clamp the computed level-of-detail value</li>
+<li><code>max_lod</code>: Value used to clamp the computed level-of-detail value</li>
+<li><code>border_color</code>: <code>VkBorderColor</code> predefined border color to use</li>
+<li><code>unnormalized_coordinates</code>: <code>True</code> to use unnormalized texel
+                          coordinates</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Sampler.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Sampler.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">mipmap_mode</span><span class="p">,</span>
+             <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">address_mode_w</span><span class="p">,</span> <span class="n">mip_lod_bias</span><span class="p">,</span>
+             <span class="n">anisotropy_enable</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="p">,</span> <span class="n">compare_enable</span><span class="p">,</span>
+             <span class="n">compare_op</span><span class="p">,</span> <span class="n">min_lod</span><span class="p">,</span> <span class="n">max_lod</span><span class="p">,</span> <span class="n">border_color</span><span class="p">,</span>
+             <span class="n">unnormalized_coordinates</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `mag_filter`: Magnification filter to apply to lookups (`VkFilter`)`</span>
+<span class="sd">    - `min_filter`: Minification filter to apply to lookups (`VkFilter`)`</span>
+<span class="sd">    - `mipmap_mode`: `VkSamplerMipmapMode` mipmap filter to apply to</span>
+<span class="sd">                     lookups</span>
+<span class="sd">    - `address_mode_u: `VkSamplerAddressMode`</span>
+<span class="sd">    - `address_mode_v: `VkSamplerAddressMode`</span>
+<span class="sd">    - `address_mode_w: `VkSamplerAddressMode`</span>
+<span class="sd">    - `mip_lod_bias`: Bias to be added to mipmap LOD calculation</span>
+<span class="sd">    - `anisotropy_enable`: `True` to enable anisotropic filtering</span>
+<span class="sd">    - `max_anisotropy`: Anisotropy value clamp</span>
+<span class="sd">    - `compare_enable`: `True` to enable comparison against a reference</span>
+<span class="sd">                        value during lookups</span>
+<span class="sd">    - `compare_op`: `VkCompareOp` comparison function to apply to fetched</span>
+<span class="sd">                    data before filtering</span>
+<span class="sd">    - `min_lod`: Value used to clamp the computed level-of-detail value</span>
+<span class="sd">    - `max_lod`: Value used to clamp the computed level-of-detail value</span>
+<span class="sd">    - `border_color`: `VkBorderColor` predefined border color to use</span>
+<span class="sd">    - `unnormalized_coordinates`: `True` to use unnormalized texel</span>
+<span class="sd">                                  coordinates</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">sampler_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSamplerCreateInfo</span><span class="p">(</span>
+        <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO</span><span class="p">,</span>
+        <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">magFilter</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">mag_filter</span><span class="p">),</span>
+        <span class="n">minFilter</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">min_filter</span><span class="p">),</span>
+        <span class="n">mipmapMode</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">mipmap_mode</span><span class="p">),</span>
+        <span class="n">addressModeU</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_u</span><span class="p">),</span>
+        <span class="n">addressModeV</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_v</span><span class="p">),</span>
+        <span class="n">addressModeW</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">address_mode_w</span><span class="p">),</span>
+        <span class="n">mipLodBias</span><span class="o">=</span><span class="n">mip_lod_bias</span><span class="p">,</span>
+        <span class="n">anisotropyEnable</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">anisotropy_enable</span><span class="p">),</span>
+        <span class="n">maxAnisotropy</span><span class="o">=</span><span class="n">max_anisotropy</span><span class="p">,</span>
+        <span class="n">compareEnable</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">compare_enable</span><span class="p">),</span>
+        <span class="n">compareOp</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">compare_op</span><span class="p">),</span>
+        <span class="n">minLod</span><span class="o">=</span><span class="n">min_lod</span><span class="p">,</span>
+        <span class="n">maxLod</span><span class="o">=</span><span class="n">max_lod</span><span class="p">,</span>
+        <span class="n">borderColor</span><span class="o">=</span><span class="n">vk_const</span><span class="p">(</span><span class="n">border_color</span><span class="p">),</span>
+        <span class="n">unnormalizedCoordinates</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">unnormalized_coordinates</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSampler</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">sampler_create</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.Sampler.sampler" class="name">var <span class="ident">sampler</span></p>
             
 
             
