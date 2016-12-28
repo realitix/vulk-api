@@ -1048,6 +1048,7 @@ table {
         <li class="mono"><a href="exception.m.html">vulk.exception</a></li>
         <li class="mono"><a href="graphic/index.html">vulk.graphic</a></li>
         <li class="mono"><a href="math/index.html">vulk.math</a></li>
+        <li class="mono"><a href="py36.m.html">vulk.py36</a></li>
         <li class="mono"><a href="tests/index.html">vulk.tests</a></li>
         <li class="mono"><a href="utils.m.html">vulk.utils</a></li>
         <li class="mono"><a href="vulkanconstant.m.html">vulk.vulkanconstant</a></li>
@@ -1133,6 +1134,15 @@ abstraction. Instead of perform...</p>
 
       </div>
       <div class="item">
+      <p class="name"><a href="py36.m.html">vulk.py36</a></p>
+      
+  
+    <div class="desc"><p>This file add Python 3.6 capabilities to Python 3.5.
+When switching to Python 3.6, this file must be deleted</p>
+</div>
+
+      </div>
+      <div class="item">
       <p class="name"><a href="tests/index.html">vulk.tests</a></p>
       
   
@@ -1148,7 +1158,13 @@ abstraction. Instead of perform...</p>
       <p class="name"><a href="vulkanconstant.m.html">vulk.vulkanconstant</a></p>
       
   
-    <div class="desc"><p>This module contains useful mapping or constants</p>
+    <div class="desc"><p>This module contains useful mapping or constants.</p>
+
+<p>Vulkan enum are translated to Python enum.
+There are two types of enumeration, <code>IntEnum</code> and <code>IntFlag</code>.
+<code>IntEnum</code> are classic enumeration whereas <code>IntFlag</code> are different.
+<code>IntFlag</code> allows to realize bitwise operation and corresponds to
+the Vulkan en...</p>
 </div>
 
       </div>
