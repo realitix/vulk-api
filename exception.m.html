@@ -3,7 +3,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk.math.plane API documentation</title>
+    <title>vulk.exception API documentation</title>
     <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
@@ -1041,14 +1041,8 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
-        <span class="class_name"><a href="#vulk.math.plane.Plane">Plane</a></span>
+        <span class="class_name"><a href="#vulk.exception.VulkError">VulkError</a></span>
         
-          
-  <ul>
-    <li class="mono"><a href="#vulk.math.plane.Plane.__init__">__init__</a></li>
-    <li class="mono"><a href="#vulk.math.plane.Plane.setFromVector3">setFromVector3</a></li>
-  </ul>
-
         </li>
       </ul>
     </li>
@@ -1063,40 +1057,21 @@ table {
   
 
     <p id="nav">
-      <a href="/vulk-api/vulk/">All packages</a>
+      <a href="/vulk-api/">All packages</a>
       
         
         :: <a href="/vulk-api/vulk">vulk</a>
-        
-        :: <a href="/vulk-api/vulk/math">vulk.math</a>
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk.math.plane</span> module</h1>
+  <h1 class="title"><span class="name">vulk.exception</span> module</h1>
   <p></p>
 
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.plane', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.plane" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">vulk.math</span> <span class="kn">import</span> <span class="n">vector</span>
-
-
-<span class="k">class</span> <span class="nc">Plane</span><span class="p">():</span>
-    <span class="n">OnPlane</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">Back</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">Front</span> <span class="o">=</span> <span class="mi">3</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">normal</span><span class="p">:</span>
-            <span class="n">normal</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">normal</span> <span class="o">=</span> <span class="n">normal</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="n">distance</span>
-
-    <span class="k">def</span> <span class="nf">setFromVector3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">v1</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">v0</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="o">-</span><span class="n">v0</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.exception', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.exception" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VulkError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
 </pre></div>
 
   </div>
@@ -1109,28 +1084,16 @@ table {
     <h2 class="section-title" id="header-classes">Classes</h2>
       
       <div class="item">
-      <p id="vulk.math.plane.Plane" class="name">class <span class="ident">Plane</span></p>
+      <p id="vulk.exception.VulkError" class="name">class <span class="ident">VulkError</span></p>
       
   
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p>
+</div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.plane.Plane', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.plane.Plane" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Plane</span><span class="p">():</span>
-    <span class="n">OnPlane</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">Back</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">Front</span> <span class="o">=</span> <span class="mi">3</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">normal</span><span class="p">:</span>
-            <span class="n">normal</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">normal</span> <span class="o">=</span> <span class="n">normal</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="n">distance</span>
-
-    <span class="k">def</span> <span class="nf">setFromVector3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">v1</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">v0</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="o">-</span><span class="n">v0</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.exception.VulkError', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.exception.VulkError" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VulkError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
 </pre></div>
 
   </div>
@@ -1140,103 +1103,14 @@ table {
       <div class="class">
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
-          <li><a href="#vulk.math.plane.Plane">Plane</a></li>
+          <li><a href="#vulk.exception.VulkError">VulkError</a></li>
+          <li>builtins.Exception</li>
+          <li>builtins.BaseException</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
             <div class="item">
-            <p id="vulk.math.plane.Plane.Back" class="name">var <span class="ident">Back</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="vulk.math.plane.Plane.Front" class="name">var <span class="ident">Front</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="vulk.math.plane.Plane.OnPlane" class="name">var <span class="ident">OnPlane</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-          <h3>Static methods</h3>
-            
-  <div class="item">
-    <div class="name def" id="vulk.math.plane.Plane.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, normal=None, distance=0)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.plane.Plane.__init__', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.plane.Plane.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">normal</span><span class="p">:</span>
-        <span class="n">normal</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">normal</span> <span class="o">=</span> <span class="n">normal</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="n">distance</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="vulk.math.plane.Plane.setFromVector3">
-    <p>def <span class="ident">setFromVector3</span>(</p><p>self, v0, v1, v2)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.plane.Plane.setFromVector3', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.plane.Plane.setFromVector3" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">setFromVector3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v0</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">v1</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v1</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">v2</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">v0</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="o">-</span><span class="n">v0</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normal</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-          <h3>Instance variables</h3>
-            <div class="item">
-            <p id="vulk.math.plane.Plane.distance" class="name">var <span class="ident">distance</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="vulk.math.plane.Plane.normal" class="name">var <span class="ident">normal</span></p>
+            <p id="vulk.exception.VulkError.args" class="name">var <span class="ident">args</span></p>
             
 
             

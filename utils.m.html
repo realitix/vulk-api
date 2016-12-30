@@ -3,7 +3,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk.graphic.d2 API documentation</title>
+    <title>vulk.utils API documentation</title>
     <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
@@ -1037,6 +1037,14 @@ table {
     <h1>Index</h1>
     <ul id="index">
 
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#vulk.utils.millis">millis</a></li>
+    <li class="mono"><a href="#vulk.utils.time_since_millis">time_since_millis</a></li>
+  </ul>
+
+    </li>
 
 
     </ul>
@@ -1049,24 +1057,87 @@ table {
   
 
     <p id="nav">
-      <a href="/vulk-api/vulk/">All packages</a>
+      <a href="/vulk-api/">All packages</a>
       
         
         :: <a href="/vulk-api/vulk">vulk</a>
-        
-        :: <a href="/vulk-api/vulk/graphic">vulk.graphic</a>
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk.graphic.d2</span> module</h1>
+  <h1 class="title"><span class="name">vulk.utils</span> module</h1>
   <p></p>
 
   
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.utils', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.utils" class="source">
+    <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="k">def</span> <span class="nf">millis</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Return the time in milliseconds&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
+
+
+<span class="k">def</span> <span class="nf">time_since_millis</span><span class="p">(</span><span class="n">previous_time</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the time in millisecons from the previous_time argument&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">previous_time</span>
+</pre></div>
+
+  </div>
 
   </header>
 
   <section id="section-items">
 
+    <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="vulk.utils.millis">
+    <p>def <span class="ident">millis</span>(</p><p>)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return the time in milliseconds</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.utils.millis', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.utils.millis" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">millis</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Return the time in milliseconds&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="vulk.utils.time_since_millis">
+    <p>def <span class="ident">time_since_millis</span>(</p><p>previous_time)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return the time in millisecons from the previous_time argument</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.utils.time_since_millis', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.utils.time_since_millis" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">time_since_millis</span><span class="p">(</span><span class="n">previous_time</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the time in millisecons from the previous_time argument&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">previous_time</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
 
 
   </section>

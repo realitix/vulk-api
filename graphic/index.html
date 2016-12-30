@@ -3,10 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk API documentation</title>
-    <meta name="description" content="Vulk 3D engine
-
-Cross-plateform 3D engine" />
+    <title>vulk.graphic API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1043,16 +1041,9 @@ table {
 
     <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
       <ul>
-        <li class="mono"><a href="baseapp.m.html">vulk.baseapp</a></li>
-        <li class="mono"><a href="context.m.html">vulk.context</a></li>
-        <li class="mono"><a href="exception.m.html">vulk.exception</a></li>
-        <li class="mono"><a href="graphic/index.html">vulk.graphic</a></li>
-        <li class="mono"><a href="math/index.html">vulk.math</a></li>
-        <li class="mono"><a href="py36.m.html">vulk.py36</a></li>
-        <li class="mono"><a href="tests/index.html">vulk.tests</a></li>
-        <li class="mono"><a href="utils.m.html">vulk.utils</a></li>
-        <li class="mono"><a href="vulkanconstant.m.html">vulk.vulkanconstant</a></li>
-        <li class="mono"><a href="vulkanobject.m.html">vulk.vulkanobject</a></li>
+        <li class="mono"><a href="camera.m.html">vulk.graphic.camera</a></li>
+        <li class="mono"><a href="d2/index.html">vulk.graphic.d2</a></li>
+        <li class="mono"><a href="d3/index.html">vulk.graphic.d3</a></li>
       </ul>
     </li>
     </ul>
@@ -1065,27 +1056,17 @@ table {
   
 
     <p id="nav">
-      <a href="/vulk-api/vulk/">All packages</a>
+      <a href="/vulk-api/">All packages</a>
       
+        
+        :: <a href="/vulk-api/vulk">vulk</a>
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk</span> module</h1>
-  <p>Vulk 3D engine</p>
-
-<p>Cross-plateform 3D engine</p>
+  <h1 class="title"><span class="name">vulk.graphic</span> module</h1>
+  <p></p>
 
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk', this);">Show source &equiv;</a></p>
-  <div id="source-vulk" class="source">
-    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;Vulk 3D engine</span>
-
-<span class="sd">Cross-plateform 3D engine</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.2.0&quot;</span>
-</pre></div>
-
-  </div>
 
   </header>
 
@@ -1095,90 +1076,21 @@ table {
 
     <h2 class="section-title" id="header-submodules">Sub-modules</h2>
       <div class="item">
-      <p class="name"><a href="baseapp.m.html">vulk.baseapp</a></p>
+      <p class="name"><a href="camera.m.html">vulk.graphic.camera</a></p>
       
   
 
       </div>
       <div class="item">
-      <p class="name"><a href="context.m.html">vulk.context</a></p>
-      
-  
-    <div class="desc"><p>Module to create Window and Vulkan context</p>
-
-<p>This module contains class to create the SDL2 window and the Vulkan
-logical device and queues.
-The context will be then passed to the Application to use it.</p>
-
-<p>Vulk uses a specific way to interact with Vulkan that allow a good
-abstraction. Instead of perform...</p>
-</div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="exception.m.html">vulk.exception</a></p>
+      <p class="name"><a href="d2/index.html">vulk.graphic.d2</a></p>
       
   
 
       </div>
       <div class="item">
-      <p class="name"><a href="graphic/index.html">vulk.graphic</a></p>
+      <p class="name"><a href="d3/index.html">vulk.graphic.d3</a></p>
       
   
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="math/index.html">vulk.math</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="py36.m.html">vulk.py36</a></p>
-      
-  
-    <div class="desc"><p>This file add Python 3.6 capabilities to Python 3.5.
-When switching to Python 3.6, this file must be deleted</p>
-</div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="tests/index.html">vulk.tests</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="utils.m.html">vulk.utils</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="vulkanconstant.m.html">vulk.vulkanconstant</a></p>
-      
-  
-    <div class="desc"><p>This module contains useful mapping or constants.</p>
-
-<p>Vulkan enum are translated to Python enum.
-There are two types of enumeration, <code>IntEnum</code> and <code>IntFlag</code>.
-<code>IntEnum</code> are classic enumeration whereas <code>IntFlag</code> are different.
-<code>IntFlag</code> allows to realize bitwise operation and corresponds to
-the Vulkan en...</p>
-</div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="vulkanobject.m.html">vulk.vulkanobject</a></p>
-      
-  
-    <div class="desc"><p>Vulkan objects modules</p>
-
-<p>This module contains the <em>High</em> level Vulkan object. It's not that <em>high</em>
-level, you need to understand fully Vulkan to use theses objects.
-This module must be use by Vulkan expert and is very complicated to work with.
-You will see a lot of namedtuple here, they are used to b...</p>
-</div>
 
       </div>
   </section>
