@@ -1118,6 +1118,7 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.begin_renderpass">begin_renderpass</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_descriptor_sets">bind_descriptor_sets</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_index_buffer">bind_index_buffer</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_mesh">bind_mesh</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_pipeline">bind_pipeline</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers">bind_vertex_buffers</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_buffer">copy_buffer</a></li>
@@ -2373,6 +2374,21 @@ module.</p>
             <span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span> <span class="n">vk_descriptors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span>
             <span class="n">offsets</span> <span class="k">if</span> <span class="n">offsets</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">bind_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `mesh`: `Mesh`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind_vertex_buffers</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
+                <span class="n">mesh</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
                       <span class="n">bind_point</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">PipelineBindPoint</span><span class="o">.</span><span class="n">GRAPHICS</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -3180,7 +3196,7 @@ module.</p>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="n">format_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">VK_FORMAT_SIZE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">]</span> <span class="o">/</span> <span class="mi">8</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">format_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
         <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -5176,6 +5192,21 @@ buffer. You should not use it directly but with <code>bind</code> method of
             <span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span> <span class="n">vk_descriptors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span>
             <span class="n">offsets</span> <span class="k">if</span> <span class="n">offsets</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">bind_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `mesh`: `Mesh`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind_vertex_buffers</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
+                <span class="n">mesh</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
                       <span class="n">bind_point</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">PipelineBindPoint</span><span class="o">.</span><span class="n">GRAPHICS</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -5535,6 +5566,44 @@ buffer. You should not use it directly but with <code>bind</code> method of
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindIndexBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
                             <span class="n">index_type</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBufferRegister.bind_mesh">
+    <p>def <span class="ident">bind_mesh</span>(</p><p>self, mesh)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Binds vertices and indices buffer of <code>Mesh</code> to this <code>CommandBuffer</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>mesh</code>: <code>Mesh</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBufferRegister.bind_mesh', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBufferRegister.bind_mesh" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">bind_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `mesh`: `Mesh`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bind_vertex_buffers</span><span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
+            <span class="n">mesh</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -7932,7 +8001,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="n">format_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">VK_FORMAT_SIZE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">]</span> <span class="o">/</span> <span class="mi">8</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">format_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
         <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -8131,7 +8200,7 @@ be careful!</p>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t map this image, memory must be host visible&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="n">format_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">VK_FORMAT_SIZE</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">]</span> <span class="o">/</span> <span class="mi">8</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">format_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
     <span class="n">image_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">*</span> <span class="n">format_size</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkMapMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>

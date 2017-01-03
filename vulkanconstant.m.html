@@ -1042,9 +1042,9 @@ table {
     <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
       
   <ul>
+    <li class="mono"><a href="#vulk.vulkanconstant.DataTypeByte">DataTypeByte</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.QUEUE_FAMILY_IGNORED">QUEUE_FAMILY_IGNORED</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.SUBPASS_EXTERNAL">SUBPASS_EXTERNAL</a></li>
-    <li class="mono"><a href="#vulk.vulkanconstant.VK_FORMAT_SIZE">VK_FORMAT_SIZE</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.VK_LAYOUT_NAME">VK_LAYOUT_NAME</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.fn">fn</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.name">name</a></li>
@@ -1052,6 +1052,14 @@ table {
 
     </li>
 
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanconstant.format_info">format_info</a></li>
+    <li class="mono"><a href="#vulk.vulkanconstant.index_type_size">index_type_size</a></li>
+  </ul>
+
+    </li>
 
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
@@ -1116,6 +1124,10 @@ table {
         
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanconstant.DataType">DataType</a></span>
+        
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanconstant.Dependency">Dependency</a></span>
         
         </li>
@@ -1133,6 +1145,10 @@ table {
         </li>
         <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanconstant.Format">Format</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanconstant.FormatType">FormatType</a></span>
         
         </li>
         <li class="mono">
@@ -1262,7 +1278,7 @@ specific field <code>NONE</code> which is equals to 0.</p>
 <span class="sd">the Vulkan enumeration that ends by &#39;_BIT&#39;. All enumerations have a</span>
 <span class="sd">specific field `NONE` which is equals to 0.</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="kn">from</span> <span class="nn">vulk.py36</span> <span class="kn">import</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">IntFlag</span>
+<span class="kn">from</span> <span class="nn">vulk.py36</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">IntFlag</span><span class="p">,</span> <span class="n">AutoNumber</span>
 <span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>  <span class="c1"># pylint: disable=import-error</span>
 
 
@@ -1427,6 +1443,26 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">FRONT</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_CULL_MODE_FRONT_BIT</span>
     <span class="n">BACK</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_CULL_MODE_BACK_BIT</span>
     <span class="n">FRONT_AND_BACK</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_CULL_MODE_FRONT_AND_BACK</span>
+
+
+<span class="c1"># TODO: Use auto with python 3.6</span>
+<span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">AutoNumber</span><span class="p">):</span>
+    <span class="n">UINT8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SINT8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UINT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SINT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UINT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SINT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UNORM8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SNORM8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UNORM16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SNORM16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UNORM32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SNORM32</span> <span class="o">=</span> <span class="p">()</span>
 
 
 <span class="k">class</span> <span class="nc">Dependency</span><span class="p">(</span><span class="n">IntFlag</span><span class="p">):</span>
@@ -1649,6 +1685,52 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">ASTC_12x12_SRGB_BLOCK</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_12x12_SRGB_BLOCK</span>
 
 
+<span class="k">class</span> <span class="nc">FormatType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Mapping between `Format` and `(DataType, num_components)`&#39;&#39;&#39;</span>
+    <span class="n">R8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8G8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8B8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">B8G8R8A8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">B8G8R8A8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16G16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R16G16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R16G16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R16G16B16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R16G16B16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R16G16B16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R16G16B16A16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16G16B16A16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R16G16B16A16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R32G32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R32G32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R32G32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R32G32B32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R32G32B32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R32G32B32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R32G32B32A32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R32G32B32A32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R32G32B32A32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+
 <span class="k">class</span> <span class="nc">FrontFace</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">COUNTER_CLOCKWISE</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_FRONT_FACE_COUNTER_CLOCKWISE</span>
@@ -1853,204 +1935,64 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">INSTANCE</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_VERTEX_INPUT_RATE_INSTANCE</span>
 
 
-<span class="c1"># Wow! That was long to do!</span>
-<span class="c1"># The format in bits (not Byte!)</span>
-<span class="c1"># TODO: Compressed format are not set, not sure of the value</span>
-<span class="n">VK_FORMAT_SIZE</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_UNDEFINED</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R4G4_UNORM_PACK8</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R4G4B4A4_UNORM_PACK16</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B4G4R4A4_UNORM_PACK16</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R5G6B5_UNORM_PACK16</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B5G6R5_UNORM_PACK16</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R5G5B5A1_UNORM_PACK16</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B5G5R5A1_UNORM_PACK16</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A1R5G5B5_UNORM_PACK16</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8_UNORM</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8_SNORM</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8_USCALED</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8_SSCALED</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8_UINT</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8_SINT</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8_SRGB</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8_UNORM</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8_SNORM</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8_USCALED</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8_SSCALED</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8_UINT</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8_SINT</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8_SRGB</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8_UNORM</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8_SNORM</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8_USCALED</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8_SSCALED</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8_UINT</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8_SINT</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8_SRGB</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8_UNORM</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8_SNORM</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8_USCALED</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8_SSCALED</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8_UINT</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8_SINT</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8_SRGB</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8A8_UNORM</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8A8_SNORM</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8A8_USCALED</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8A8_SSCALED</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8A8_UINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8A8_SINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R8G8B8A8_SRGB</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8A8_UNORM</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8A8_SNORM</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8A8_USCALED</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8A8_SSCALED</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8A8_UINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8A8_SINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B8G8R8A8_SRGB</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A8B8G8R8_UNORM_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A8B8G8R8_SNORM_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A8B8G8R8_USCALED_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A8B8G8R8_SSCALED_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A8B8G8R8_UINT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A8B8G8R8_SINT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A8B8G8R8_SRGB_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2R10G10B10_UNORM_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2R10G10B10_SNORM_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2R10G10B10_USCALED_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2R10G10B10_SSCALED_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2R10G10B10_UINT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2R10G10B10_SINT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2B10G10R10_UNORM_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2B10G10R10_SNORM_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2B10G10R10_USCALED_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2B10G10R10_SSCALED_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2B10G10R10_UINT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_A2B10G10R10_SINT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16_UNORM</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16_SNORM</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16_USCALED</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16_SSCALED</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16_UINT</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16_SINT</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16_SFLOAT</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16_UNORM</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16_SNORM</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16_USCALED</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16_SSCALED</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16_UINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16_SINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16_SFLOAT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16_UNORM</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16_SNORM</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16_USCALED</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16_SSCALED</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16_UINT</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16_SINT</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16_SFLOAT</span><span class="p">:</span> <span class="mi">48</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16A16_UNORM</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16A16_SNORM</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16A16_USCALED</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16A16_SSCALED</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16A16_UINT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16A16_SINT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R16G16B16A16_SFLOAT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32_UINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32_SINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32_SFLOAT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32_UINT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32_SINT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32_SFLOAT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32B32_UINT</span><span class="p">:</span> <span class="mi">96</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32B32_SINT</span><span class="p">:</span> <span class="mi">96</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32B32_SFLOAT</span><span class="p">:</span> <span class="mi">96</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32B32A32_UINT</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32B32A32_SINT</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R32G32B32A32_SFLOAT</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64_UINT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64_SINT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64_SFLOAT</span><span class="p">:</span> <span class="mi">64</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64_UINT</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64_SINT</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64_SFLOAT</span><span class="p">:</span> <span class="mi">128</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64B64_UINT</span><span class="p">:</span> <span class="mi">194</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64B64_SINT</span><span class="p">:</span> <span class="mi">194</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64B64_SFLOAT</span><span class="p">:</span> <span class="mi">194</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64B64A64_UINT</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64B64A64_SINT</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_R64G64B64A64_SFLOAT</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_B10G11R11_UFLOAT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_E5B9G9R9_UFLOAT_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_D16_UNORM</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_X8_D24_UNORM_PACK32</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_D32_SFLOAT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_S8_UINT</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_D16_UNORM_S8_UINT</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_D24_UNORM_S8_UINT</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_D32_SFLOAT_S8_UINT</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC1_RGB_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC1_RGB_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC1_RGBA_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC1_RGBA_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC2_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC2_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC3_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC3_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC4_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC4_SNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC5_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC5_SNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC6H_UFLOAT_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC6H_SFLOAT_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC7_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_BC7_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_EAC_R11_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_EAC_R11_SNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_EAC_R11G11_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_EAC_R11G11_SNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_4x4_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_4x4_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_5x4_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_5x4_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_5x5_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_5x5_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_6x5_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_6x5_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_6x6_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_6x6_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_8x5_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_8x5_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_8x6_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_8x6_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_8x8_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_8x8_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x5_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x5_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x6_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x6_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x8_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x8_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x10_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_10x10_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_12x10_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_12x10_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_12x12_UNORM_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_ASTC_12x12_SRGB_BLOCK</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">vk</span><span class="o">.</span><span class="n">VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="c1"># ----------</span>
+<span class="c1"># MAPPING</span>
+<span class="c1"># ----------</span>
+<span class="n">DataTypeByte</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UFLOAT16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UFLOAT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UNORM16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SNORM16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UNORM32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SNORM32</span><span class="p">:</span> <span class="mi">4</span>
 <span class="p">}</span>
+
+
+<span class="c1"># ----------</span>
+<span class="c1"># FUNCTIONS</span>
+<span class="c1"># ----------</span>
+<span class="k">def</span> <span class="nf">format_info</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return detailed information of format `f`</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `f`: `Format`</span>
+
+<span class="sd">    *Returns:*</span>
+
+<span class="sd">    Tuple containing:</span>
+
+<span class="sd">    - `DataType`</span>
+<span class="sd">    - Number of components</span>
+<span class="sd">    - Size in bytes (not bits)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">ftype</span> <span class="o">=</span> <span class="n">FormatType</span><span class="o">.</span><span class="n">__members__</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="n">data_type</span> <span class="o">=</span> <span class="n">ftype</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_components</span> <span class="o">=</span> <span class="n">ftype</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">DataTypeByte</span><span class="p">[</span><span class="n">data_type</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_components</span>
+    <span class="k">return</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">num_components</span><span class="p">,</span> <span class="n">size</span>
+
+
+<span class="k">def</span> <span class="nf">index_type_size</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the size in byte of the index type</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `t`: `IndexType`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="mi">4</span>
 
 
 <span class="c1"># Mapping between layout value and its name</span>
@@ -2072,6 +2014,14 @@ specific field <code>NONE</code> which is equals to 0.</p>
   <section id="section-items">
     <h2 class="section-title" id="header-variables">Module variables</h2>
       <div class="item">
+      <p id="vulk.vulkanconstant.DataTypeByte" class="name">var <span class="ident">DataTypeByte</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
       <p id="vulk.vulkanconstant.QUEUE_FAMILY_IGNORED" class="name">var <span class="ident">QUEUE_FAMILY_IGNORED</span></p>
       
   
@@ -2081,14 +2031,6 @@ specific field <code>NONE</code> which is equals to 0.</p>
       </div>
       <div class="item">
       <p id="vulk.vulkanconstant.SUBPASS_EXTERNAL" class="name">var <span class="ident">SUBPASS_EXTERNAL</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
-      <div class="item">
-      <p id="vulk.vulkanconstant.VK_FORMAT_SIZE" class="name">var <span class="ident">VK_FORMAT_SIZE</span></p>
       
   
   <div class="source_cont">
@@ -2120,6 +2062,101 @@ specific field <code>NONE</code> which is equals to 0.</p>
 
       </div>
 
+    <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="vulk.vulkanconstant.format_info">
+    <p>def <span class="ident">format_info</span>(</p><p>f)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return detailed information of format <code>f</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>f</code>: <code>Format</code></li>
+</ul>
+
+<p><em>Returns:</em></p>
+
+<p>Tuple containing:</p>
+
+<ul>
+<li><code>DataType</code></li>
+<li>Number of components</li>
+<li>Size in bytes (not bits)</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanconstant.format_info', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanconstant.format_info" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">format_info</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return detailed information of format `f`</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `f`: `Format`</span>
+
+<span class="sd">    *Returns:*</span>
+
+<span class="sd">    Tuple containing:</span>
+
+<span class="sd">    - `DataType`</span>
+<span class="sd">    - Number of components</span>
+<span class="sd">    - Size in bytes (not bits)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">ftype</span> <span class="o">=</span> <span class="n">FormatType</span><span class="o">.</span><span class="n">__members__</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+    <span class="n">data_type</span> <span class="o">=</span> <span class="n">ftype</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_components</span> <span class="o">=</span> <span class="n">ftype</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">DataTypeByte</span><span class="p">[</span><span class="n">data_type</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_components</span>
+    <span class="k">return</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">num_components</span><span class="p">,</span> <span class="n">size</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="vulk.vulkanconstant.index_type_size">
+    <p>def <span class="ident">index_type_size</span>(</p><p>t)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return the size in byte of the index type</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>t</code>: <code>IndexType</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanconstant.index_type_size', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanconstant.index_type_size" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">index_type_size</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the size in byte of the index type</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `t`: `IndexType`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="mi">4</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
 
     <h2 class="section-title" id="header-classes">Classes</h2>
       
@@ -3742,6 +3779,210 @@ specific field <code>NONE</code> which is equals to 0.</p>
             </div>
             <div class="item">
             <p id="vulk.vulkanconstant.CullMode.NONE" class="name">var <span class="ident">NONE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanconstant.DataType" class="name">class <span class="ident">DataType</span></p>
+      
+  
+    <div class="desc"><p>An enumeration.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanconstant.DataType', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanconstant.DataType" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">AutoNumber</span><span class="p">):</span>
+    <span class="n">UINT8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SINT8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UINT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SINT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UINT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SINT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UNORM8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SNORM8</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UNORM16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SNORM16</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">UNORM32</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">SNORM32</span> <span class="o">=</span> <span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanconstant.DataType">DataType</a></li>
+          <li>vulk.py36.AutoNumber</li>
+          <li>vulk.py36.Enum</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SFLOAT16" class="name">var <span class="ident">SFLOAT16</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SFLOAT32" class="name">var <span class="ident">SFLOAT32</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SINT16" class="name">var <span class="ident">SINT16</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SINT32" class="name">var <span class="ident">SINT32</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SINT8" class="name">var <span class="ident">SINT8</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SNORM16" class="name">var <span class="ident">SNORM16</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SNORM32" class="name">var <span class="ident">SNORM32</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.SNORM8" class="name">var <span class="ident">SNORM8</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UFLOAT16" class="name">var <span class="ident">UFLOAT16</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UFLOAT32" class="name">var <span class="ident">UFLOAT32</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UINT16" class="name">var <span class="ident">UINT16</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UINT32" class="name">var <span class="ident">UINT32</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UINT8" class="name">var <span class="ident">UINT8</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UNORM16" class="name">var <span class="ident">UNORM16</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UNORM32" class="name">var <span class="ident">UNORM32</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.DataType.UNORM8" class="name">var <span class="ident">UNORM8</span></p>
             
 
             
@@ -6144,6 +6385,516 @@ specific field <code>NONE</code> which is equals to 0.</p>
             </div>
             <div class="item">
             <p id="vulk.vulkanconstant.Format.X8_D24_UNORM_PACK32" class="name">var <span class="ident">X8_D24_UNORM_PACK32</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanconstant.FormatType" class="name">class <span class="ident">FormatType</span></p>
+      
+  
+    <div class="desc"><p>Mapping between <code>Format</code> and <code>(DataType, num_components)</code></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanconstant.FormatType', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanconstant.FormatType" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">FormatType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Mapping between `Format` and `(DataType, num_components)`&#39;&#39;&#39;</span>
+    <span class="n">R8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R8G8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R8G8B8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_UNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_SNORM</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R8G8B8A8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">B8G8R8A8_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">B8G8R8A8_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16G16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R16G16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R16G16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R16G16B16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R16G16B16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R16G16B16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R16G16B16A16_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R16G16B16A16_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R16G16B16A16_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">R32G32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R32G32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R32G32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">R32G32B32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R32G32B32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R32G32B32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">R32G32B32A32_UINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R32G32B32A32_SINT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">R32G32B32A32_SFLOAT</span> <span class="o">=</span> <span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanconstant.FormatType">FormatType</a></li>
+          <li>vulk.py36.Enum</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.B8G8R8A8_SINT" class="name">var <span class="ident">B8G8R8A8_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.B8G8R8A8_UINT" class="name">var <span class="ident">B8G8R8A8_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16B16A16_SFLOAT" class="name">var <span class="ident">R16G16B16A16_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16B16A16_SINT" class="name">var <span class="ident">R16G16B16A16_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16B16A16_UINT" class="name">var <span class="ident">R16G16B16A16_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16B16_SFLOAT" class="name">var <span class="ident">R16G16B16_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16B16_SINT" class="name">var <span class="ident">R16G16B16_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16B16_UINT" class="name">var <span class="ident">R16G16B16_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16_SFLOAT" class="name">var <span class="ident">R16G16_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16_SINT" class="name">var <span class="ident">R16G16_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16G16_UINT" class="name">var <span class="ident">R16G16_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16_SFLOAT" class="name">var <span class="ident">R16_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16_SINT" class="name">var <span class="ident">R16_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R16_UINT" class="name">var <span class="ident">R16_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32B32A32_SFLOAT" class="name">var <span class="ident">R32G32B32A32_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32B32A32_SINT" class="name">var <span class="ident">R32G32B32A32_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32B32A32_UINT" class="name">var <span class="ident">R32G32B32A32_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32B32_SFLOAT" class="name">var <span class="ident">R32G32B32_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32B32_SINT" class="name">var <span class="ident">R32G32B32_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32B32_UINT" class="name">var <span class="ident">R32G32B32_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32_SFLOAT" class="name">var <span class="ident">R32G32_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32_SINT" class="name">var <span class="ident">R32G32_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32G32_UINT" class="name">var <span class="ident">R32G32_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32_SFLOAT" class="name">var <span class="ident">R32_SFLOAT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32_SINT" class="name">var <span class="ident">R32_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R32_UINT" class="name">var <span class="ident">R32_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8A8_SINT" class="name">var <span class="ident">R8G8B8A8_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8A8_SNORM" class="name">var <span class="ident">R8G8B8A8_SNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8A8_UINT" class="name">var <span class="ident">R8G8B8A8_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8A8_UNORM" class="name">var <span class="ident">R8G8B8A8_UNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8_SINT" class="name">var <span class="ident">R8G8B8_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8_SNORM" class="name">var <span class="ident">R8G8B8_SNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8_UINT" class="name">var <span class="ident">R8G8B8_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8B8_UNORM" class="name">var <span class="ident">R8G8B8_UNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8_SINT" class="name">var <span class="ident">R8G8_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8_SNORM" class="name">var <span class="ident">R8G8_SNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8_UINT" class="name">var <span class="ident">R8G8_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8G8_UNORM" class="name">var <span class="ident">R8G8_UNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8_SINT" class="name">var <span class="ident">R8_SINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8_SNORM" class="name">var <span class="ident">R8_SNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8_UINT" class="name">var <span class="ident">R8_UINT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.R8_UNORM" class="name">var <span class="ident">R8_UNORM</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.name" class="name">var <span class="ident">name</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.FormatType.value" class="name">var <span class="ident">value</span></p>
             
 
             
