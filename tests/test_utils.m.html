@@ -3,7 +3,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk.tests API documentation</title>
+    <title>vulk.tests.test_utils API documentation</title>
     <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
@@ -1037,14 +1037,15 @@ table {
     <h1>Index</h1>
     <ul id="index">
 
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#vulk.tests.test_utils.test_returns_number">test_returns_number</a></li>
+  </ul>
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
-      <ul>
-        <li class="mono"><a href="math/index.html">vulk.tests.math</a></li>
-        <li class="mono"><a href="test_utils.m.html">vulk.tests.test_utils</a></li>
-      </ul>
     </li>
+
+
     </ul>
   </div>
 
@@ -1059,16 +1060,24 @@ table {
       
         
         :: <a href="/vulk-api/vulk">vulk</a>
+        
+        :: <a href="/vulk-api/vulk/tests">vulk.tests</a>
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk.tests</span> module</h1>
+  <h1 class="title"><span class="name">vulk.tests.test_utils</span> module</h1>
   <p></p>
 
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.tests', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.tests" class="source">
-    <div class="codehilite"><pre><span></span><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;math&#39;</span><span class="p">,</span> <span class="s1">&#39;test_utils&#39;</span><span class="p">]</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.tests.test_utils', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.tests.test_utils" class="source">
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">utils</span>
+
+<span class="kn">import</span> <span class="nn">numbers</span>
+
+
+<span class="k">def</span> <span class="nf">test_returns_number</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">millis</span><span class="p">(),</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1077,21 +1086,30 @@ table {
 
   <section id="section-items">
 
-
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
-      <div class="item">
-      <p class="name"><a href="math/index.html">vulk.tests.math</a></p>
+    <h2 class="section-title" id="header-functions">Functions</h2>
       
+  <div class="item">
+    <div class="name def" id="vulk.tests.test_utils.test_returns_number">
+    <p>def <span class="ident">test_returns_number</span>(</p><p>)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.tests.test_utils.test_returns_number', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.tests.test_utils.test_returns_number" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">test_returns_number</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">millis</span><span class="p">(),</span> <span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
   
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="test_utils.m.html">vulk.tests.test_utils</a></p>
-      
-  
 
-      </div>
   </section>
 
     </article>
