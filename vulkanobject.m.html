@@ -1118,7 +1118,6 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.begin_renderpass">begin_renderpass</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_descriptor_sets">bind_descriptor_sets</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_index_buffer">bind_index_buffer</a></li>
-    <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_mesh">bind_mesh</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_pipeline">bind_pipeline</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers">bind_vertex_buffers</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_buffer">copy_buffer</a></li>
@@ -1347,6 +1346,15 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.vulkanobject.ShaderModule.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.ShaderProgram">ShaderProgram</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.ShaderProgram.__init__">__init__</a></li>
   </ul>
 
         </li>
@@ -2373,21 +2381,6 @@ module.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">bind_point</span><span class="p">,</span> <span class="n">layout</span><span class="o">.</span><span class="n">layout</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span> <span class="n">vk_descriptors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span>
             <span class="n">offsets</span> <span class="k">if</span> <span class="n">offsets</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">bind_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `mesh`: `Mesh`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bind_vertex_buffers</span><span class="p">(</span>
-            <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
-                <span class="n">mesh</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
                       <span class="n">bind_point</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">PipelineBindPoint</span><span class="o">.</span><span class="n">GRAPHICS</span><span class="p">):</span>
@@ -3747,6 +3740,30 @@ module.</p>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">codeSize</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">code</span><span class="p">),</span> <span class="n">pCode</span><span class="o">=</span><span class="n">code</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateShaderModule</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">shader_create</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ShaderProgram</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;ShaderProgram</span>
+
+<span class="sd">    A `ShaderProgram` embed all `ShaderModule` of a `Pipeline`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `modules`: `dict` containing a mapping between `ShaderStage` and the</span>
+<span class="sd">                     actual shader. The shader must be a `bytes` object like</span>
+<span class="sd">                     obtained by open(path, &#39;rb&#39;).read()</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">spirv</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spirv</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;shader must be a bytes object&quot;</span><span class="p">)</span>
+
+            <span class="n">module</span> <span class="o">=</span> <span class="n">ShaderModule</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">spirv</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PipelineShaderStage</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
 </pre></div>
 
   </div>
@@ -5192,21 +5209,6 @@ buffer. You should not use it directly but with <code>bind</code> method of
             <span class="nb">len</span><span class="p">(</span><span class="n">vk_descriptors</span><span class="p">),</span> <span class="n">vk_descriptors</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span>
             <span class="n">offsets</span> <span class="k">if</span> <span class="n">offsets</span> <span class="k">else</span> <span class="bp">None</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">bind_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `mesh`: `Mesh`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bind_vertex_buffers</span><span class="p">(</span>
-            <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
-                <span class="n">mesh</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span>
                       <span class="n">bind_point</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">PipelineBindPoint</span><span class="o">.</span><span class="n">GRAPHICS</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -5566,44 +5568,6 @@ buffer. You should not use it directly but with <code>bind</code> method of
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindIndexBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
                             <span class="n">index_type</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="vulk.vulkanobject.CommandBufferRegister.bind_mesh">
-    <p>def <span class="ident">bind_mesh</span>(</p><p>self, mesh)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Binds vertices and indices buffer of <code>Mesh</code> to this <code>CommandBuffer</code></p>
-
-<p><em>Parameters:</em></p>
-
-<ul>
-<li><code>mesh</code>: <code>Mesh</code></li>
-</ul>
-</div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBufferRegister.bind_mesh', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.vulkanobject.CommandBufferRegister.bind_mesh" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">bind_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Binds vertices and indices buffer of `Mesh` to this `CommandBuffer`</span>
-<span class="sd">    *Parameters:*</span>
-<span class="sd">    - `mesh`: `Mesh`</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">bind_vertex_buffers</span><span class="p">(</span>
-        <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
-            <span class="n">mesh</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mesh</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -10850,6 +10814,108 @@ The real Vulkan module can be accessed by the 'module' property.</p>
             </div>
             <div class="item">
             <p id="vulk.vulkanobject.ShaderModule.module" class="name">var <span class="ident">module</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.ShaderProgram" class="name">class <span class="ident">ShaderProgram</span></p>
+      
+  
+    <div class="desc"><p>ShaderProgram</p>
+
+<p>A <code>ShaderProgram</code> embed all <code>ShaderModule</code> of a <code>Pipeline</code>.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ShaderProgram', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.ShaderProgram" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ShaderProgram</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;ShaderProgram</span>
+
+<span class="sd">    A `ShaderProgram` embed all `ShaderModule` of a `Pipeline`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `modules`: `dict` containing a mapping between `ShaderStage` and the</span>
+<span class="sd">                     actual shader. The shader must be a `bytes` object like</span>
+<span class="sd">                     obtained by open(path, &#39;rb&#39;).read()</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">spirv</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spirv</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;shader must be a bytes object&quot;</span><span class="p">)</span>
+
+            <span class="n">module</span> <span class="o">=</span> <span class="n">ShaderModule</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">spirv</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PipelineShaderStage</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.ShaderProgram">ShaderProgram</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.ShaderProgram.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, modules)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>modules</code>: <code>dict</code> containing a mapping between <code>ShaderStage</code> and the
+         actual shader. The shader must be a <code>bytes</code> object like
+         obtained by open(path, 'rb').read()</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ShaderProgram.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.ShaderProgram.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `modules`: `dict` containing a mapping between `ShaderStage` and the</span>
+<span class="sd">                 actual shader. The shader must be a `bytes` object like</span>
+<span class="sd">                 obtained by open(path, &#39;rb&#39;).read()</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">stages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">spirv</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spirv</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;shader must be a bytes object&quot;</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">ShaderModule</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">spirv</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PipelineShaderStage</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.ShaderProgram.stages" class="name">var <span class="ident">stages</span></p>
             
 
             
