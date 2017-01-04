@@ -1041,6 +1041,20 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.graphic.texture.BinaryTexture">BinaryTexture</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.init_bitmap">init_bitmap</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.init_view_sampler">init_view_sampler</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.set_sampler">set_sampler</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.set_view">set_view</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.upload">upload</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></span>
         
           
@@ -1133,7 +1147,7 @@ table {
             <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="c1"># Init view and</span>
+        <span class="c1"># Init view and sampler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_view_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
@@ -1178,13 +1192,39 @@ table {
                       <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Texture</span><span class="p">(</span><span class="n">RawTexture</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">BinaryTexture</span><span class="p">(</span><span class="n">RawTexture</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    RawTexture with provided bitmap buffer.</span>
+
+<span class="sd">    **Warning: You are responsible of the bitmap buffer**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
+                 <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameter:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `raw_bitmap`: Buffer to a bitmap</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Create all the components by calling parent init</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span>
+                         <span class="n">raw_bitmap</span><span class="o">=</span><span class="n">raw_bitmap</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Upload data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Texture</span><span class="p">(</span><span class="n">BinaryTexture</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;This class represent a texture.</span>
 
 <span class="sd">    It handles a Vulkan buffer and a bitmap array (numpy array)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        *Parameter:*</span>
 
@@ -1197,14 +1237,8 @@ table {
         <span class="n">texture_format</span> <span class="o">=</span> <span class="n">Texture</span><span class="o">.</span><span class="n">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
 
         <span class="c1"># Create all the components by calling parent init</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span>
-                         <span class="n">raw_bitmap</span><span class="o">=</span><span class="n">raw_bitmap</span><span class="p">)</span>
-
-        <span class="c1"># Upload data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
+                         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
@@ -1223,6 +1257,236 @@ table {
 
 
     <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="vulk.graphic.texture.BinaryTexture" class="name">class <span class="ident">BinaryTexture</span></p>
+      
+  
+    <div class="desc"><p>RawTexture with provided bitmap buffer.</p>
+
+<p><strong>Warning: You are responsible of the bitmap buffer</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.BinaryTexture" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">BinaryTexture</span><span class="p">(</span><span class="n">RawTexture</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    RawTexture with provided bitmap buffer.</span>
+
+<span class="sd">    **Warning: You are responsible of the bitmap buffer**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
+                 <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameter:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `raw_bitmap`: Buffer to a bitmap</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Create all the components by calling parent init</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span>
+                         <span class="n">raw_bitmap</span><span class="o">=</span><span class="n">raw_bitmap</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Upload data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.graphic.texture.BinaryTexture">BinaryTexture</a></li>
+          <li><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.BinaryTexture.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, width, height, texture_format, raw_bitmap, *args, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameter:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>raw_bitmap</code>: Buffer to a bitmap</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.BinaryTexture.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
+             <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameter:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `raw_bitmap`: Buffer to a bitmap</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Create all the components by calling parent init</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span>
+                     <span class="n">raw_bitmap</span><span class="o">=</span><span class="n">raw_bitmap</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="c1"># Upload data</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.BinaryTexture.init_bitmap">
+    <p>def <span class="ident">init_bitmap</span>(</p><p>self, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.init_bitmap', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.BinaryTexture.init_bitmap" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.BinaryTexture.init_view_sampler">
+    <p>def <span class="ident">init_view_sampler</span>(</p><p>self, context)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.init_view_sampler', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.BinaryTexture.init_view_sampler" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_view_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.BinaryTexture.set_sampler">
+    <p>def <span class="ident">set_sampler</span>(</p><p>self, context, mag_filter=&lt;Filter.NEAREST: 1&gt;, min_filter=&lt;Filter.NEAREST: 1&gt;, address_mode_u=&lt;SamplerAddressMode.REPEAT: 1&gt;, address_mode_v=&lt;SamplerAddressMode.REPEAT: 1&gt;)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.set_sampler', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.BinaryTexture.set_sampler" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
+                <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
+                <span class="n">address_mode_u</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
+                <span class="n">address_mode_v</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
+        <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">CompareOp</span><span class="o">.</span><span class="n">ALWAYS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">BorderColor</span><span class="o">.</span><span class="n">INT_OPAQUE_BLACK</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.BinaryTexture.set_view">
+    <p>def <span class="ident">set_view</span>(</p><p>self, context)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Allow to customize the texture view</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.set_view', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.BinaryTexture.set_view" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Allow to customize the texture view</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">texture_range</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageSubresourceRange</span><span class="p">(</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ImageAspect</span><span class="o">.</span><span class="n">COLOR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageView</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">final_image</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ImageViewType</span><span class="o">.</span><span class="n">TYPE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">texture_range</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.BinaryTexture.upload">
+    <p>def <span class="ident">upload</span>(</p><p>self, context)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></code>.<code><a href="#vulk.graphic.texture.RawTexture.upload">upload</a></code>
+    </p>
+
+    
+  
+    <div class="desc inherited"><p>Upload bitmap into Vulkan memory</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.upload', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.BinaryTexture.upload" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory&#39;&#39;&#39;</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span>
+                  <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
       
       <div class="item">
       <p id="vulk.graphic.texture.RawTexture" class="name">class <span class="ident">RawTexture</span></p>
@@ -1260,7 +1524,7 @@ manually</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="c1"># Init view and</span>
+        <span class="c1"># Init view and sampler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_view_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
@@ -1358,7 +1622,7 @@ manually</p>
         <span class="n">context</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">TYPE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_bitmap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="c1"># Init view and</span>
+    <span class="c1"># Init view and sampler</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">init_view_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
@@ -1591,13 +1855,13 @@ manually</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Texture</span><span class="p">(</span><span class="n">RawTexture</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Texture</span><span class="p">(</span><span class="n">BinaryTexture</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;This class represent a texture.</span>
 
 <span class="sd">    It handles a Vulkan buffer and a bitmap array (numpy array)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        *Parameter:*</span>
 
@@ -1610,14 +1874,8 @@ manually</p>
         <span class="n">texture_format</span> <span class="o">=</span> <span class="n">Texture</span><span class="o">.</span><span class="n">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
 
         <span class="c1"># Create all the components by calling parent init</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span>
-                         <span class="n">raw_bitmap</span><span class="o">=</span><span class="n">raw_bitmap</span><span class="p">)</span>
-
-        <span class="c1"># Upload data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
+                         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
@@ -1636,6 +1894,7 @@ manually</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.graphic.texture.Texture">Texture</a></li>
+          <li><a href="#vulk.graphic.texture.BinaryTexture">BinaryTexture</a></li>
           <li><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></li>
           <li>builtins.object</li>
           </ul>
@@ -1643,7 +1902,7 @@ manually</p>
             
   <div class="item">
     <div class="name def" id="vulk.graphic.texture.Texture.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, path_file)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, path_file, *args, **kwargs)</p>
     </div>
     
 
@@ -1659,7 +1918,7 @@ manually</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    *Parameter:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
@@ -1670,10 +1929,8 @@ manually</p>
         <span class="nb">open</span><span class="p">(</span><span class="n">path_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
     <span class="n">texture_format</span> <span class="o">=</span> <span class="n">Texture</span><span class="o">.</span><span class="n">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
     <span class="c1"># Create all the components by calling parent init</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span>
-                     <span class="n">raw_bitmap</span><span class="o">=</span><span class="n">raw_bitmap</span><span class="p">)</span>
-    <span class="c1"># Upload data</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
+                     <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1719,7 +1976,7 @@ manually</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture.init_bitmap', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture.init_bitmap" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1733,6 +1990,10 @@ manually</p>
     <p>def <span class="ident">init_view_sampler</span>(</p><p>self, context)</p>
     </div>
     
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></code>.<code><a href="#vulk.graphic.texture.RawTexture.init_view_sampler">init_view_sampler</a></code>
+    </p>
 
     
   
@@ -1823,7 +2084,7 @@ manually</p>
     
     <p class="inheritance">
      <strong>Inheritance:</strong>
-       <code><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></code>.<code><a href="#vulk.graphic.texture.RawTexture.upload">upload</a></code>
+       <code><a href="#vulk.graphic.texture.BinaryTexture">BinaryTexture</a></code>.<code><a href="#vulk.graphic.texture.BinaryTexture.upload">upload</a></code>
     </p>
 
     
