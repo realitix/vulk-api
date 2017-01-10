@@ -1054,6 +1054,7 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.bind">bind</a></li>
+    <li class="mono"><a href="#vulk.graphic.mesh.Mesh.draw">draw</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.set_indices">set_indices</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.set_vertices">set_vertices</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.upload">upload</a></li>
@@ -1173,8 +1174,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Mesh</span><span class="p">():</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span><span class="p">,</span> <span class="n">max_indices</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span>
-                 <span class="n">index_type</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span><span class="p">,</span> <span class="n">max_indices</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        *Parameters:*</span>
 
@@ -1182,8 +1182,11 @@ table {
 <span class="sd">        - `max_indices`: Maximum number of indice for this mesh</span>
 <span class="sd">        - `attributes`: `VertexAttributes`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span>
+        <span class="k">if</span> <span class="n">max_vertices</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT32</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">index_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span> <span class="o">=</span> <span class="n">max_indices</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
         <span class="c1"># Create numpy type based of vertex attributes</span>
@@ -1202,7 +1205,7 @@ table {
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
-                <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="n">index_type</span><span class="p">),</span>
+                <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">),</span>
                 <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">INDEX_BUFFER</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -1248,6 +1251,26 @@ table {
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Draw the mesh during command buffer registration</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `cmd`: `CommandBufferRegister`</span>
+<span class="sd">        - `offset`: Start drawing at `offset` vertices</span>
+<span class="sd">        - `count`: Draw `count` vertices</span>
+
+<span class="sd">        **Note: `offset` and `count` target indices if mesh is indexed**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">count</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">draw_indexed</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">count</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1276,8 +1299,7 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Mesh</span><span class="p">():</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span><span class="p">,</span> <span class="n">max_indices</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span>
-                 <span class="n">index_type</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span><span class="p">,</span> <span class="n">max_indices</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        *Parameters:*</span>
 
@@ -1285,8 +1307,11 @@ table {
 <span class="sd">        - `max_indices`: Maximum number of indice for this mesh</span>
 <span class="sd">        - `attributes`: `VertexAttributes`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span>
+        <span class="k">if</span> <span class="n">max_vertices</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT32</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">index_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span> <span class="o">=</span> <span class="n">max_indices</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
         <span class="c1"># Create numpy type based of vertex attributes</span>
@@ -1305,7 +1330,7 @@ table {
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
-                <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="n">index_type</span><span class="p">),</span>
+                <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">),</span>
                 <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">INDEX_BUFFER</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -1351,6 +1376,26 @@ table {
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Draw the mesh during command buffer registration</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `cmd`: `CommandBufferRegister`</span>
+<span class="sd">        - `offset`: Start drawing at `offset` vertices</span>
+<span class="sd">        - `count`: Draw `count` vertices</span>
+
+<span class="sd">        **Note: `offset` and `count` target indices if mesh is indexed**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">count</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">draw_indexed</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">count</span><span class="p">:</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1367,7 +1412,7 @@ table {
             
   <div class="item">
     <div class="name def" id="vulk.graphic.mesh.Mesh.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, max_vertices, max_indices, attributes, index_type=&lt;IndexType.UINT16: 1&gt;)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, max_vertices, max_indices, attributes)</p>
     </div>
     
 
@@ -1384,16 +1429,17 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span><span class="p">,</span> <span class="n">max_indices</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span>
-             <span class="n">index_type</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span><span class="p">,</span> <span class="n">max_indices</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `max_vertices`: Maximum number of vertices for this mesh</span>
 <span class="sd">    - `max_indices`: Maximum number of indice for this mesh</span>
 <span class="sd">    - `attributes`: `VertexAttributes`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span>
+    <span class="k">if</span> <span class="n">max_vertices</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT32</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">index_type</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span> <span class="o">=</span> <span class="n">max_indices</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="c1"># Create numpy type based of vertex attributes</span>
     <span class="n">numpy_types</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1409,7 +1455,7 @@ table {
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="n">index_type</span><span class="p">),</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">),</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">INDEX_BUFFER</span><span class="p">)</span>
 </pre></div>
 
@@ -1448,6 +1494,53 @@ table {
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">bind_index_buffer</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.mesh.Mesh.draw">
+    <p>def <span class="ident">draw</span>(</p><p>self, cmd, offset=0, count=0)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Draw the mesh during command buffer registration</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>cmd</code>: <code>CommandBufferRegister</code></li>
+<li><code>offset</code>: Start drawing at <code>offset</code> vertices</li>
+<li><code>count</code>: Draw <code>count</code> vertices</li>
+</ul>
+
+<p><strong>Note: <code>offset</code> and <code>count</code> target indices if mesh is indexed</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.draw', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.mesh.Mesh.draw" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Draw the mesh during command buffer registration</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `cmd`: `CommandBufferRegister`</span>
+<span class="sd">    - `offset`: Start drawing at `offset` vertices</span>
+<span class="sd">    - `count`: Draw `count` vertices</span>
+<span class="sd">    **Note: `offset` and `count` target indices if mesh is indexed**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">count</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">draw_indexed</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">count</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span>
+        <span class="n">cmd</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 </pre></div>
 
   </div>

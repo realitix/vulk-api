@@ -1985,12 +1985,10 @@ module.</p>
 <span class="n">SubpassDescription</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SubpassDescription&#39;</span><span class="p">,</span>
                                 <span class="p">[</span><span class="s1">&#39;colors&#39;</span><span class="p">,</span> <span class="s1">&#39;inputs&#39;</span><span class="p">,</span> <span class="s1">&#39;resolves&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;preserves&#39;</span><span class="p">,</span> <span class="s1">&#39;depth_stencil&#39;</span><span class="p">])</span>
-<span class="n">SubpassDescription</span><span class="o">.</span><span class="n">__new__</span><span class="o">.</span><span class="n">__defaults__</span> <span class="o">=</span> \
-        <span class="p">([],)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">SubpassDescription</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>
 <span class="n">SubpassDescription</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">    `SubpassDescription` describes all attachments in the subpass.</span>
 <span class="s1">    All parameters are of type `AttachmentReference`. If you don&#39;t want</span>
-<span class="s1">    an attachment, don&#39;t set it, its default value is an empty list.</span>
+<span class="s1">    an attachment, set it to an empty list.</span>
 
 <span class="s1">    *Parameters:*</span>
 
@@ -11119,7 +11117,7 @@ The real Vulkan module can be accessed by the 'module' property.</p>
   
     <div class="desc"><p><code>SubpassDescription</code> describes all attachments in the subpass.
 All parameters are of type <code>AttachmentReference</code>. If you don't want
-an attachment, don't set it, its default value is an empty list.</p>
+an attachment, set it to an empty list.</p>
 
 <p><em>Parameters:</em></p>
 

@@ -1278,7 +1278,7 @@ specific field <code>NONE</code> which is equals to 0.</p>
 <span class="sd">the Vulkan enumeration that ends by &#39;_BIT&#39;. All enumerations have a</span>
 <span class="sd">specific field `NONE` which is equals to 0.</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="kn">from</span> <span class="nn">vulk.py36</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">IntFlag</span><span class="p">,</span> <span class="n">AutoNumber</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">IntFlag</span><span class="p">,</span> <span class="n">auto</span>
 <span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>  <span class="c1"># pylint: disable=import-error</span>
 
 
@@ -1445,24 +1445,23 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">FRONT_AND_BACK</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_CULL_MODE_FRONT_AND_BACK</span>
 
 
-<span class="c1"># TODO: Use auto with python 3.6</span>
-<span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">AutoNumber</span><span class="p">):</span>
-    <span class="n">UINT8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SINT8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UINT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SINT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UINT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SINT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UNORM8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SNORM8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UNORM16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SNORM16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UNORM32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SNORM32</span> <span class="o">=</span> <span class="p">()</span>
+<span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">UINT8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SINT8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UINT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SINT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UNORM16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SNORM16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UNORM32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SNORM32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
 
 
 <span class="k">class</span> <span class="nc">Dependency</span><span class="p">(</span><span class="n">IntFlag</span><span class="p">):</span>
@@ -2198,10 +2197,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.Access">Access</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -2412,9 +2411,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.AttachmentLoadOp">AttachmentLoadOp</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -2484,9 +2483,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.AttachmentStoreOp">AttachmentStoreOp</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -2563,9 +2562,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.BlendFactor">BlendFactor</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -2798,9 +2797,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.BlendOp">BlendOp</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -2894,9 +2893,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.BorderColor">BorderColor</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -2997,10 +2996,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.BufferCreate">BufferCreate</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3077,10 +3076,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.BufferUsage">BufferUsage</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3212,10 +3211,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ColorComponent">ColorComponent</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3295,9 +3294,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.CommandBufferLevel">CommandBufferLevel</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3358,10 +3357,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.CommandBufferUsage">CommandBufferUsage</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3431,10 +3430,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.CommandPoolCreate">CommandPoolCreate</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3500,9 +3499,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.CompareOp">CompareOp</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3627,9 +3626,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ComponentSwizzle">ComponentSwizzle</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3740,10 +3739,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.CullMode">CullMode</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -3799,23 +3798,23 @@ specific field <code>NONE</code> which is equals to 0.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanconstant.DataType', this);">Show source &equiv;</a></p>
   <div id="source-vulk.vulkanconstant.DataType" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">AutoNumber</span><span class="p">):</span>
-    <span class="n">UINT8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SINT8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UINT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SINT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UINT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SINT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UNORM8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SNORM8</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UNORM16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SNORM16</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">UNORM32</span> <span class="o">=</span> <span class="p">()</span>
-    <span class="n">SNORM32</span> <span class="o">=</span> <span class="p">()</span>
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">DataType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">UINT8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SINT8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UINT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SINT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UNORM16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SNORM16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">UNORM32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">SNORM32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -3826,8 +3825,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.DataType">DataType</a></li>
-          <li>vulk.py36.AutoNumber</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.IntEnum</li>
+          <li>builtins.int</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -4016,10 +4016,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.Dependency">Dependency</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -4068,10 +4068,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.DescriptorPoolCreate">DescriptorPoolCreate</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -4130,9 +4130,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.DescriptorType">DescriptorType</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -4282,9 +4282,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.Filter">Filter</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -4527,9 +4527,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.Format">Format</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -6459,7 +6459,7 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.FormatType">FormatType</a></li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -6929,9 +6929,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.FrontFace">FrontFace</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -6993,10 +6993,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ImageAspect">ImageAspect</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7084,9 +7084,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ImageLayout">ImageLayout</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7226,9 +7226,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ImageTiling">ImageTiling</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7289,9 +7289,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ImageType">ImageType</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7367,10 +7367,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ImageUsage">ImageUsage</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7495,9 +7495,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ImageViewType">ImageViewType</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7607,9 +7607,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.IndexType">IndexType</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7683,9 +7683,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.LogicOp">LogicOp</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7888,10 +7888,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.MemoryProperty">MemoryProperty</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -7981,9 +7981,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.PipelineBindPoint">PipelineBindPoint</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8058,10 +8058,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.PipelineStage">PipelineStage</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8272,9 +8272,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.PolygonMode">PolygonMode</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8353,9 +8353,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.PrimitiveTopology">PrimitiveTopology</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8510,10 +8510,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.SampleCount">SampleCount</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8626,9 +8626,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.SamplerAddressMode">SamplerAddressMode</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8718,9 +8718,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.SamplerMipmapMode">SamplerMipmapMode</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8786,10 +8786,10 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.ShaderStage">ShaderStage</a></li>
-          <li>vulk.py36.IntFlag</li>
+          <li>enum.IntFlag</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Flag</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8909,9 +8909,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.SharingMode">SharingMode</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -8971,9 +8971,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.SubpassContents">SubpassContents</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>
@@ -9033,9 +9033,9 @@ specific field <code>NONE</code> which is equals to 0.</p>
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.vulkanconstant.VertexInputRate">VertexInputRate</a></li>
-          <li>vulk.py36.IntEnum</li>
+          <li>enum.IntEnum</li>
           <li>builtins.int</li>
-          <li>vulk.py36.Enum</li>
+          <li>enum.Enum</li>
           <li>builtins.object</li>
           </ul>
           <h3>Class variables</h3>

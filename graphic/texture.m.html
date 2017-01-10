@@ -1083,6 +1083,18 @@ table {
   </ul>
 
         </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.graphic.texture.TextureRegion">TextureRegion</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.set_region">set_region</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.set_region2">set_region2</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.set_texture">set_texture</a></li>
+  </ul>
+
+        </li>
       </ul>
     </li>
 
@@ -1232,8 +1244,8 @@ table {
 <span class="sd">        - `path_file`: Path to the image to load</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Load bitmap</span>
-        <span class="n">raw_bitmap</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span>
-            <span class="nb">open</span><span class="p">(</span><span class="n">path_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">raw_bitmap</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="n">texture_format</span> <span class="o">=</span> <span class="n">Texture</span><span class="o">.</span><span class="n">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
 
         <span class="c1"># Create all the components by calling parent init</span>
@@ -1247,6 +1259,68 @@ table {
 
         <span class="k">return</span> <span class="p">[</span><span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R8_UNORM</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R8G8_UNORM</span><span class="p">,</span>
                 <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R8G8B8_UNORM</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R8G8B8A8_UNORM</span><span class="p">][</span><span class="n">components</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">TextureRegion</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Defines a rectangular area of a texture. The coordinate system used has</span>
+<span class="sd">    its origin in the upper left corner with the x-axis pointing to the</span>
+<span class="sd">    right and the y axis pointing downwards.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize texture region</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `texture`: `RawTexture`</span>
+<span class="sd">        - `u`, `u2`: X coordinate relative to texture size</span>
+<span class="sd">        - `v`, `v2`: Y coordinate relative to texture size</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">texture</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u2</span> <span class="o">=</span> <span class="n">u2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
+
+    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set texture of `TextureRegion`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `texture`: `RawTexture`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">texture</span>
+
+    <span class="k">def</span> <span class="nf">set_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set coordinate relatively to texture size</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `u`, `u2`: X coordinate relative to texture size</span>
+<span class="sd">        - `v`, `v2`: Y coordinate relative to texture size</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u2</span> <span class="o">=</span> <span class="n">u2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
+
+    <span class="k">def</span> <span class="nf">set_region2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set coordinate relatively to pixel size</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`: X coordinate of the texture</span>
+<span class="sd">        - `y`: Y coordinate of the texture</span>
+<span class="sd">        - `width`: Width of the region</span>
+<span class="sd">        - `height`: Height of the region</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">inv_width</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">inv_height</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_region</span><span class="p">(</span>
+            <span class="n">x</span> <span class="o">*</span> <span class="n">inv_width</span><span class="p">,</span> <span class="n">y</span> <span class="o">*</span> <span class="n">inv_height</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">inv_width</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">)</span> <span class="o">*</span> <span class="n">inv_height</span>
+        <span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1313,6 +1387,10 @@ table {
     <p>def <span class="ident">__init__</span>(</p><p>self, context, width, height, texture_format, raw_bitmap, *args, **kwargs)</p>
     </div>
     
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></code>.<code><a href="#vulk.graphic.texture.RawTexture.__init__">__init__</a></code>
+    </p>
 
     
   
@@ -1372,10 +1450,6 @@ table {
     <p>def <span class="ident">init_view_sampler</span>(</p><p>self, context)</p>
     </div>
     
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></code>.<code><a href="#vulk.graphic.texture.RawTexture.init_view_sampler">init_view_sampler</a></code>
-    </p>
 
     
   
@@ -1869,8 +1943,8 @@ manually</p>
 <span class="sd">        - `path_file`: Path to the image to load</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Load bitmap</span>
-        <span class="n">raw_bitmap</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span>
-            <span class="nb">open</span><span class="p">(</span><span class="n">path_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">raw_bitmap</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
         <span class="n">texture_format</span> <span class="o">=</span> <span class="n">Texture</span><span class="o">.</span><span class="n">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
 
         <span class="c1"># Create all the components by calling parent init</span>
@@ -1905,6 +1979,10 @@ manually</p>
     <p>def <span class="ident">__init__</span>(</p><p>self, context, path_file, *args, **kwargs)</p>
     </div>
     
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.graphic.texture.BinaryTexture">BinaryTexture</a></code>.<code><a href="#vulk.graphic.texture.BinaryTexture.__init__">__init__</a></code>
+    </p>
 
     
   
@@ -1925,8 +2003,8 @@ manually</p>
 <span class="sd">    - `path_file`: Path to the image to load</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Load bitmap</span>
-    <span class="n">raw_bitmap</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span>
-        <span class="nb">open</span><span class="p">(</span><span class="n">path_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">raw_bitmap</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
     <span class="n">texture_format</span> <span class="o">=</span> <span class="n">Texture</span><span class="o">.</span><span class="n">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
     <span class="c1"># Create all the components by calling parent init</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
@@ -1990,10 +2068,6 @@ manually</p>
     <p>def <span class="ident">init_view_sampler</span>(</p><p>self, context)</p>
     </div>
     
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#vulk.graphic.texture.BinaryTexture">BinaryTexture</a></code>.<code><a href="#vulk.graphic.texture.BinaryTexture.init_view_sampler">init_view_sampler</a></code>
-    </p>
 
     
   
@@ -2016,10 +2090,6 @@ manually</p>
     <p>def <span class="ident">set_sampler</span>(</p><p>self, context, mag_filter=&lt;Filter.NEAREST: 1&gt;, min_filter=&lt;Filter.NEAREST: 1&gt;, address_mode_u=&lt;SamplerAddressMode.REPEAT: 1&gt;, address_mode_v=&lt;SamplerAddressMode.REPEAT: 1&gt;)</p>
     </div>
     
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#vulk.graphic.texture.RawTexture">RawTexture</a></code>.<code><a href="#vulk.graphic.texture.RawTexture.set_sampler">set_sampler</a></code>
-    </p>
 
     
   
@@ -2107,6 +2177,300 @@ manually</p>
 
   </div>
   
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.graphic.texture.TextureRegion" class="name">class <span class="ident">TextureRegion</span></p>
+      
+  
+    <div class="desc"><p>Defines a rectangular area of a texture. The coordinate system used has
+its origin in the upper left corner with the x-axis pointing to the
+right and the y axis pointing downwards.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.TextureRegion', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.TextureRegion" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">TextureRegion</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Defines a rectangular area of a texture. The coordinate system used has</span>
+<span class="sd">    its origin in the upper left corner with the x-axis pointing to the</span>
+<span class="sd">    right and the y axis pointing downwards.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize texture region</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `texture`: `RawTexture`</span>
+<span class="sd">        - `u`, `u2`: X coordinate relative to texture size</span>
+<span class="sd">        - `v`, `v2`: Y coordinate relative to texture size</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">texture</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u2</span> <span class="o">=</span> <span class="n">u2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
+
+    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set texture of `TextureRegion`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `texture`: `RawTexture`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">texture</span>
+
+    <span class="k">def</span> <span class="nf">set_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set coordinate relatively to texture size</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `u`, `u2`: X coordinate relative to texture size</span>
+<span class="sd">        - `v`, `v2`: Y coordinate relative to texture size</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u2</span> <span class="o">=</span> <span class="n">u2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
+
+    <span class="k">def</span> <span class="nf">set_region2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set coordinate relatively to pixel size</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`: X coordinate of the texture</span>
+<span class="sd">        - `y`: Y coordinate of the texture</span>
+<span class="sd">        - `width`: Width of the region</span>
+<span class="sd">        - `height`: Height of the region</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">inv_width</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">inv_height</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_region</span><span class="p">(</span>
+            <span class="n">x</span> <span class="o">*</span> <span class="n">inv_width</span><span class="p">,</span> <span class="n">y</span> <span class="o">*</span> <span class="n">inv_height</span><span class="p">,</span>
+            <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">inv_width</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">)</span> <span class="o">*</span> <span class="n">inv_height</span>
+        <span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.graphic.texture.TextureRegion">TextureRegion</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.TextureRegion.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, texture, u=0, u2=1, v=0, v2=1)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize texture region</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>texture</code>: <code>RawTexture</code></li>
+<li><code>u</code>, <code>u2</code>: X coordinate relative to texture size</li>
+<li><code>v</code>, <code>v2</code>: Y coordinate relative to texture size</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.TextureRegion.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.TextureRegion.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Initialize texture region</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `texture`: `RawTexture`</span>
+<span class="sd">    - `u`, `u2`: X coordinate relative to texture size</span>
+<span class="sd">    - `v`, `v2`: Y coordinate relative to texture size</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">texture</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">u2</span> <span class="o">=</span> <span class="n">u2</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.TextureRegion.set_region">
+    <p>def <span class="ident">set_region</span>(</p><p>self, u, u2, v, v2)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set coordinate relatively to texture size</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>u</code>, <code>u2</code>: X coordinate relative to texture size</li>
+<li><code>v</code>, <code>v2</code>: Y coordinate relative to texture size</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.TextureRegion.set_region', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.TextureRegion.set_region" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set coordinate relatively to texture size</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `u`, `u2`: X coordinate relative to texture size</span>
+<span class="sd">    - `v`, `v2`: Y coordinate relative to texture size</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">u2</span> <span class="o">=</span> <span class="n">u2</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.TextureRegion.set_region2">
+    <p>def <span class="ident">set_region2</span>(</p><p>self, x, y, width, height)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set coordinate relatively to pixel size</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>x</code>: X coordinate of the texture</li>
+<li><code>y</code>: Y coordinate of the texture</li>
+<li><code>width</code>: Width of the region</li>
+<li><code>height</code>: Height of the region</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.TextureRegion.set_region2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.TextureRegion.set_region2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_region2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set coordinate relatively to pixel size</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `x`: X coordinate of the texture</span>
+<span class="sd">    - `y`: Y coordinate of the texture</span>
+<span class="sd">    - `width`: Width of the region</span>
+<span class="sd">    - `height`: Height of the region</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">inv_width</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+    <span class="n">inv_height</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">height</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">set_region</span><span class="p">(</span>
+        <span class="n">x</span> <span class="o">*</span> <span class="n">inv_width</span><span class="p">,</span> <span class="n">y</span> <span class="o">*</span> <span class="n">inv_height</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">)</span> <span class="o">*</span> <span class="n">inv_width</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">)</span> <span class="o">*</span> <span class="n">inv_height</span>
+    <span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.texture.TextureRegion.set_texture">
+    <p>def <span class="ident">set_texture</span>(</p><p>self, texture)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set texture of <code>TextureRegion</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>texture</code>: <code>RawTexture</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.TextureRegion.set_texture', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.TextureRegion.set_texture" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set texture of `TextureRegion`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `texture`: `RawTexture`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">texture</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.graphic.texture.TextureRegion.texture" class="name">var <span class="ident">texture</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.texture.TextureRegion.u" class="name">var <span class="ident">u</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.texture.TextureRegion.u2" class="name">var <span class="ident">u2</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.texture.TextureRegion.v" class="name">var <span class="ident">v</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.texture.TextureRegion.v2" class="name">var <span class="ident">v2</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
       </div>
       </div>
 

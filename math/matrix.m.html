@@ -1048,6 +1048,8 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.Matrix.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix.mul">mul</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix.set">set</a></li>
   </ul>
 
         </li>
@@ -1057,6 +1059,8 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.Matrix3.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix3.mul">mul</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix3.set">set</a></li>
   </ul>
 
         </li>
@@ -1066,6 +1070,8 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix4.mul">mul</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix4.set">set</a></li>
   </ul>
 
         </li>
@@ -1109,15 +1115,23 @@ table {
 <span class="k">class</span> <span class="nc">Matrix</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;Base class for Matrix&#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
 
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
+
+    <span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
 
 <span class="k">class</span> <span class="nc">Matrix3</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Matrix3 class&#39;&#39;&#39;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Matrix3&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
@@ -1131,6 +1145,8 @@ table {
 
 <span class="k">class</span> <span class="nc">Matrix4</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Matrix4 class&#39;&#39;&#39;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Matrix4&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
@@ -1164,11 +1180,17 @@ table {
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Matrix</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;Base class for Matrix&#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
+
+    <span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1197,7 +1219,49 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.matrix.Matrix.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix.mul">
+    <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix.mul', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix.mul" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix.set">
+    <p>def <span class="ident">set</span>(</p><p>self, values, offset=0)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
 </pre></div>
 
   </div>
@@ -1230,6 +1294,8 @@ table {
   <div id="source-vulk.math.matrix.Matrix3" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Matrix3</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Matrix3 class&#39;&#39;&#39;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Matrix3&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
@@ -1252,6 +1318,17 @@ table {
           <li><a href="#vulk.math.matrix.Matrix">Matrix</a></li>
           <li>builtins.object</li>
           </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.math.matrix.Matrix3.dtype" class="name">var <span class="ident">dtype</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
           <h3>Static methods</h3>
             
   <div class="item">
@@ -1276,6 +1353,48 @@ table {
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Matrix3 needs 9 components&quot;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix3.mul">
+    <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix3.mul', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix3.mul" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix3.set">
+    <p>def <span class="ident">set</span>(</p><p>self, values, offset=0)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix3.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix3.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
 </pre></div>
 
   </div>
@@ -1312,6 +1431,8 @@ table {
   <div id="source-vulk.math.matrix.Matrix4" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Matrix4</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Matrix4 class&#39;&#39;&#39;</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Matrix4&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
@@ -1335,6 +1456,17 @@ table {
           <li><a href="#vulk.math.matrix.Matrix">Matrix</a></li>
           <li>builtins.object</li>
           </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.math.matrix.Matrix4.dtype" class="name">var <span class="ident">dtype</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
           <h3>Static methods</h3>
             
   <div class="item">
@@ -1360,6 +1492,48 @@ table {
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Matrix4 needs 16 components&quot;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix4.mul">
+    <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.mul', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix4.mul" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix4.set">
+    <p>def <span class="ident">set</span>(</p><p>self, values, offset=0)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix4.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
 </pre></div>
 
   </div>

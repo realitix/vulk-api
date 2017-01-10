@@ -3,10 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk API documentation</title>
-    <meta name="description" content="Vulk 3D engine
-
-Cross-plateform 3D engine" />
+    <title>vulk.graphic.uniformbuffer API documentation</title>
+    <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1038,31 +1036,24 @@ table {
   <div id="sidebar">
     <h1>Index</h1>
     <ul id="index">
-    <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
-      
+
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.graphic.uniformbuffer.UniformBuffer">UniformBuffer</a></span>
+        
+          
   <ul>
-    <li class="mono"><a href="#vulk.PATH_VULK">PATH_VULK</a></li>
-    <li class="mono"><a href="#vulk.PATH_VULK_ASSET">PATH_VULK_ASSET</a></li>
-    <li class="mono"><a href="#vulk.PATH_VULK_SHADER">PATH_VULK_SHADER</a></li>
+    <li class="mono"><a href="#vulk.graphic.uniformbuffer.UniformBuffer.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.graphic.uniformbuffer.UniformBuffer.set_uniforms">set_uniforms</a></li>
+    <li class="mono"><a href="#vulk.graphic.uniformbuffer.UniformBuffer.upload">upload</a></li>
   </ul>
 
-    </li>
-
-
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
-      <ul>
-        <li class="mono"><a href="baseapp.m.html">vulk.baseapp</a></li>
-        <li class="mono"><a href="context.m.html">vulk.context</a></li>
-        <li class="mono"><a href="exception.m.html">vulk.exception</a></li>
-        <li class="mono"><a href="graphic/index.html">vulk.graphic</a></li>
-        <li class="mono"><a href="math/index.html">vulk.math</a></li>
-        <li class="mono"><a href="tests/index.html">vulk.tests</a></li>
-        <li class="mono"><a href="utils.m.html">vulk.utils</a></li>
-        <li class="mono"><a href="vulkanconstant.m.html">vulk.vulkanconstant</a></li>
-        <li class="mono"><a href="vulkanobject.m.html">vulk.vulkanobject</a></li>
+        </li>
       </ul>
     </li>
+
     </ul>
   </div>
 
@@ -1075,28 +1066,39 @@ table {
     <p id="nav">
       <a href="/vulk-api/">All packages</a>
       
+        
+        :: <a href="/vulk-api/vulk">vulk</a>
+        
+        :: <a href="/vulk-api/vulk/graphic">vulk.graphic</a>
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk</span> module</h1>
-  <p>Vulk 3D engine</p>
-
-<p>Cross-plateform 3D engine</p>
+  <h1 class="title"><span class="name">vulk.graphic.uniformbuffer</span> module</h1>
+  <p></p>
 
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk', this);">Show source &equiv;</a></p>
-  <div id="source-vulk" class="source">
-    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;Vulk 3D engine</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.uniformbuffer', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.uniformbuffer" class="source">
+    <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
-<span class="sd">Cross-plateform 3D engine</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span> <span class="k">as</span> <span class="n">p</span>
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanconstant</span> <span class="k">as</span> <span class="n">vc</span>
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanobject</span> <span class="k">as</span> <span class="n">vo</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.2.0&quot;</span>
 
-<span class="n">PATH_VULK</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
-<span class="n">PATH_VULK_ASSET</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK</span><span class="p">,</span> <span class="s1">&#39;asset&#39;</span><span class="p">)</span>
-<span class="n">PATH_VULK_SHADER</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_ASSET</span><span class="p">,</span> <span class="s1">&#39;shader&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UniformBuffer</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_uniforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniforms</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">uniforms</span>
+
+    <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">unit8</span><span class="p">),</span>
+                      <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1104,113 +1106,138 @@ table {
   </header>
 
   <section id="section-items">
-    <h2 class="section-title" id="header-variables">Module variables</h2>
-      <div class="item">
-      <p id="vulk.PATH_VULK" class="name">var <span class="ident">PATH_VULK</span></p>
+
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
       
+      <div class="item">
+      <p id="vulk.graphic.uniformbuffer.UniformBuffer" class="name">class <span class="ident">UniformBuffer</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.uniformbuffer.UniformBuffer', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.uniformbuffer.UniformBuffer" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">UniformBuffer</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_uniforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniforms</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">uniforms</span>
+
+    <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">unit8</span><span class="p">),</span>
+                      <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.graphic.uniformbuffer.UniformBuffer">UniformBuffer</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.uniformbuffer.UniformBuffer.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, dtype, size=1)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.uniformbuffer.UniformBuffer.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.uniformbuffer.UniformBuffer.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">uniform_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.uniformbuffer.UniformBuffer.set_uniforms">
+    <p>def <span class="ident">set_uniforms</span>(</p><p>self, uniforms, offset=0)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.uniformbuffer.UniformBuffer.set_uniforms', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.uniformbuffer.UniformBuffer.set_uniforms" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_uniforms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uniforms</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">uniforms</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.uniformbuffer.UniformBuffer.upload">
+    <p>def <span class="ident">upload</span>(</p><p>self, context)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.uniformbuffer.UniformBuffer.upload', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.uniformbuffer.UniformBuffer.upload" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">uniform_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">uniform_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">unit8</span><span class="p">),</span>
+                  <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.graphic.uniformbuffer.UniformBuffer.uniform_array" class="name">var <span class="ident">uniform_array</span></p>
+            
+
+            
   
   <div class="source_cont">
 </div>
 
-      </div>
-      <div class="item">
-      <p id="vulk.PATH_VULK_ASSET" class="name">var <span class="ident">PATH_VULK_ASSET</span></p>
-      
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.uniformbuffer.UniformBuffer.uniform_buffer" class="name">var <span class="ident">uniform_buffer</span></p>
+            
+
+            
   
   <div class="source_cont">
 </div>
 
+            </div>
       </div>
-      <div class="item">
-      <p id="vulk.PATH_VULK_SHADER" class="name">var <span class="ident">PATH_VULK_SHADER</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
       </div>
 
-
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
-      <div class="item">
-      <p class="name"><a href="baseapp.m.html">vulk.baseapp</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="context.m.html">vulk.context</a></p>
-      
-  
-    <div class="desc"><p>Module to create Window and Vulkan context</p>
-
-<p>This module contains class to create the SDL2 window and the Vulkan
-logical device and queues.
-The context will be then passed to the Application to use it.</p>
-
-<p>Vulk uses a specific way to interact with Vulkan that allow a good
-abstraction. Instead of perform...</p>
-</div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="exception.m.html">vulk.exception</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="graphic/index.html">vulk.graphic</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="math/index.html">vulk.math</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="tests/index.html">vulk.tests</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="utils.m.html">vulk.utils</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="vulkanconstant.m.html">vulk.vulkanconstant</a></p>
-      
-  
-    <div class="desc"><p>This module contains useful mapping or constants.</p>
-
-<p>Vulkan enum are translated to Python enum.
-There are two types of enumeration, <code>IntEnum</code> and <code>IntFlag</code>.
-<code>IntEnum</code> are classic enumeration whereas <code>IntFlag</code> are different.
-<code>IntFlag</code> allows to realize bitwise operation and corresponds to
-the Vulkan en...</p>
-</div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="vulkanobject.m.html">vulk.vulkanobject</a></p>
-      
-  
-    <div class="desc"><p>Vulkan objects modules</p>
-
-<p>This module contains the <em>High</em> level Vulkan object. It's not that <em>high</em>
-level, you need to understand fully Vulkan to use theses objects.
-This module must be use by Vulkan expert and is very complicated to work with.
-You will see a lot of namedtuple here, they are used to b...</p>
-</div>
-
-      </div>
   </section>
 
     </article>
