@@ -1132,8 +1132,7 @@ swapchain's image.</p>
 
 <span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanconstant</span> <span class="k">as</span> <span class="n">vc</span>
-<span class="kn">from</span> <span class="nn">vulk.vulkanobject</span> <span class="kn">import</span> <span class="n">CommandPool</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageView</span><span class="p">,</span> \
-        <span class="n">ImageSubresourceRange</span><span class="p">,</span> <span class="n">Semaphore</span><span class="p">,</span> <span class="n">immediate_buffer</span>
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanobject</span> <span class="k">as</span> <span class="n">vo</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
@@ -1234,9 +1233,11 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c1"># Image view of the final image</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c1"># Internal semaphores</span>
+        <span class="c1"># Semaphores used during presentation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Semaphores used for direct rendering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direct_semaphores</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Command buffers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="bp">None</span>
 
@@ -1766,7 +1767,7 @@ swapchain's image.</p>
         <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">swapchain_raw_images</span><span class="p">:</span>
             <span class="c1"># Put swapchain image in Image</span>
             <span class="c1"># It&#39;s a bad practice but for this specific use case, it&#39;s good</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">Image</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span>
             <span class="n">img</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">raw_image</span>
             <span class="n">img</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">surface_format</span><span class="o">.</span><span class="n">format</span>
             <span class="n">img</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
@@ -1776,7 +1777,7 @@ swapchain's image.</p>
 
         <span class="c1"># Update layout of all swapchain images to present khr</span>
         <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">vo</span><span class="o">.</span><span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
                 <span class="n">image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                     <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">UNDEFINED</span><span class="p">,</span>
                     <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PRESENT_SRC_KHR</span><span class="p">,</span>
@@ -1790,7 +1791,7 @@ swapchain's image.</p>
 
     <span class="k">def</span> <span class="nf">_create_final_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">usage</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">TRANSFER_SRC</span> <span class="o">|</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">TYPE_2D</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
             <span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SharingMode</span><span class="o">.</span><span class="n">EXCLUSIVE</span><span class="p">,</span> <span class="p">[],</span>
@@ -1798,7 +1799,18 @@ swapchain's image.</p>
             <span class="n">vc</span><span class="o">.</span><span class="n">MemoryProperty</span><span class="o">.</span><span class="n">DEVICE_LOCAL</span>
         <span class="p">)</span>
 
-        <span class="n">subresource_range</span> <span class="o">=</span> <span class="n">ImageSubresourceRange</span><span class="p">(</span>
+        <span class="c1"># Put final image to color attachment layout</span>
+        <span class="k">with</span> <span class="n">vo</span><span class="o">.</span><span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">UNDEFINED</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_WRITE</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Create image view</span>
+        <span class="n">subresource_range</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageSubresourceRange</span><span class="p">(</span>
             <span class="n">aspect</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">ImageAspect</span><span class="o">.</span><span class="n">COLOR</span><span class="p">,</span>
             <span class="n">base_miplevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">level_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -1806,19 +1818,28 @@ swapchain's image.</p>
             <span class="n">layer_count</span><span class="o">=</span><span class="mi">1</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="n">ImageView</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageView</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageViewType</span><span class="o">.</span><span class="n">TYPE_2D</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">),</span> <span class="n">subresource_range</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_commandbuffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create the command buffers used to copy image&#39;&#39;&#39;</span>
-        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">])</span>
+        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">CommandPool</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">commandpool</span><span class="o">.</span><span class="n">allocate_buffers</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">CommandBufferLevel</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">commandbuffer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">):</span>
             <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_WRITE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_READ</span>
+                <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                     <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PRESENT_SRC_KHR</span><span class="p">,</span>
                     <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
@@ -1836,11 +1857,20 @@ swapchain's image.</p>
                     <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_WRITE</span><span class="p">,</span>
                     <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">MEMORY_READ</span>
                 <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">BOTTOM_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">BOTTOM_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_READ</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_WRITE</span>
+                <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_semaphores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create semaphores used during image swaping&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direct_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
@@ -1875,9 +1905,8 @@ swapchain's image.</p>
 
 <span class="sd">        - `semaphore`: A `list` of `Semaphore` to wait on</span>
 
-<span class="sd">        **Note: The `final_image` layout must be set to</span>
-<span class="sd">                `TRANSFER_SRC_OPTIMAL` before calling `swap`.</span>
-<span class="sd">                `VulkContext` never update the `final_image` layout**</span>
+<span class="sd">        **Note: `final_image` layout is handled by `VulkContext`. You must</span>
+<span class="sd">                 let it to COLOR_ATTACHMENT_OPTIMAL**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Acquire image</span>
         <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">](</span>
@@ -2032,9 +2061,11 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="c1"># Image view of the final image</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="c1"># Internal semaphores</span>
+        <span class="c1"># Semaphores used during presentation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="c1"># Semaphores used for direct rendering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direct_semaphores</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># Command buffers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="bp">None</span>
 
@@ -2564,7 +2595,7 @@ swapchain's image.</p>
         <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">swapchain_raw_images</span><span class="p">:</span>
             <span class="c1"># Put swapchain image in Image</span>
             <span class="c1"># It&#39;s a bad practice but for this specific use case, it&#39;s good</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">Image</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Image</span><span class="p">)</span>
             <span class="n">img</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">raw_image</span>
             <span class="n">img</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">surface_format</span><span class="o">.</span><span class="n">format</span>
             <span class="n">img</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
@@ -2574,7 +2605,7 @@ swapchain's image.</p>
 
         <span class="c1"># Update layout of all swapchain images to present khr</span>
         <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">vo</span><span class="o">.</span><span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
                 <span class="n">image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                     <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">UNDEFINED</span><span class="p">,</span>
                     <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PRESENT_SRC_KHR</span><span class="p">,</span>
@@ -2588,7 +2619,7 @@ swapchain's image.</p>
 
     <span class="k">def</span> <span class="nf">_create_final_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">usage</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">TRANSFER_SRC</span> <span class="o">|</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageType</span><span class="o">.</span><span class="n">TYPE_2D</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
             <span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SharingMode</span><span class="o">.</span><span class="n">EXCLUSIVE</span><span class="p">,</span> <span class="p">[],</span>
@@ -2596,7 +2627,18 @@ swapchain's image.</p>
             <span class="n">vc</span><span class="o">.</span><span class="n">MemoryProperty</span><span class="o">.</span><span class="n">DEVICE_LOCAL</span>
         <span class="p">)</span>
 
-        <span class="n">subresource_range</span> <span class="o">=</span> <span class="n">ImageSubresourceRange</span><span class="p">(</span>
+        <span class="c1"># Put final image to color attachment layout</span>
+        <span class="k">with</span> <span class="n">vo</span><span class="o">.</span><span class="n">immediate_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">UNDEFINED</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_WRITE</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Create image view</span>
+        <span class="n">subresource_range</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageSubresourceRange</span><span class="p">(</span>
             <span class="n">aspect</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">ImageAspect</span><span class="o">.</span><span class="n">COLOR</span><span class="p">,</span>
             <span class="n">base_miplevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">level_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -2604,19 +2646,28 @@ swapchain's image.</p>
             <span class="n">layer_count</span><span class="o">=</span><span class="mi">1</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="n">ImageView</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageView</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageViewType</span><span class="o">.</span><span class="n">TYPE_2D</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_format</span><span class="p">),</span> <span class="n">subresource_range</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_commandbuffers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create the command buffers used to copy image&#39;&#39;&#39;</span>
-        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">])</span>
+        <span class="n">commandpool</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">CommandPool</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="n">commandpool</span><span class="o">.</span><span class="n">allocate_buffers</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">CommandBufferLevel</span><span class="o">.</span><span class="n">PRIMARY</span><span class="p">,</span>
             <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">commandbuffer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span><span class="p">):</span>
             <span class="k">with</span> <span class="n">commandbuffer</span><span class="o">.</span><span class="n">bind</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_WRITE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_READ</span>
+                <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">swapchain_images</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
                     <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PRESENT_SRC_KHR</span><span class="p">,</span>
                     <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_DST_OPTIMAL</span><span class="p">,</span>
@@ -2634,11 +2685,20 @@ swapchain's image.</p>
                     <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_WRITE</span><span class="p">,</span>
                     <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">MEMORY_READ</span>
                 <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+                    <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">BOTTOM_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">BOTTOM_OF_PIPE</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_READ</span><span class="p">,</span>
+                    <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_WRITE</span>
+                <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_semaphores</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create semaphores used during image swaping&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_direct_semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create Vulkan context</span>
@@ -2673,9 +2733,8 @@ swapchain's image.</p>
 
 <span class="sd">        - `semaphore`: A `list` of `Semaphore` to wait on</span>
 
-<span class="sd">        **Note: The `final_image` layout must be set to</span>
-<span class="sd">                `TRANSFER_SRC_OPTIMAL` before calling `swap`.</span>
-<span class="sd">                `VulkContext` never update the `final_image` layout**</span>
+<span class="sd">        **Note: `final_image` layout is handled by `VulkContext`. You must</span>
+<span class="sd">                 let it to COLOR_ATTACHMENT_OPTIMAL**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Acquire image</span>
         <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">](</span>
@@ -2781,9 +2840,11 @@ swapchain's image.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="c1"># Image view of the final image</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">final_image_view</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="c1"># Internal semaphores</span>
+    <span class="c1"># Semaphores used during presentation</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_available</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semaphore_copied</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="c1"># Semaphores used for direct rendering</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_direct_semaphores</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Command buffers</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="bp">None</span>
 </pre></div>
@@ -2860,9 +2921,8 @@ command.</p>
 <li><code>semaphore</code>: A <code>list</code> of <code>Semaphore</code> to wait on</li>
 </ul>
 
-<p><strong>Note: The <code>final_image</code> layout must be set to
-        <code>TRANSFER_SRC_OPTIMAL</code> before calling <code>swap</code>.
-        <code>VulkContext</code> never update the <code>final_image</code> layout</strong></p>
+<p><strong>Note: <code>final_image</code> layout is handled by <code>VulkContext</code>. You must
+         let it to COLOR<em>ATTACHMENT</em>OPTIMAL</strong></p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkContext.swap', this);">Show source &equiv;</a></p>
@@ -2875,9 +2935,8 @@ command.</p>
 <span class="sd">    command.</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `semaphore`: A `list` of `Semaphore` to wait on</span>
-<span class="sd">    **Note: The `final_image` layout must be set to</span>
-<span class="sd">            `TRANSFER_SRC_OPTIMAL` before calling `swap`.</span>
-<span class="sd">            `VulkContext` never update the `final_image` layout**</span>
+<span class="sd">    **Note: `final_image` layout is handled by `VulkContext`. You must</span>
+<span class="sd">             let it to COLOR_ATTACHMENT_OPTIMAL**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Acquire image</span>
     <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkAcquireNextImageKHR&#39;</span><span class="p">](</span>

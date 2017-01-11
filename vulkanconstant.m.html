@@ -1104,6 +1104,10 @@ table {
         
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanconstant.CommandBufferReset">CommandBufferReset</a></span>
+        
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanconstant.CommandBufferUsage">CommandBufferUsage</a></span>
         
         </li>
@@ -1400,6 +1404,11 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">PRIMARY</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_COMMAND_BUFFER_LEVEL_PRIMARY</span>
     <span class="n">SCONDARY</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_COMMAND_BUFFER_LEVEL_SECONDARY</span>
+
+
+<span class="k">class</span> <span class="nc">CommandBufferReset</span><span class="p">(</span><span class="n">IntFlag</span><span class="p">):</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">RELEASE_RESOURCES</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT</span>
 
 
 <span class="k">class</span> <span class="nc">CommandBufferUsage</span><span class="p">(</span><span class="n">IntFlag</span><span class="p">):</span>
@@ -3322,6 +3331,58 @@ specific field <code>NONE</code> which is equals to 0.</p>
             </div>
             <div class="item">
             <p id="vulk.vulkanconstant.CommandBufferLevel.SCONDARY" class="name">var <span class="ident">SCONDARY</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanconstant.CommandBufferReset" class="name">class <span class="ident">CommandBufferReset</span></p>
+      
+  
+    <div class="desc"><p>An enumeration.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanconstant.CommandBufferReset', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanconstant.CommandBufferReset" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CommandBufferReset</span><span class="p">(</span><span class="n">IntFlag</span><span class="p">):</span>
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">RELEASE_RESOURCES</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanconstant.CommandBufferReset">CommandBufferReset</a></li>
+          <li>enum.IntFlag</li>
+          <li>builtins.int</li>
+          <li>enum.Flag</li>
+          <li>enum.Enum</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanconstant.CommandBufferReset.NONE" class="name">var <span class="ident">NONE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanconstant.CommandBufferReset.RELEASE_RESOURCES" class="name">var <span class="ident">RELEASE_RESOURCES</span></p>
             
 
             
