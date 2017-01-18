@@ -1043,6 +1043,7 @@ table {
       
   <ul>
     <li class="mono"><a href="#vulk.vulkanconstant.DataTypeByte">DataTypeByte</a></li>
+    <li class="mono"><a href="#vulk.vulkanconstant.DataTypeNumpy">DataTypeNumpy</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.QUEUE_FAMILY_IGNORED">QUEUE_FAMILY_IGNORED</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.SUBPASS_EXTERNAL">SUBPASS_EXTERNAL</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.VK_LAYOUT_NAME">VK_LAYOUT_NAME</a></li>
@@ -1283,6 +1284,7 @@ specific field <code>NONE</code> which is equals to 0.</p>
 <span class="sd">specific field `NONE` which is equals to 0.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">IntEnum</span><span class="p">,</span> <span class="n">IntFlag</span><span class="p">,</span> <span class="n">auto</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>  <span class="c1"># pylint: disable=import-error</span>
 
 
@@ -1461,9 +1463,7 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">SINT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">UINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">UNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
@@ -1953,9 +1953,7 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
-    <span class="n">DataType</span><span class="o">.</span><span class="n">UFLOAT16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="n">DataType</span><span class="o">.</span><span class="n">UFLOAT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -1963,6 +1961,20 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">DataType</span><span class="o">.</span><span class="n">SNORM16</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">UNORM32</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">SNORM32</span><span class="p">:</span> <span class="mi">4</span>
+<span class="p">}</span>
+
+
+<span class="n">DataTypeNumpy</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
+    <span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span>
 <span class="p">}</span>
 
 
@@ -2023,6 +2035,14 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <h2 class="section-title" id="header-variables">Module variables</h2>
       <div class="item">
       <p id="vulk.vulkanconstant.DataTypeByte" class="name">var <span class="ident">DataTypeByte</span></p>
+      
+  
+  <div class="source_cont">
+</div>
+
+      </div>
+      <div class="item">
+      <p id="vulk.vulkanconstant.DataTypeNumpy" class="name">var <span class="ident">DataTypeNumpy</span></p>
       
   
   <div class="source_cont">
@@ -3866,9 +3886,7 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="n">SINT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">UINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SINT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">UFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SFLOAT16</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-    <span class="n">UFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SFLOAT32</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">UNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
     <span class="n">SNORM8</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
@@ -3964,26 +3982,6 @@ specific field <code>NONE</code> which is equals to 0.</p>
             </div>
             <div class="item">
             <p id="vulk.vulkanconstant.DataType.SNORM8" class="name">var <span class="ident">SNORM8</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="vulk.vulkanconstant.DataType.UFLOAT16" class="name">var <span class="ident">UFLOAT16</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="vulk.vulkanconstant.DataType.UFLOAT32" class="name">var <span class="ident">UFLOAT32</span></p>
             
 
             

@@ -1121,6 +1121,7 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_index_buffer">bind_index_buffer</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_pipeline">bind_pipeline</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.bind_vertex_buffers">bind_vertex_buffers</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.clear_color_image">clear_color_image</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_buffer">copy_buffer</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.copy_image">copy_image</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.CommandBufferRegister.draw">draw</a></li>
@@ -2432,6 +2433,30 @@ module.</p>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindIndexBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
                                 <span class="n">index_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">clear_color_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">clear_color</span><span class="p">,</span> <span class="n">ranges</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Clear image with color values</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `image`: `Image` to clear</span>
+<span class="sd">        - `layout`: `ImageLayout` of `image`</span>
+<span class="sd">        - `clear_color`: `ClearColorValue`</span>
+<span class="sd">        - `ranges`: `list` of `ImageSubresourceRange`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ranges</span><span class="p">:</span>
+            <span class="n">vk_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceRange</span><span class="p">(</span>
+                <span class="n">aspectMask</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">aspect</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">baseMipLevel</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">base_miplevel</span><span class="p">,</span>
+                <span class="n">levelCount</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">level_count</span><span class="p">,</span>
+                <span class="n">baseArrayLayer</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">base_layer</span><span class="p">,</span>
+                <span class="n">layerCount</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">layer_count</span>
+            <span class="p">))</span>
+
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdClearColorImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span>
+                                <span class="n">clear_color</span><span class="o">.</span><span class="n">clear</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vk_ranges</span><span class="p">),</span> <span class="n">vk_ranges</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
              <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -5299,6 +5324,30 @@ buffer. You should not use it directly but with <code>bind</code> method of
         <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindIndexBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="nb">buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
                                 <span class="n">index_type</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">clear_color_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">clear_color</span><span class="p">,</span> <span class="n">ranges</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Clear image with color values</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `image`: `Image` to clear</span>
+<span class="sd">        - `layout`: `ImageLayout` of `image`</span>
+<span class="sd">        - `clear_color`: `ClearColorValue`</span>
+<span class="sd">        - `ranges`: `list` of `ImageSubresourceRange`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vk_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ranges</span><span class="p">:</span>
+            <span class="n">vk_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceRange</span><span class="p">(</span>
+                <span class="n">aspectMask</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">aspect</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">baseMipLevel</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">base_miplevel</span><span class="p">,</span>
+                <span class="n">levelCount</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">level_count</span><span class="p">,</span>
+                <span class="n">baseArrayLayer</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">base_layer</span><span class="p">,</span>
+                <span class="n">layerCount</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">layer_count</span>
+            <span class="p">))</span>
+
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdClearColorImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span>
+                                <span class="n">clear_color</span><span class="o">.</span><span class="n">clear</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vk_ranges</span><span class="p">),</span> <span class="n">vk_ranges</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertex_count</span><span class="p">,</span> <span class="n">first_vertex</span><span class="p">,</span>
              <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">first_instance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -5700,6 +5749,56 @@ buffer. You should not use it directly but with <code>bind</code> method of
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdBindVertexBuffers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span>
                               <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">buffer</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">buffers</span><span class="p">],</span> <span class="n">offsets</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.CommandBufferRegister.clear_color_image">
+    <p>def <span class="ident">clear_color_image</span>(</p><p>self, image, layout, clear_color, ranges)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Clear image with color values</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>image</code>: <code>Image</code> to clear</li>
+<li><code>layout</code>: <code>ImageLayout</code> of <code>image</code></li>
+<li><code>clear_color</code>: <code>ClearColorValue</code></li>
+<li><code>ranges</code>: <code>list</code> of <code>ImageSubresourceRange</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.CommandBufferRegister.clear_color_image', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.CommandBufferRegister.clear_color_image" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">clear_color_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">clear_color</span><span class="p">,</span> <span class="n">ranges</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Clear image with color values</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `image`: `Image` to clear</span>
+<span class="sd">    - `layout`: `ImageLayout` of `image`</span>
+<span class="sd">    - `clear_color`: `ClearColorValue`</span>
+<span class="sd">    - `ranges`: `list` of `ImageSubresourceRange`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vk_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">ranges</span><span class="p">:</span>
+        <span class="n">vk_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceRange</span><span class="p">(</span>
+            <span class="n">aspectMask</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">aspect</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="n">baseMipLevel</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">base_miplevel</span><span class="p">,</span>
+            <span class="n">levelCount</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">level_count</span><span class="p">,</span>
+            <span class="n">baseArrayLayer</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">base_layer</span><span class="p">,</span>
+            <span class="n">layerCount</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">layer_count</span>
+        <span class="p">))</span>
+    <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdClearColorImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span>
+                            <span class="n">clear_color</span><span class="o">.</span><span class="n">clear</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vk_ranges</span><span class="p">),</span> <span class="n">vk_ranges</span><span class="p">)</span>
 </pre></div>
 
   </div>

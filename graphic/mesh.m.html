@@ -1036,13 +1036,6 @@ table {
   <div id="sidebar">
     <h1>Index</h1>
     <ul id="index">
-    <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
-      
-  <ul>
-    <li class="mono"><a href="#vulk.graphic.mesh.datatype_mapping">datatype_mapping</a></li>
-  </ul>
-
-    </li>
 
 
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
@@ -1116,23 +1109,6 @@ table {
 <span class="kn">import</span> <span class="nn">vulk.vulkanobject</span> <span class="kn">as</span> <span class="nn">vo</span>
 
 
-<span class="c1"># Vulk DataType to numpy dtype</span>
-<span class="n">datatype_mapping</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT16</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">UINT32</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">SINT32</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">UFLOAT16</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT16</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">UFLOAT32</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">UNORM8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
-    <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">SNORM8</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span>
-<span class="p">}</span>
-
-
 <span class="k">class</span> <span class="nc">VertexAttribute</span><span class="p">():</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">attribute_format</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -1178,6 +1154,7 @@ table {
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        *Parameters:*</span>
 
+<span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `max_vertices`: Maximum number of vertices for this mesh</span>
 <span class="sd">        - `max_indices`: Maximum number of indice for this mesh</span>
 <span class="sd">        - `attributes`: `VertexAttributes`</span>
@@ -1189,16 +1166,16 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span> <span class="o">=</span> <span class="n">max_indices</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
-        <span class="c1"># Create numpy type based of vertex attributes</span>
-        <span class="n">numpy_types</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create numpy type based on vertex attributes</span>
+        <span class="n">numpy_dtype</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
-            <span class="n">numpy_types</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">datatype_mapping</span><span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>
-                                     <span class="n">attr</span><span class="o">.</span><span class="n">components</span><span class="p">)))</span>
+            <span class="n">numpy_dtype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DataTypeNumpy</span><span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>  <span class="n">attr</span><span class="o">.</span><span class="n">components</span><span class="p">))</span>
 
         <span class="c1"># Create vertices array and buffer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy_types</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy_dtype</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span> <span class="o">*</span> <span class="n">attributes</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">VERTEX_BUFFER</span><span class="p">)</span>
 
         <span class="c1"># Create indices array and buffer</span>
@@ -1208,18 +1185,28 @@ table {
                 <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">),</span>
                 <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">INDEX_BUFFER</span><span class="p">)</span>
 
+        <span class="c1"># Create othens attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
+
     <span class="k">def</span> <span class="nf">set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">set_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">vertices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">upload_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
@@ -1227,6 +1214,10 @@ table {
                       <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
@@ -1278,15 +1269,6 @@ table {
   </header>
 
   <section id="section-items">
-    <h2 class="section-title" id="header-variables">Module variables</h2>
-      <div class="item">
-      <p id="vulk.graphic.mesh.datatype_mapping" class="name">var <span class="ident">datatype_mapping</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
 
 
     <h2 class="section-title" id="header-classes">Classes</h2>
@@ -1303,6 +1285,7 @@ table {
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        *Parameters:*</span>
 
+<span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        - `max_vertices`: Maximum number of vertices for this mesh</span>
 <span class="sd">        - `max_indices`: Maximum number of indice for this mesh</span>
 <span class="sd">        - `attributes`: `VertexAttributes`</span>
@@ -1314,16 +1297,16 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span> <span class="o">=</span> <span class="n">max_indices</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
-        <span class="c1"># Create numpy type based of vertex attributes</span>
-        <span class="n">numpy_types</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create numpy type based on vertex attributes</span>
+        <span class="n">numpy_dtype</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
-            <span class="n">numpy_types</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">datatype_mapping</span><span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>
-                                     <span class="n">attr</span><span class="o">.</span><span class="n">components</span><span class="p">)))</span>
+            <span class="n">numpy_dtype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DataTypeNumpy</span><span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>  <span class="n">attr</span><span class="o">.</span><span class="n">components</span><span class="p">))</span>
 
         <span class="c1"># Create vertices array and buffer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy_types</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy_dtype</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span> <span class="o">*</span> <span class="n">attributes</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">VERTEX_BUFFER</span><span class="p">)</span>
 
         <span class="c1"># Create indices array and buffer</span>
@@ -1333,18 +1316,28 @@ table {
                 <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">),</span>
                 <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">INDEX_BUFFER</span><span class="p">)</span>
 
+        <span class="c1"># Create othens attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
+
     <span class="k">def</span> <span class="nf">set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">indices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">set_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">vertices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">upload_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">False</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
@@ -1352,6 +1345,10 @@ table {
                       <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
@@ -1421,6 +1418,7 @@ table {
     <div class="desc"><p><em>Parameters:</em></p>
 
 <ul>
+<li><code>context</code>: <code>VulkContext</code></li>
 <li><code>max_vertices</code>: Maximum number of vertices for this mesh</li>
 <li><code>max_indices</code>: Maximum number of indice for this mesh</li>
 <li><code>attributes</code>: <code>VertexAttributes</code></li>
@@ -1432,6 +1430,7 @@ table {
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span><span class="p">,</span> <span class="n">max_indices</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
 <span class="sd">    - `max_vertices`: Maximum number of vertices for this mesh</span>
 <span class="sd">    - `max_indices`: Maximum number of indice for this mesh</span>
 <span class="sd">    - `attributes`: `VertexAttributes`</span>
@@ -1441,15 +1440,15 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">index_type</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">IndexType</span><span class="o">.</span><span class="n">UINT32</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="n">attributes</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span> <span class="o">=</span> <span class="n">max_indices</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="c1"># Create numpy type based of vertex attributes</span>
-    <span class="n">numpy_types</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Create numpy type based on vertex attributes</span>
+    <span class="n">numpy_dtype</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
-        <span class="n">numpy_types</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">datatype_mapping</span><span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>
-                                 <span class="n">attr</span><span class="o">.</span><span class="n">components</span><span class="p">)))</span>
+        <span class="n">numpy_dtype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DataTypeNumpy</span><span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">dtype</span><span class="p">],</span>  <span class="n">attr</span><span class="o">.</span><span class="n">components</span><span class="p">))</span>
     <span class="c1"># Create vertices array and buffer</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy_types</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">max_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy_dtype</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
-        <span class="n">context</span><span class="p">,</span> <span class="n">max_vertices</span> <span class="o">*</span> <span class="n">attributes</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">nbytes</span><span class="p">,</span>
         <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">VERTEX_BUFFER</span><span class="p">)</span>
     <span class="c1"># Create indices array and buffer</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
@@ -1457,6 +1456,9 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">HighPerformanceBuffer</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">max_indices</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">index_type_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index_type</span><span class="p">),</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">INDEX_BUFFER</span><span class="p">)</span>
+    <span class="c1"># Create othens attributes</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 </pre></div>
 
   </div>
@@ -1564,6 +1566,7 @@ table {
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">indices</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
 </pre></div>
 
   </div>
@@ -1585,6 +1588,7 @@ table {
   <div id="source-vulk.graphic.mesh.Mesh.set_vertices" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">vertices</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 </pre></div>
 
   </div>
@@ -1630,6 +1634,9 @@ table {
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
@@ -1654,6 +1661,9 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.upload_vertices', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh.upload_vertices" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
@@ -1668,6 +1678,26 @@ table {
           <h3>Instance variables</h3>
             <div class="item">
             <p id="vulk.graphic.mesh.Mesh.attributes" class="name">var <span class="ident">attributes</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.mesh.Mesh.dirty_indices" class="name">var <span class="ident">dirty_indices</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.mesh.Mesh.dirty_vertices" class="name">var <span class="ident">dirty_vertices</span></p>
             
 
             
