@@ -3,7 +3,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk.graphic.d2 API documentation</title>
+    <title>vulk.event API documentation</title>
     <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
@@ -1038,12 +1038,40 @@ table {
     <ul id="index">
 
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
-        <li class="mono"><a href="spritebatch.m.html">vulk.graphic.d2.spritebatch</a></li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.event.EventChainListener">EventChainListener</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.event.EventChainListener.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.event.EventChainListener.handle">handle</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.event.QuitEventListener">QuitEventListener</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.event.QuitEventListener.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.event.QuitEventListener.handle">handle</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.event.RawEventListener">RawEventListener</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.event.RawEventListener.handle">handle</a></li>
+  </ul>
+
+        </li>
       </ul>
     </li>
+
     </ul>
   </div>
 
@@ -1058,34 +1086,416 @@ table {
       
         
         :: <a href="/vulk-api/vulk">vulk</a>
-        
-        :: <a href="/vulk-api/vulk/graphic">vulk.graphic</a>
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk.graphic.d2</span> module</h1>
+  <h1 class="title"><span class="name">vulk.event</span> module</h1>
   <p></p>
 
   
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event" class="source">
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">takewhile</span>
+
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">eventconstant</span> <span class="k">as</span> <span class="n">ec</span>
+
+
+<span class="k">class</span> <span class="nc">RawEventListener</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Base class for event listener.</span>
+<span class="sd">    You shouldn&#39;t need to inherit directly from this class,</span>
+<span class="sd">    it&#39;s very low level.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Called for each SDL2 event received</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_Event`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">EventChainListener</span><span class="p">(</span><span class="n">RawEventListener</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Allow to chain events.</span>
+<span class="sd">    When an event in sended to the `EventChain`, included event listeners</span>
+<span class="sd">    will intercept event until one of them return False.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_listeners</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event_listeners`: `list` of `RawEventListener`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">event_listeners</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">event_listeners</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Call event listener until one of them return False.</span>
+
+<span class="sd">        *Parameters:*</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">event</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">QuitEventListener</span><span class="p">(</span><span class="n">RawEventListener</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Listener only listening to quit event.</span>
+<span class="sd">    When the event arise, the callback function is called.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `callback`: Callback function to call when Quit event</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">()</span>
+</pre></div>
+
+  </div>
 
   </header>
 
   <section id="section-items">
 
 
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
       <div class="item">
-      <p class="name"><a href="spritebatch.m.html">vulk.graphic.d2.spritebatch</a></p>
+      <p id="vulk.event.EventChainListener" class="name">class <span class="ident">EventChainListener</span></p>
       
   
-    <div class="desc"><p>SpriteBatch module</p>
+    <div class="desc"><p>Allow to chain events.
+When an event in sended to the <code>EventChain</code>, included event listeners
+will intercept event until one of them return False.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.EventChainListener', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.EventChainListener" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">EventChainListener</span><span class="p">(</span><span class="n">RawEventListener</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Allow to chain events.</span>
+<span class="sd">    When an event in sended to the `EventChain`, included event listeners</span>
+<span class="sd">    will intercept event until one of them return False.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
-<p>SpriteBatch is the pillar of 2D rendering. It has to be very performant
-and reliable.</p>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_listeners</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event_listeners`: `list` of `RawEventListener`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">event_listeners</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">event_listeners</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Call event listener until one of them return False.</span>
+
+<span class="sd">        *Parameters:*</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">event</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="p">))</span>
+</pre></div>
+
+  </div>
 </div>
 
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.event.EventChainListener">EventChainListener</a></li>
+          <li><a href="#vulk.event.RawEventListener">RawEventListener</a></li>
+          <li>abc.ABC</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.event.EventChainListener.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, event_listeners=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event_listeners</code>: <code>list</code> of <code>RawEventListener</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.EventChainListener.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.EventChainListener.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_listeners</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `event_listeners`: `list` of `RawEventListener`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">event_listeners</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">event_listeners</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.event.EventChainListener.handle">
+    <p>def <span class="ident">handle</span>(</p><p>self, event)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Call event listener until one of them return False.</p>
+
+<p><em>Parameters:</em></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.EventChainListener.handle', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.EventChainListener.handle" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Call event listener until one of them return False.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">takewhile</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">event</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">listeners</span><span class="p">))</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.event.EventChainListener.listeners" class="name">var <span class="ident">listeners</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
       </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.event.QuitEventListener" class="name">class <span class="ident">QuitEventListener</span></p>
+      
+  
+    <div class="desc"><p>Listener only listening to quit event.
+When the event arise, the callback function is called.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.QuitEventListener', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.QuitEventListener" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">QuitEventListener</span><span class="p">(</span><span class="n">RawEventListener</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Listener only listening to quit event.</span>
+<span class="sd">    When the event arise, the callback function is called.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `callback`: Callback function to call when Quit event</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.event.QuitEventListener">QuitEventListener</a></li>
+          <li><a href="#vulk.event.RawEventListener">RawEventListener</a></li>
+          <li>abc.ABC</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.event.QuitEventListener.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, callback)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>callback</code>: Callback function to call when Quit event</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.QuitEventListener.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.QuitEventListener.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `callback`: Callback function to call when Quit event</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="n">callback</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.event.QuitEventListener.handle">
+    <p>def <span class="ident">handle</span>(</p><p>self, event)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Called for each SDL2 event received</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event</code>: <code>SDL_Event</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.QuitEventListener.handle', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.QuitEventListener.handle" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.event.QuitEventListener.callback" class="name">var <span class="ident">callback</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.event.RawEventListener" class="name">class <span class="ident">RawEventListener</span></p>
+      
+  
+    <div class="desc"><p>Base class for event listener.
+You shouldn't need to inherit directly from this class,
+it's very low level.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.RawEventListener', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.RawEventListener" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">RawEventListener</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Base class for event listener.</span>
+<span class="sd">    You shouldn&#39;t need to inherit directly from this class,</span>
+<span class="sd">    it&#39;s very low level.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Called for each SDL2 event received</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_Event`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.event.RawEventListener">RawEventListener</a></li>
+          <li>abc.ABC</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.event.RawEventListener.handle">
+    <p>def <span class="ident">handle</span>(</p><p>self, event)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Called for each SDL2 event received</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event</code>: <code>SDL_Event</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.event.RawEventListener.handle', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.event.RawEventListener.handle" class="source">
+    <div class="codehilite"><pre><span></span><span class="nd">@abstractmethod</span>
+<span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Called for each SDL2 event received</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `event`: `SDL_Event`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">pass</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+
   </section>
 
     </article>

@@ -1061,6 +1061,7 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.context.VulkContext.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.context.VulkContext.create">create</a></li>
+    <li class="mono"><a href="#vulk.context.VulkContext.get_events">get_events</a></li>
     <li class="mono"><a href="#vulk.context.VulkContext.swap">swap</a></li>
   </ul>
 
@@ -1960,6 +1961,9 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkQueuePresentKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
 
         <span class="n">vk</span><span class="o">.</span><span class="n">vkDeviceWaitIdle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -2800,6 +2804,9 @@ swapchain's image.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">pfn</span><span class="p">[</span><span class="s1">&#39;vkQueuePresentKHR&#39;</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">present_queue</span><span class="p">,</span> <span class="n">present</span><span class="p">)</span>
 
         <span class="n">vk</span><span class="o">.</span><span class="n">vkDeviceWaitIdle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -2916,6 +2923,27 @@ swapchain's image.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_final_image</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_commandbuffers</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_create_semaphores</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.context.VulkContext.get_events">
+    <p>def <span class="ident">get_events</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkContext.get_events', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.context.VulkContext.get_events" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
 </pre></div>
 
   </div>

@@ -6,7 +6,8 @@
     <title>vulk.math.vector API documentation</title>
     <meta name="description" content="Vector module
 
-This module contains all Vector class definition" />
+This module contains all Vector classes definition.
+Vector are a key of graphic compu..." />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1113,14 +1114,16 @@ table {
   <h1 class="title"><span class="name">vulk.math.vector</span> module</h1>
   <p>Vector module</p>
 
-<p>This module contains all Vector class definition</p>
+<p>This module contains all Vector classes definition.
+Vector are a key of graphic computing.</p>
 
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector" class="source">
     <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39;Vector module</span>
 
-<span class="sd">This module contains all Vector class definition</span>
+<span class="sd">This module contains all Vector classes definition.</span>
+<span class="sd">Vector are a key of graphic computing.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span>
@@ -1141,6 +1144,11 @@ table {
 <span class="sd">            get directly the numpy array if you need more power**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1193,25 +1201,36 @@ table {
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
 
-    <span class="nd">@coordinates.setter</span>
-    <span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="nd">@values.setter</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Return the size of vector</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `value`: `Vector` of the same size</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">XMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `x` property to class&#39;&#39;&#39;</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1222,6 +1241,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">YMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `y` property to class&#39;&#39;&#39;</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1232,6 +1252,7 @@ table {
 
 
 <span class="k">class</span> <span class="nc">ZMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `z` property to class&#39;&#39;&#39;</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -1242,44 +1263,72 @@ table {
 
 
 <span class="k">class</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">Vector</span><span class="p">,</span> <span class="n">XMixin</span><span class="p">,</span> <span class="n">YMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="sd">&#39;&#39;&#39;Vector2 class represents a Vector in 2D space.</span>
+<span class="sd">    It has two components `x` and `y`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 2 `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector2 needs 2 components&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Vector3</span><span class="p">(</span><span class="n">Vector</span><span class="p">,</span> <span class="n">XMixin</span><span class="p">,</span> <span class="n">YMixin</span><span class="p">,</span> <span class="n">ZMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="sd">&#39;&#39;&#39;Vector2 class represents a Vector in 2D space.</span>
+<span class="sd">    It has two components `x`, `y` and `z`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 3 `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector3 needs 3 components&quot;</span><span class="p">)</span>
 
+        <span class="c1"># tmp properties used during computation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">mul_matrix4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-        <span class="c1"># TODO: optimize this compute</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
-        <span class="c1"># We load matrix in column order (default is row order)</span>
+        <span class="sd">&#39;&#39;&#39;Multiply this vector by a `Matrix4`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix4`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># prepare tmp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="c1"># load matrix in column order (default is row order)</span>
+        <span class="c1"># reshape returns a view (I hope!)</span>
         <span class="n">mv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 
 
 <span class="c1"># Vector2 constants</span>
-<span class="n">Vector2</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">Vector2</span><span class="o">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">Vector2</span><span class="o">.</span><span class="n">Zero</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">Vector2</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">Vector2</span><span class="o">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">Vector2</span><span class="o">.</span><span class="n">Zero</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 
 <span class="c1"># Vector3 constants</span>
-<span class="n">Vector3</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">Vector3</span><span class="o">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">Vector3</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">Vector3</span><span class="o">.</span><span class="n">Zero</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">Zero</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 </pre></div>
 
   </div>
@@ -1325,6 +1374,11 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 <span class="sd">            get directly the numpy array if you need more power**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1377,21 +1431,31 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
 
-    <span class="nd">@coordinates.setter</span>
-    <span class="k">def</span> <span class="nf">coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="nd">@values.setter</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Return the size of vector</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `value`: `Vector` of the same size</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 
@@ -1415,12 +1479,20 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
@@ -1438,10 +1510,22 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
+    <div class="desc"><p>Return the croos product between the two vectors</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>value</code>: <code>Vector</code> of the same size</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.crs', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector.crs" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `value`: `Vector` of the same size</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 
@@ -1459,10 +1543,13 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
+    <div class="desc"><p>Normalize the vector and return it for chaining</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.nor', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector.nor" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 </pre></div>
 
@@ -1473,17 +1560,19 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="vulk.math.vector.Vector.coordinates" class="name">var <span class="ident">coordinates</span></p>
+            <p id="vulk.math.vector.Vector.size" class="name">var <span class="ident">size</span></p>
             
 
             
   
+    <div class="desc"><p>Return the size of vector</p>
+</div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
-            <p id="vulk.math.vector.Vector.size" class="name">var <span class="ident">size</span></p>
+            <p id="vulk.math.vector.Vector.values" class="name">var <span class="ident">values</span></p>
             
 
             
@@ -1499,27 +1588,26 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
       <p id="vulk.math.vector.Vector2" class="name">class <span class="ident">Vector2</span></p>
       
   
-    <div class="desc"><p>Base class for Vector</p>
-
-<p><em>Exemple:</em></p>
-
-<pre><code>v1 += 10 # Add 10 to all components
-v1 += [10, 9, 8] # Add a different value to each component
-dot_product = v1 @ v2 # Dot product use the matmul operator
-</code></pre>
-
-<p><strong>Note: Vector is just a wrapper around a numpy array. You can
-        get directly the numpy array if you need more power</strong></p>
+    <div class="desc"><p>Vector2 class represents a Vector in 2D space.
+It has two components <code>x</code> and <code>y</code>.</p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector2" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">Vector</span><span class="p">,</span> <span class="n">XMixin</span><span class="p">,</span> <span class="n">YMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="sd">&#39;&#39;&#39;Vector2 class represents a Vector in 2D space.</span>
+<span class="sd">    It has two components `x` and `y`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 2 `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector2 needs 2 components&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1572,22 +1660,30 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
             
   <div class="item">
     <div class="name def" id="vulk.math.vector.Vector2.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, *args)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, values=None)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 2 <code>float</code></li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector2.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 2 `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector2 needs 2 components&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1606,10 +1702,22 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
+    <div class="desc"><p>Return the croos product between the two vectors</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>value</code>: <code>Vector</code> of the same size</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.crs', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector2.crs" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `value`: `Vector` of the same size</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 
@@ -1627,10 +1735,13 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
+    <div class="desc"><p>Normalize the vector and return it for chaining</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.nor', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector2.nor" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 </pre></div>
 
@@ -1641,21 +1752,23 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="vulk.math.vector.Vector2.coordinates" class="name">var <span class="ident">coordinates</span></p>
+            <p id="vulk.math.vector.Vector2.size" class="name">var <span class="ident">size</span></p>
             
     <p class="inheritance">
      <strong>Inheritance:</strong>
-       <code><a href="#vulk.math.vector.Vector">Vector</a></code>.<code><a href="#vulk.math.vector.Vector.coordinates">coordinates</a></code>
+       <code><a href="#vulk.math.vector.Vector">Vector</a></code>.<code><a href="#vulk.math.vector.Vector.size">size</a></code>
     </p>
 
             
   
+    <div class="desc inherited"><p>Return the size of vector</p>
+</div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
-            <p id="vulk.math.vector.Vector2.size" class="name">var <span class="ident">size</span></p>
+            <p id="vulk.math.vector.Vector2.values" class="name">var <span class="ident">values</span></p>
             
 
             
@@ -1691,38 +1804,49 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
       <p id="vulk.math.vector.Vector3" class="name">class <span class="ident">Vector3</span></p>
       
   
-    <div class="desc"><p>Base class for Vector</p>
-
-<p><em>Exemple:</em></p>
-
-<pre><code>v1 += 10 # Add 10 to all components
-v1 += [10, 9, 8] # Add a different value to each component
-dot_product = v1 @ v2 # Dot product use the matmul operator
-</code></pre>
-
-<p><strong>Note: Vector is just a wrapper around a numpy array. You can
-        get directly the numpy array if you need more power</strong></p>
+    <div class="desc"><p>Vector2 class represents a Vector in 2D space.
+It has two components <code>x</code>, <code>y</code> and <code>z</code>.</p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector3" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Vector3</span><span class="p">(</span><span class="n">Vector</span><span class="p">,</span> <span class="n">XMixin</span><span class="p">,</span> <span class="n">YMixin</span><span class="p">,</span> <span class="n">ZMixin</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="sd">&#39;&#39;&#39;Vector2 class represents a Vector in 2D space.</span>
+<span class="sd">    It has two components `x`, `y` and `z`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 3 `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector3 needs 3 components&quot;</span><span class="p">)</span>
 
+        <span class="c1"># tmp properties used during computation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">mul_matrix4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-        <span class="c1"># TODO: optimize this compute</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
-        <span class="c1"># We load matrix in column order (default is row order)</span>
+        <span class="sd">&#39;&#39;&#39;Multiply this vector by a `Matrix4`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix4`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># prepare tmp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="c1"># load matrix in column order (default is row order)</span>
+        <span class="c1"># reshape returns a view (I hope!)</span>
         <span class="n">mv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -1784,24 +1908,35 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
             
   <div class="item">
     <div class="name def" id="vulk.math.vector.Vector3.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, *args)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, values=None)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 3 <code>float</code></li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector3.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 3 `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector3 needs 3 components&quot;</span><span class="p">)</span>
+    <span class="c1"># tmp properties used during computation</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1818,10 +1953,22 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
+    <div class="desc"><p>Return the croos product between the two vectors</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>value</code>: <code>Vector</code> of the same size</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.crs', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector3.crs" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `value`: `Vector` of the same size</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 </pre></div>
 
@@ -1839,17 +1986,30 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
+    <div class="desc"><p>Multiply this vector by a <code>Matrix4</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix4</code></li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.mul_matrix4', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector3.mul_matrix4" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">mul_matrix4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-    <span class="c1"># TODO: optimize this compute</span>
-    <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-    <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
-    <span class="c1"># We load matrix in column order (default is row order)</span>
+    <span class="sd">&#39;&#39;&#39;Multiply this vector by a `Matrix4`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix4`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># prepare tmp</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="c1"># load matrix in column order (default is row order)</span>
+    <span class="c1"># reshape returns a view (I hope!)</span>
     <span class="n">mv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 </pre></div>
 
   </div>
@@ -1866,10 +2026,13 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
     
   
+    <div class="desc"><p>Normalize the vector and return it for chaining</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.nor', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector3.nor" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 </pre></div>
 
@@ -1880,12 +2043,20 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="vulk.math.vector.Vector3.coordinates" class="name">var <span class="ident">coordinates</span></p>
+            <p id="vulk.math.vector.Vector3.size" class="name">var <span class="ident">size</span></p>
             
-    <p class="inheritance">
-     <strong>Inheritance:</strong>
-       <code><a href="#vulk.math.vector.Vector">Vector</a></code>.<code><a href="#vulk.math.vector.Vector.coordinates">coordinates</a></code>
-    </p>
+
+            
+  
+    <div class="desc"><p>Return the size of vector</p>
+</div>
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.math.vector.Vector3.tmp" class="name">var <span class="ident">tmp</span></p>
+            
 
             
   
@@ -1894,7 +2065,17 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
             </div>
             <div class="item">
-            <p id="vulk.math.vector.Vector3.size" class="name">var <span class="ident">size</span></p>
+            <p id="vulk.math.vector.Vector3.tmp1" class="name">var <span class="ident">tmp1</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.math.vector.Vector3.values" class="name">var <span class="ident">values</span></p>
             
 
             
@@ -1940,10 +2121,13 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
       <p id="vulk.math.vector.XMixin" class="name">class <span class="ident">XMixin</span></p>
       
   
+    <div class="desc"><p>Mixin adding <code>x</code> property to class</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.XMixin', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.XMixin" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">XMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `x` property to class&#39;&#39;&#39;</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1981,10 +2165,13 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
       <p id="vulk.math.vector.YMixin" class="name">class <span class="ident">YMixin</span></p>
       
   
+    <div class="desc"><p>Mixin adding <code>y</code> property to class</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.YMixin', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.YMixin" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">YMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `y` property to class&#39;&#39;&#39;</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -2022,10 +2209,13 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
       <p id="vulk.math.vector.ZMixin" class="name">class <span class="ident">ZMixin</span></p>
       
   
+    <div class="desc"><p>Mixin adding <code>z</code> property to class</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.ZMixin', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.ZMixin" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ZMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `z` property to class&#39;&#39;&#39;</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>

@@ -1049,6 +1049,7 @@ table {
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.bind">bind</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.draw">draw</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.set_indices">set_indices</a></li>
+    <li class="mono"><a href="#vulk.graphic.mesh.Mesh.set_vertex">set_vertex</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.set_vertices">set_vertices</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.upload">upload</a></li>
     <li class="mono"><a href="#vulk.graphic.mesh.Mesh.upload_indices">upload_indices</a></li>
@@ -1190,40 +1191,107 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set indices of mesh</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `indices`: `list` of `float`</span>
+<span class="sd">        - `offset`: Offset in mesh indices array</span>
+
+<span class="sd">        **Note: Mesh must be indexed**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">indices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
 
+    <span class="k">def</span> <span class="nf">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">vertex</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set one vertex of the mesh at position `index`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `index`: Vertex index</span>
+<span class="sd">        - `vertex`: Vertex data (tuple format)</span>
+
+<span class="sd">        *Exemple:*</span>
+
+<span class="sd">        For a mesh with two attributes (2 components and 4 components):</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        vertex = ([x, y], [r, g, b, a])</span>
+<span class="sd">        mesh.set_vertex(idx, vertex)</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        **Note: Vertex data type depends on `VertexAttributes` of the mesh.</span>
+<span class="sd">                It must be a tuple containing an array for each attributes**</span>
+
+<span class="sd">        **Note: Once mesh vertices are updated, you need to `upload` the mesh</span>
+<span class="sd">                to take into account the changes.**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
+
     <span class="k">def</span> <span class="nf">set_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set vertices of the mesh.</span>
+<span class="sd">        Report to `set_vertex`, it works the same but it waits for an array</span>
+<span class="sd">        of vertex.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vertices`: `list` of Vertex data (see `set_vertex`)</span>
+<span class="sd">        - `offset`: Offset in the mesh vertices array</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">vertices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">upload_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Upload indices to graphic card</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+
+<span class="sd">        **Note: Mesh must be indexed**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">False</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
                       <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Upload vertices to graphic card</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
                       <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Upload vertices and indices to graphic card</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upload_vertices</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
@@ -1321,40 +1389,107 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set indices of mesh</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `indices`: `list` of `float`</span>
+<span class="sd">        - `offset`: Offset in mesh indices array</span>
+
+<span class="sd">        **Note: Mesh must be indexed**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">indices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
 
+    <span class="k">def</span> <span class="nf">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">vertex</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set one vertex of the mesh at position `index`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `index`: Vertex index</span>
+<span class="sd">        - `vertex`: Vertex data (tuple format)</span>
+
+<span class="sd">        *Exemple:*</span>
+
+<span class="sd">        For a mesh with two attributes (2 components and 4 components):</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        vertex = ([x, y], [r, g, b, a])</span>
+<span class="sd">        mesh.set_vertex(idx, vertex)</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        **Note: Vertex data type depends on `VertexAttributes` of the mesh.</span>
+<span class="sd">                It must be a tuple containing an array for each attributes**</span>
+
+<span class="sd">        **Note: Once mesh vertices are updated, you need to `upload` the mesh</span>
+<span class="sd">                to take into account the changes.**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
+
     <span class="k">def</span> <span class="nf">set_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set vertices of the mesh.</span>
+<span class="sd">        Report to `set_vertex`, it works the same but it waits for an array</span>
+<span class="sd">        of vertex.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vertices`: `list` of Vertex data (see `set_vertex`)</span>
+<span class="sd">        - `offset`: Offset in the mesh vertices array</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">vertices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">upload_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Upload indices to graphic card</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+
+<span class="sd">        **Note: Mesh must be indexed**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">False</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
                       <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Upload vertices to graphic card</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
                       <span class="n">casting</span><span class="o">=</span><span class="s1">&#39;no&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Upload vertices and indices to graphic card</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upload_vertices</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
@@ -1559,14 +1694,91 @@ table {
 
     
   
+    <div class="desc"><p>Set indices of mesh</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>indices</code>: <code>list</code> of <code>float</code></li>
+<li><code>offset</code>: Offset in mesh indices array</li>
+</ul>
+
+<p><strong>Note: Mesh must be indexed</strong></p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.set_indices', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh.set_indices" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set indices of mesh</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `indices`: `list` of `float`</span>
+<span class="sd">    - `offset`: Offset in mesh indices array</span>
+<span class="sd">    **Note: Mesh must be indexed**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">indices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">indices</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.mesh.Mesh.set_vertex">
+    <p>def <span class="ident">set_vertex</span>(</p><p>self, index, vertex)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set one vertex of the mesh at position <code>index</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>index</code>: Vertex index</li>
+<li><code>vertex</code>: Vertex data (tuple format)</li>
+</ul>
+
+<p><em>Exemple:</em></p>
+
+<p>For a mesh with two attributes (2 components and 4 components):</p>
+
+<pre><code>vertex = ([x, y], [r, g, b, a])
+mesh.set_vertex(idx, vertex)
+</code></pre>
+
+<p><strong>Note: Vertex data type depends on <code>VertexAttributes</code> of the mesh.
+        It must be a tuple containing an array for each attributes</strong></p>
+
+<p><strong>Note: Once mesh vertices are updated, you need to <code>upload</code> the mesh
+        to take into account the changes.</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.set_vertex', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.mesh.Mesh.set_vertex" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">vertex</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set one vertex of the mesh at position `index`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `index`: Vertex index</span>
+<span class="sd">    - `vertex`: Vertex data (tuple format)</span>
+<span class="sd">    *Exemple:*</span>
+<span class="sd">    For a mesh with two attributes (2 components and 4 components):</span>
+<span class="sd">    ```</span>
+<span class="sd">    vertex = ([x, y], [r, g, b, a])</span>
+<span class="sd">    mesh.set_vertex(idx, vertex)</span>
+<span class="sd">    ```</span>
+<span class="sd">    **Note: Vertex data type depends on `VertexAttributes` of the mesh.</span>
+<span class="sd">            It must be a tuple containing an array for each attributes**</span>
+<span class="sd">    **Note: Once mesh vertices are updated, you need to `upload` the mesh</span>
+<span class="sd">            to take into account the changes.**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertex</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 </pre></div>
 
   </div>
@@ -1583,10 +1795,28 @@ table {
 
     
   
+    <div class="desc"><p>Set vertices of the mesh.
+Report to <code>set_vertex</code>, it works the same but it waits for an array
+of vertex.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vertices</code>: <code>list</code> of Vertex data (see <code>set_vertex</code>)</li>
+<li><code>offset</code>: Offset in the mesh vertices array</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.set_vertices', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh.set_vertices" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set vertices of the mesh.</span>
+<span class="sd">    Report to `set_vertex`, it works the same but it waits for an array</span>
+<span class="sd">    of vertex.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vertices`: `list` of Vertex data (see `set_vertex`)</span>
+<span class="sd">    - `offset`: Offset in the mesh vertices array</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">vertices_array</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">vertices</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">True</span>
 </pre></div>
@@ -1605,10 +1835,23 @@ table {
 
     
   
+    <div class="desc"><p>Upload vertices and indices to graphic card</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.upload', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh.upload" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Upload vertices and indices to graphic card</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">upload_vertices</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">upload_indices</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
@@ -1628,10 +1871,26 @@ table {
 
     
   
+    <div class="desc"><p>Upload indices to graphic card</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
+
+<p><strong>Note: Mesh must be indexed</strong></p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.upload_indices', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh.upload_indices" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Upload indices to graphic card</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    **Note: Mesh must be indexed**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_indices</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;No index in this mesh&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_indices</span><span class="p">:</span>
@@ -1657,10 +1916,23 @@ table {
 
     
   
+    <div class="desc"><p>Upload vertices to graphic card</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.mesh.Mesh.upload_vertices', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.mesh.Mesh.upload_vertices" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Upload vertices to graphic card</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span><span class="p">:</span>
         <span class="k">return</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dirty_vertices</span> <span class="o">=</span> <span class="bp">False</span>

@@ -1047,7 +1047,6 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.init_bitmap">init_bitmap</a></li>
-    <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.init_view_sampler">init_view_sampler</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.set_sampler">set_sampler</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.set_view">set_view</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.BinaryTexture.upload">upload</a></li>
@@ -1061,7 +1060,6 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.graphic.texture.RawTexture.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.RawTexture.init_bitmap">init_bitmap</a></li>
-    <li class="mono"><a href="#vulk.graphic.texture.RawTexture.init_view_sampler">init_view_sampler</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.RawTexture.set_sampler">set_sampler</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.RawTexture.set_view">set_view</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.RawTexture.upload">upload</a></li>
@@ -1076,7 +1074,6 @@ table {
     <li class="mono"><a href="#vulk.graphic.texture.Texture.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.Texture.components_to_format">components_to_format</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.Texture.init_bitmap">init_bitmap</a></li>
-    <li class="mono"><a href="#vulk.graphic.texture.Texture.init_view_sampler">init_view_sampler</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.Texture.set_sampler">set_sampler</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.Texture.set_view">set_view</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.Texture.upload">upload</a></li>
@@ -1090,7 +1087,7 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.set_region">set_region</a></li>
-    <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.set_region2">set_region2</a></li>
+    <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.set_region_pixel">set_region_pixel</a></li>
     <li class="mono"><a href="#vulk.graphic.texture.TextureRegion.set_texture">set_texture</a></li>
   </ul>
 
@@ -1164,15 +1161,13 @@ table {
         <span class="c1"># Init view and sampler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_view_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pixel_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">pixel_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">init_view_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the numpy array containing bitmap&#39;&#39;&#39;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pixel_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">pixel_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -1192,6 +1187,17 @@ table {
                     <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
                     <span class="n">address_mode_u</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
                     <span class="n">address_mode_v</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Allow to customize the texture sampler</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `mag_filter`: `Filter` vulk constant</span>
+<span class="sd">        - `min_filter`: `Filter` vulk constant</span>
+<span class="sd">        - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">        - `address_mode_v`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
             <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
@@ -1199,7 +1205,12 @@ table {
             <span class="n">vc</span><span class="o">.</span><span class="n">BorderColor</span><span class="o">.</span><span class="n">INT_OPAQUE_BLACK</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory&#39;&#39;&#39;</span>
+        <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span>
@@ -1219,6 +1230,9 @@ table {
 <span class="sd">        *Parameter:*</span>
 
 <span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `width`: Width of the texture</span>
+<span class="sd">        - `height`: Height of the texture</span>
+<span class="sd">        - `texture_format`: `Format` of the vulkan texture</span>
 <span class="sd">        - `raw_bitmap`: Buffer to a bitmap</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Create all the components by calling parent init</span>
@@ -1229,13 +1243,13 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize bitmap array with `raw_bitmap`&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Texture</span><span class="p">(</span><span class="n">BinaryTexture</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;This class represent a texture.</span>
-
-<span class="sd">    It handles a Vulkan buffer and a bitmap array (numpy array)</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    BinaryTexture with file managing.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1256,6 +1270,12 @@ table {
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Convert number of channel components in image to Vulkan format</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `components`: Number of components</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="n">components</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">components</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;components must be between 0 and 4&quot;</span><span class="p">)</span>
 
@@ -1307,7 +1327,7 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
 
-    <span class="k">def</span> <span class="nf">set_region2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_region_pixel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set coordinate relatively to pixel size</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -1358,6 +1378,9 @@ table {
 <span class="sd">        *Parameter:*</span>
 
 <span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `width`: Width of the texture</span>
+<span class="sd">        - `height`: Height of the texture</span>
+<span class="sd">        - `texture_format`: `Format` of the vulkan texture</span>
 <span class="sd">        - `raw_bitmap`: Buffer to a bitmap</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Create all the components by calling parent init</span>
@@ -1368,6 +1391,7 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize bitmap array with `raw_bitmap`&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 </pre></div>
 
@@ -1400,6 +1424,9 @@ table {
 
 <ul>
 <li><code>context</code>: <code>VulkContext</code></li>
+<li><code>width</code>: Width of the texture</li>
+<li><code>height</code>: Height of the texture</li>
+<li><code>texture_format</code>: <code>Format</code> of the vulkan texture</li>
 <li><code>raw_bitmap</code>: Buffer to a bitmap</li>
 </ul>
 </div>
@@ -1411,6 +1438,9 @@ table {
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    *Parameter:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `width`: Width of the texture</span>
+<span class="sd">    - `height`: Height of the texture</span>
+<span class="sd">    - `texture_format`: `Format` of the vulkan texture</span>
 <span class="sd">    - `raw_bitmap`: Buffer to a bitmap</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Create all the components by calling parent init</span>
@@ -1434,33 +1464,14 @@ table {
 
     
   
+    <div class="desc"><p>Initialize bitmap array with <code>raw_bitmap</code></p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.init_bitmap', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.BinaryTexture.init_bitmap" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Initialize bitmap array with `raw_bitmap`&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="vulk.graphic.texture.BinaryTexture.init_view_sampler">
-    <p>def <span class="ident">init_view_sampler</span>(</p><p>self, context)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.init_view_sampler', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.graphic.texture.BinaryTexture.init_view_sampler" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_view_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1477,6 +1488,18 @@ table {
 
     
   
+    <div class="desc"><p>Allow to customize the texture sampler</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>mag_filter</code>: <code>Filter</code> vulk constant</li>
+<li><code>min_filter</code>: <code>Filter</code> vulk constant</li>
+<li><code>address_mode_u</code>: <code>SamplerAddressMode</code> vulk constant</li>
+<li><code>address_mode_v</code>: <code>SamplerAddressMode</code> vulk constant</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.set_sampler', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.BinaryTexture.set_sampler" class="source">
@@ -1484,6 +1507,15 @@ table {
                 <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
                 <span class="n">address_mode_u</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
                 <span class="n">address_mode_v</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Allow to customize the texture sampler</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `mag_filter`: `Filter` vulk constant</span>
+<span class="sd">    - `min_filter`: `Filter` vulk constant</span>
+<span class="sd">    - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">    - `address_mode_v`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
         <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
         <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
@@ -1544,12 +1576,21 @@ table {
     
   
     <div class="desc"><p>Upload bitmap into Vulkan memory</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.BinaryTexture.upload', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.BinaryTexture.upload" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span>
@@ -1605,15 +1646,13 @@ manually</p>
         <span class="c1"># Init view and sampler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_view_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pixel_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">pixel_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">init_view_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the numpy array containing bitmap&#39;&#39;&#39;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pixel_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">pixel_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -1633,6 +1672,17 @@ manually</p>
                     <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
                     <span class="n">address_mode_u</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
                     <span class="n">address_mode_v</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Allow to customize the texture sampler</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `mag_filter`: `Filter` vulk constant</span>
+<span class="sd">        - `min_filter`: `Filter` vulk constant</span>
+<span class="sd">        - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">        - `address_mode_v`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
             <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
@@ -1640,7 +1690,12 @@ manually</p>
             <span class="n">vc</span><span class="o">.</span><span class="n">BorderColor</span><span class="o">.</span><span class="n">INT_OPAQUE_BLACK</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory&#39;&#39;&#39;</span>
+        <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
             <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                       <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span>
@@ -1704,7 +1759,8 @@ manually</p>
     <span class="c1"># Init view and sampler</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">init_view_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1721,34 +1777,15 @@ manually</p>
 
     
   
+    <div class="desc"><p>Return the numpy array containing bitmap</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.RawTexture.init_bitmap', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.RawTexture.init_bitmap" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the numpy array containing bitmap&#39;&#39;&#39;</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pixel_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">pixel_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="vulk.graphic.texture.RawTexture.init_view_sampler">
-    <p>def <span class="ident">init_view_sampler</span>(</p><p>self, context)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.RawTexture.init_view_sampler', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.graphic.texture.RawTexture.init_view_sampler" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_view_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1765,6 +1802,18 @@ manually</p>
 
     
   
+    <div class="desc"><p>Allow to customize the texture sampler</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>mag_filter</code>: <code>Filter</code> vulk constant</li>
+<li><code>min_filter</code>: <code>Filter</code> vulk constant</li>
+<li><code>address_mode_u</code>: <code>SamplerAddressMode</code> vulk constant</li>
+<li><code>address_mode_v</code>: <code>SamplerAddressMode</code> vulk constant</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.RawTexture.set_sampler', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.RawTexture.set_sampler" class="source">
@@ -1772,6 +1821,15 @@ manually</p>
                 <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
                 <span class="n">address_mode_u</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
                 <span class="n">address_mode_v</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Allow to customize the texture sampler</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `mag_filter`: `Filter` vulk constant</span>
+<span class="sd">    - `min_filter`: `Filter` vulk constant</span>
+<span class="sd">    - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">    - `address_mode_v`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
         <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
         <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
@@ -1832,12 +1890,21 @@ manually</p>
     
   
     <div class="desc"><p>Upload bitmap into Vulkan memory</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.RawTexture.upload', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.RawTexture.upload" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span>
@@ -1927,17 +1994,14 @@ manually</p>
       <p id="vulk.graphic.texture.Texture" class="name">class <span class="ident">Texture</span></p>
       
   
-    <div class="desc"><p>This class represent a texture.</p>
-
-<p>It handles a Vulkan buffer and a bitmap array (numpy array)</p>
+    <div class="desc"><p>BinaryTexture with file managing.</p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Texture</span><span class="p">(</span><span class="n">BinaryTexture</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;This class represent a texture.</span>
-
-<span class="sd">    It handles a Vulkan buffer and a bitmap array (numpy array)</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    BinaryTexture with file managing.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">path_file</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1958,6 +2022,12 @@ manually</p>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Convert number of channel components in image to Vulkan format</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `components`: Number of components</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="n">components</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">components</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;components must be between 0 and 4&quot;</span><span class="p">)</span>
 
@@ -2030,11 +2100,23 @@ manually</p>
 
     
   
+    <div class="desc"><p>Convert number of channel components in image to Vulkan format</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>components</code>: Number of components</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture.components_to_format', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture.components_to_format" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">components_to_format</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Convert number of channel components in image to Vulkan format</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `components`: Number of components</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">components</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">components</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;components must be between 0 and 4&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R8_UNORM</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R8G8_UNORM</span><span class="p">,</span>
@@ -2055,33 +2137,14 @@ manually</p>
 
     
   
+    <div class="desc"><p>Initialize bitmap array with <code>raw_bitmap</code></p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture.init_bitmap', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture.init_bitmap" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Initialize bitmap array with `raw_bitmap`&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;raw_bitmap&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="vulk.graphic.texture.Texture.init_view_sampler">
-    <p>def <span class="ident">init_view_sampler</span>(</p><p>self, context)</p>
-    </div>
-    
-
-    
-  
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture.init_view_sampler', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.graphic.texture.Texture.init_view_sampler" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">init_view_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2098,6 +2161,18 @@ manually</p>
 
     
   
+    <div class="desc"><p>Allow to customize the texture sampler</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>mag_filter</code>: <code>Filter</code> vulk constant</li>
+<li><code>min_filter</code>: <code>Filter</code> vulk constant</li>
+<li><code>address_mode_u</code>: <code>SamplerAddressMode</code> vulk constant</li>
+<li><code>address_mode_v</code>: <code>SamplerAddressMode</code> vulk constant</li>
+</ul>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture.set_sampler', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture.set_sampler" class="source">
@@ -2105,6 +2180,15 @@ manually</p>
                 <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
                 <span class="n">address_mode_u</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
                 <span class="n">address_mode_v</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Allow to customize the texture sampler</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `mag_filter`: `Filter` vulk constant</span>
+<span class="sd">    - `min_filter`: `Filter` vulk constant</span>
+<span class="sd">    - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">    - `address_mode_v`: `SamplerAddressMode` vulk constant</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
         <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
         <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
@@ -2165,12 +2249,21 @@ manually</p>
     
   
     <div class="desc"><p>Upload bitmap into Vulkan memory</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+</ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.Texture.upload', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.texture.Texture.upload" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory&#39;&#39;&#39;</span>
+    <span class="sd">&#39;&#39;&#39;Upload bitmap into Vulkan memory</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">t</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                   <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span><span class="p">,</span>
@@ -2240,7 +2333,7 @@ right and the y axis pointing downwards.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
 
-    <span class="k">def</span> <span class="nf">set_region2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_region_pixel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set coordinate relatively to pixel size</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -2350,8 +2443,8 @@ right and the y axis pointing downwards.</p>
   
             
   <div class="item">
-    <div class="name def" id="vulk.graphic.texture.TextureRegion.set_region2">
-    <p>def <span class="ident">set_region2</span>(</p><p>self, x, y, width, height)</p>
+    <div class="name def" id="vulk.graphic.texture.TextureRegion.set_region_pixel">
+    <p>def <span class="ident">set_region_pixel</span>(</p><p>self, x, y, width, height)</p>
     </div>
     
 
@@ -2369,9 +2462,9 @@ right and the y axis pointing downwards.</p>
 </ul>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.TextureRegion.set_region2', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.graphic.texture.TextureRegion.set_region2" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_region2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.texture.TextureRegion.set_region_pixel', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.texture.TextureRegion.set_region_pixel" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set_region_pixel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set coordinate relatively to pixel size</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `x`: X coordinate of the texture</span>
