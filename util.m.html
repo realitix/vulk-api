@@ -3,7 +3,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk.utils API documentation</title>
+    <title>vulk.util API documentation</title>
     <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
@@ -901,8 +901,10 @@ table {
 .codehilite .mh { color: #666666 } /* Literal.Number.Hex */
 .codehilite .mi { color: #666666 } /* Literal.Number.Integer */
 .codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
 .codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
 .codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
 .codehilite .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -913,9 +915,11 @@ table {
 .codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
 .codehilite .ss { color: #19177C } /* Literal.String.Symbol */
 .codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
 .codehilite .vc { color: #19177C } /* Name.Variable.Class */
 .codehilite .vg { color: #19177C } /* Name.Variable.Global */
 .codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
   </style>
 
@@ -1040,8 +1044,8 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
-    <li class="mono"><a href="#vulk.utils.millis">millis</a></li>
-    <li class="mono"><a href="#vulk.utils.time_since_millis">time_since_millis</a></li>
+    <li class="mono"><a href="#vulk.util.millis">millis</a></li>
+    <li class="mono"><a href="#vulk.util.time_since_millis">time_since_millis</a></li>
   </ul>
 
     </li>
@@ -1064,12 +1068,12 @@ table {
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk.utils</span> module</h1>
+  <h1 class="title"><span class="name">vulk.util</span> module</h1>
   <p></p>
 
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.utils', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.utils" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.util', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.util" class="source">
     <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 
 
@@ -1092,7 +1096,7 @@ table {
     <h2 class="section-title" id="header-functions">Functions</h2>
       
   <div class="item">
-    <div class="name def" id="vulk.utils.millis">
+    <div class="name def" id="vulk.util.millis">
     <p>def <span class="ident">millis</span>(</p><p>)</p>
     </div>
     
@@ -1102,8 +1106,8 @@ table {
     <div class="desc"><p>Return the time in milliseconds</p>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.utils.millis', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.utils.millis" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.util.millis', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.util.millis" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">millis</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;Return the time in milliseconds&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
@@ -1116,7 +1120,7 @@ table {
   
       
   <div class="item">
-    <div class="name def" id="vulk.utils.time_since_millis">
+    <div class="name def" id="vulk.util.time_since_millis">
     <p>def <span class="ident">time_since_millis</span>(</p><p>previous_time)</p>
     </div>
     
@@ -1126,8 +1130,8 @@ table {
     <div class="desc"><p>Return the time in millisecons from the previous_time argument</p>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.utils.time_since_millis', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.utils.time_since_millis" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.util.time_since_millis', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.util.time_since_millis" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">time_since_millis</span><span class="p">(</span><span class="n">previous_time</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Return the time in millisecons from the previous_time argument&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">previous_time</span>
