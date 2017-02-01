@@ -1236,6 +1236,7 @@ table {
     <li class="mono"><a href="#vulk.vulkanobject.Image.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.Image.bind">bind</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.Image.copy_to">copy_to</a></li>
+    <li class="mono"><a href="#vulk.vulkanobject.Image.generate_mipmap">generate_mipmap</a></li>
     <li class="mono"><a href="#vulk.vulkanobject.Image.update_layout">update_layout</a></li>
   </ul>
 
@@ -2913,6 +2914,9 @@ module.</p>
 <span class="sd">    When we create an image, we first upload the pixels in the staging</span>
 <span class="sd">    image and then copy the memory in the final image. Of course, both of</span>
 <span class="sd">    the image have the same properties.</span>
+
+<span class="sd">    **Note: MipMap generation is done only on the final image, the staging</span>
+<span class="sd">            image don&#39;t need mipmap.**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
@@ -2929,7 +2933,7 @@ module.</p>
 <span class="sd">        - `width`: Image width</span>
 <span class="sd">        - `heigth`: Image height</span>
 <span class="sd">        - `depth`: Image depth</span>
-<span class="sd">        - `mip_level`: Level of mip (`int`)</span>
+<span class="sd">        - `mip_level`: Level of mip (`int`) (only for final_image)</span>
 <span class="sd">        - `layers`: Number of layers (`int`)</span>
 <span class="sd">        - `samples`: This `SampleCount` vulk constant is related</span>
 <span class="sd">                     to multisampling</span>
@@ -2941,8 +2945,11 @@ module.</p>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">queue_families</span><span class="p">:</span>
             <span class="n">queue_families</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="c1"># Miplevel is applied automatically on final image if &gt; 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mip_level</span> <span class="o">=</span> <span class="n">mip_level</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PREINITIALIZED</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageTiling</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">TRANSFER_SRC</span><span class="p">,</span>
@@ -2956,7 +2963,7 @@ module.</p>
             <span class="n">vc</span><span class="o">.</span><span class="n">MemoryProperty</span><span class="o">.</span><span class="n">DEVICE_LOCAL</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_copy_staging_to_final</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Prepare and copy the staging image to the final image.</span>
 
@@ -3003,6 +3010,17 @@ module.</p>
                 <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_WRITE</span><span class="p">,</span>
                 <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">SHADER_READ</span>
             <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Prepare and copy the staging image to the final image.</span>
+<span class="sd">        Generate Mipmap if needed.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_copy_staging_to_final</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -3062,6 +3080,7 @@ module.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mip_level</span> <span class="o">=</span> <span class="n">mip_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">image_format</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">memory_properties</span>
         <span class="n">image_type</span> <span class="o">=</span> <span class="n">image_type</span><span class="o">.</span><span class="n">value</span>
@@ -3161,6 +3180,18 @@ module.</p>
 
         <span class="n">cmd</span><span class="o">.</span><span class="n">pipeline_barrier</span><span class="p">(</span><span class="n">src_stage</span><span class="p">,</span> <span class="n">dst_stage</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Dependency</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
                              <span class="p">[],</span> <span class="p">[],</span> <span class="p">[</span><span class="n">barrier</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">generate_mipmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generate mipmap of this image based on `self.mip_level`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `cmd`: `CommandBufferRegister` used to register commands</span>
+
+<span class="sd">        **Note: TODO about layout**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -7624,6 +7655,9 @@ a final image with very fast memory that we will use in shaders.
 When we create an image, we first upload the pixels in the staging
 image and then copy the memory in the final image. Of course, both of
 the image have the same properties.</p>
+
+<p><strong>Note: MipMap generation is done only on the final image, the staging
+        image don't need mipmap.</strong></p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.HighPerformanceImage', this);">Show source &equiv;</a></p>
@@ -7639,6 +7673,9 @@ the image have the same properties.</p>
 <span class="sd">    When we create an image, we first upload the pixels in the staging</span>
 <span class="sd">    image and then copy the memory in the final image. Of course, both of</span>
 <span class="sd">    the image have the same properties.</span>
+
+<span class="sd">    **Note: MipMap generation is done only on the final image, the staging</span>
+<span class="sd">            image don&#39;t need mipmap.**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
@@ -7655,7 +7692,7 @@ the image have the same properties.</p>
 <span class="sd">        - `width`: Image width</span>
 <span class="sd">        - `heigth`: Image height</span>
 <span class="sd">        - `depth`: Image depth</span>
-<span class="sd">        - `mip_level`: Level of mip (`int`)</span>
+<span class="sd">        - `mip_level`: Level of mip (`int`) (only for final_image)</span>
 <span class="sd">        - `layers`: Number of layers (`int`)</span>
 <span class="sd">        - `samples`: This `SampleCount` vulk constant is related</span>
 <span class="sd">                     to multisampling</span>
@@ -7667,8 +7704,11 @@ the image have the same properties.</p>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">queue_families</span><span class="p">:</span>
             <span class="n">queue_families</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="c1"># Miplevel is applied automatically on final image if &gt; 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mip_level</span> <span class="o">=</span> <span class="n">mip_level</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PREINITIALIZED</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageTiling</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">TRANSFER_SRC</span><span class="p">,</span>
@@ -7682,7 +7722,7 @@ the image have the same properties.</p>
             <span class="n">vc</span><span class="o">.</span><span class="n">MemoryProperty</span><span class="o">.</span><span class="n">DEVICE_LOCAL</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_copy_staging_to_final</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Prepare and copy the staging image to the final image.</span>
 
@@ -7729,6 +7769,17 @@ the image have the same properties.</p>
                 <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_WRITE</span><span class="p">,</span>
                 <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">SHADER_READ</span>
             <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_finalize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Prepare and copy the staging image to the final image.</span>
+<span class="sd">        Generate Mipmap if needed.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_copy_staging_to_final</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
     <span class="nd">@contextmanager</span>
     <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -7779,7 +7830,7 @@ the image have the same properties.</p>
 <li><code>width</code>: Image width</li>
 <li><code>heigth</code>: Image height</li>
 <li><code>depth</code>: Image depth</li>
-<li><code>mip_level</code>: Level of mip (<code>int</code>)</li>
+<li><code>mip_level</code>: Level of mip (<code>int</code>) (only for final_image)</li>
 <li><code>layers</code>: Number of layers (<code>int</code>)</li>
 <li><code>samples</code>: This <code>SampleCount</code> vulk constant is related
          to multisampling</li>
@@ -7804,7 +7855,7 @@ the image have the same properties.</p>
 <span class="sd">    - `width`: Image width</span>
 <span class="sd">    - `heigth`: Image height</span>
 <span class="sd">    - `depth`: Image depth</span>
-<span class="sd">    - `mip_level`: Level of mip (`int`)</span>
+<span class="sd">    - `mip_level`: Level of mip (`int`) (only for final_image)</span>
 <span class="sd">    - `layers`: Number of layers (`int`)</span>
 <span class="sd">    - `samples`: This `SampleCount` vulk constant is related</span>
 <span class="sd">                 to multisampling</span>
@@ -7815,8 +7866,10 @@ the image have the same properties.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">queue_families</span><span class="p">:</span>
         <span class="n">queue_families</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Miplevel is applied automatically on final image if &gt; 1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mip_level</span> <span class="o">=</span> <span class="n">mip_level</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
         <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PREINITIALIZED</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageTiling</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
         <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">TRANSFER_SRC</span><span class="p">,</span>
@@ -7891,6 +7944,16 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 
             </div>
             <div class="item">
+            <p id="vulk.vulkanobject.HighPerformanceImage.mip_level" class="name">var <span class="ident">mip_level</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
             <p id="vulk.vulkanobject.HighPerformanceImage.staging_image" class="name">var <span class="ident">staging_image</span></p>
             
 
@@ -7952,6 +8015,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mip_level</span> <span class="o">=</span> <span class="n">mip_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">image_format</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">memory_properties</span>
         <span class="n">image_type</span> <span class="o">=</span> <span class="n">image_type</span><span class="o">.</span><span class="n">value</span>
@@ -8051,6 +8115,18 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
 
         <span class="n">cmd</span><span class="o">.</span><span class="n">pipeline_barrier</span><span class="p">(</span><span class="n">src_stage</span><span class="p">,</span> <span class="n">dst_stage</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Dependency</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
                              <span class="p">[],</span> <span class="p">[],</span> <span class="p">[</span><span class="n">barrier</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">generate_mipmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generate mipmap of this image based on `self.mip_level`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `cmd`: `CommandBufferRegister` used to register commands</span>
+
+<span class="sd">        **Note: TODO about layout**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span>
 
     <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -8213,6 +8289,7 @@ when the contextmanager is released. Must be used with <code>with</code>.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mip_level</span> <span class="o">=</span> <span class="n">mip_level</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">image_format</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">memory_properties</span>
     <span class="n">image_type</span> <span class="o">=</span> <span class="n">image_type</span><span class="o">.</span><span class="n">value</span>
@@ -8400,6 +8477,43 @@ you to start and submit the command buffer to the execution queue.</p>
   
             
   <div class="item">
+    <div class="name def" id="vulk.vulkanobject.Image.generate_mipmap">
+    <p>def <span class="ident">generate_mipmap</span>(</p><p>self, cmd)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Generate mipmap of this image based on <code>self.mip_level</code>.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>cmd</code>: <code>CommandBufferRegister</code> used to register commands</li>
+</ul>
+
+<p><strong>Note: TODO about layout</strong></p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.Image.generate_mipmap', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.Image.generate_mipmap" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">generate_mipmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Generate mipmap of this image based on `self.mip_level`.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `cmd`: `CommandBufferRegister` used to register commands</span>
+<span class="sd">    **Note: TODO about layout**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">pass</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.vulkanobject.Image.update_layout">
     <p>def <span class="ident">update_layout</span>(</p><p>self, cmd, old_layout, new_layout, src_stage, dst_stage, src_access, dst_access)</p>
     </div>
@@ -8523,6 +8637,16 @@ the execution queue.</p>
             </div>
             <div class="item">
             <p id="vulk.vulkanobject.Image.memory_properties" class="name">var <span class="ident">memory_properties</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.vulkanobject.Image.mip_level" class="name">var <span class="ident">mip_level</span></p>
             
 
             

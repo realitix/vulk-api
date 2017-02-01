@@ -1088,9 +1088,10 @@ table {
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">vulk.util</span> <span class="kn">import</span> <span class="n">millis</span><span class="p">,</span> <span class="n">time_since_millis</span>
+<span class="kn">from</span> <span class="nn">vulk.audio</span> <span class="kn">import</span> <span class="n">VulkAudio</span>
 <span class="kn">from</span> <span class="nn">vulk.context</span> <span class="kn">import</span> <span class="n">VulkWindow</span><span class="p">,</span> <span class="n">VulkContext</span>
 <span class="kn">from</span> <span class="nn">vulk.event</span> <span class="kn">import</span> <span class="n">QuitEventListener</span>
+<span class="kn">from</span> <span class="nn">vulk.util</span> <span class="kn">import</span> <span class="n">millis</span><span class="p">,</span> <span class="n">time_since_millis</span>
 
 
 <span class="k">class</span> <span class="nc">BaseApp</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
@@ -1102,7 +1103,8 @@ table {
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Vulk&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">640</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">480</span><span class="p">,</span>
                  <span class="n">fullscreen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">decorated</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                 <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                 <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">extra_vulkan_layers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">audio_channel</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
         <span class="c1"># pylint: disable=W0612,W0613</span>
         <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 
@@ -1118,6 +1120,7 @@ table {
 <span class="sd">        - `decorated`: Should the window be decorated (button close)</span>
 <span class="sd">        - `highdpi`: Enable highdpi mode if supported</span>
 <span class="sd">        - `debug`: Enable debug mode (for development only)</span>
+<span class="sd">        - `extra_vulkan_layers`: `list` of custom vulkan layers</span>
 
 <span class="sd">        **Note: When full screen mode is enabled, you can set width and</span>
 <span class="sd">                height to 0 to use the native resolution, otherwise the</span>
@@ -1130,6 +1133,7 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_quit</span> <span class="o">=</span> <span class="bp">False</span>
 
@@ -1149,17 +1153,20 @@ table {
         <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">steam_handler</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Create window and Vulkan context&#39;&#39;&#39;</span>
+        <span class="sd">&#39;&#39;&#39;Create window, Vulkan context, audio&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">VulkWindow</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span> <span class="o">=</span> <span class="n">VulkAudio</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Clean Vulkan resource&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1234,7 +1241,8 @@ cycle of the program.</p>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Vulk&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">640</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">480</span><span class="p">,</span>
                  <span class="n">fullscreen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">decorated</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-                 <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+                 <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">extra_vulkan_layers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">audio_channel</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
         <span class="c1"># pylint: disable=W0612,W0613</span>
         <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 
@@ -1250,6 +1258,7 @@ cycle of the program.</p>
 <span class="sd">        - `decorated`: Should the window be decorated (button close)</span>
 <span class="sd">        - `highdpi`: Enable highdpi mode if supported</span>
 <span class="sd">        - `debug`: Enable debug mode (for development only)</span>
+<span class="sd">        - `extra_vulkan_layers`: `list` of custom vulkan layers</span>
 
 <span class="sd">        **Note: When full screen mode is enabled, you can set width and</span>
 <span class="sd">                height to 0 to use the native resolution, otherwise the</span>
@@ -1262,6 +1271,7 @@ cycle of the program.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_quit</span> <span class="o">=</span> <span class="bp">False</span>
 
@@ -1281,17 +1291,20 @@ cycle of the program.</p>
         <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">steam_handler</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Create window and Vulkan context&#39;&#39;&#39;</span>
+        <span class="sd">&#39;&#39;&#39;Create window, Vulkan context, audio&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="n">VulkWindow</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span> <span class="o">=</span> <span class="n">VulkAudio</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Clean Vulkan resource&#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1351,7 +1364,7 @@ cycle of the program.</p>
             
   <div class="item">
     <div class="name def" id="vulk.baseapp.BaseApp.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, name=&#39;Vulk&#39;, x=-1, y=-1, width=640, height=480, fullscreen=False, resizable=True, decorated=True, highdpi=False, debug=False)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, name=&#39;Vulk&#39;, x=-1, y=-1, width=640, height=480, fullscreen=False, resizable=True, decorated=True, highdpi=False, debug=False, extra_vulkan_layers=None, audio_channel=8)</p>
     </div>
     
 
@@ -1372,6 +1385,7 @@ cycle of the program.</p>
 <li><code>decorated</code>: Should the window be decorated (button close)</li>
 <li><code>highdpi</code>: Enable highdpi mode if supported</li>
 <li><code>debug</code>: Enable debug mode (for development only)</li>
+<li><code>extra_vulkan_layers</code>: <code>list</code> of custom vulkan layers</li>
 </ul>
 
 <p><strong>Note: When full screen mode is enabled, you can set width and
@@ -1383,7 +1397,8 @@ cycle of the program.</p>
   <div id="source-vulk.baseapp.BaseApp.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Vulk&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">640</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">480</span><span class="p">,</span>
              <span class="n">fullscreen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">decorated</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-             <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+             <span class="n">highdpi</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">extra_vulkan_layers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+             <span class="n">audio_channel</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
     <span class="c1"># pylint: disable=W0612,W0613</span>
     <span class="sd">&#39;&#39;&#39;Set initial configuration</span>
 <span class="sd">    *Parameters:*</span>
@@ -1397,6 +1412,7 @@ cycle of the program.</p>
 <span class="sd">    - `decorated`: Should the window be decorated (button close)</span>
 <span class="sd">    - `highdpi`: Enable highdpi mode if supported</span>
 <span class="sd">    - `debug`: Enable debug mode (for development only)</span>
+<span class="sd">    - `extra_vulkan_layers`: `list` of custom vulkan layers</span>
 <span class="sd">    **Note: When full screen mode is enabled, you can set width and</span>
 <span class="sd">            height to 0 to use the native resolution, otherwise the</span>
 <span class="sd">            fullscreen resolution will be set to width/height.**</span>
@@ -1407,6 +1423,7 @@ cycle of the program.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">audio</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">request_quit</span> <span class="o">=</span> <span class="bp">False</span>
 </pre></div>
@@ -1562,6 +1579,16 @@ This function must be called to quit App</p>
   </div>
   
           <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.baseapp.BaseApp.audio" class="name">var <span class="ident">audio</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
             <div class="item">
             <p id="vulk.baseapp.BaseApp.configuration" class="name">var <span class="ident">configuration</span></p>
             

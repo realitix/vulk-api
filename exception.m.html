@@ -1045,6 +1045,14 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.exception.SDL2Error">SDL2Error</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.exception.SoundError">SoundError</a></span>
+        
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.exception.VulkError">VulkError</a></span>
         
         </li>
@@ -1076,6 +1084,14 @@ table {
   <div id="source-vulk.exception" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VulkError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">SDL2Error</span><span class="p">(</span><span class="n">VulkError</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">SoundError</span><span class="p">(</span><span class="n">VulkError</span><span class="p">):</span>
+    <span class="k">pass</span>
 </pre></div>
 
   </div>
@@ -1086,6 +1102,94 @@ table {
 
 
     <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="vulk.exception.SDL2Error" class="name">class <span class="ident">SDL2Error</span></p>
+      
+  
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.exception.SDL2Error', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.exception.SDL2Error" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">SDL2Error</span><span class="p">(</span><span class="n">VulkError</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.exception.SDL2Error">SDL2Error</a></li>
+          <li><a href="#vulk.exception.VulkError">VulkError</a></li>
+          <li>builtins.Exception</li>
+          <li>builtins.BaseException</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.exception.SDL2Error.args" class="name">var <span class="ident">args</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.exception.VulkError">VulkError</a></code>.<code><a href="#vulk.exception.VulkError.args">args</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.exception.SoundError" class="name">class <span class="ident">SoundError</span></p>
+      
+  
+    <div class="desc"><p>Common base class for all non-exit exceptions.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.exception.SoundError', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.exception.SoundError" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">SoundError</span><span class="p">(</span><span class="n">VulkError</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.exception.SoundError">SoundError</a></li>
+          <li><a href="#vulk.exception.VulkError">VulkError</a></li>
+          <li>builtins.Exception</li>
+          <li>builtins.BaseException</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.exception.SoundError.args" class="name">var <span class="ident">args</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.exception.VulkError">VulkError</a></code>.<code><a href="#vulk.exception.VulkError.args">args</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
       
       <div class="item">
       <p id="vulk.exception.VulkError" class="name">class <span class="ident">VulkError</span></p>

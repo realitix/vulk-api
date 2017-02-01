@@ -1055,10 +1055,6 @@ table {
     <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
         <li class="mono">
-        <span class="class_name"><a href="#vulk.context.SDL2Error">SDL2Error</a></span>
-        
-        </li>
-        <li class="mono">
         <span class="class_name"><a href="#vulk.context.VulkContext">VulkContext</a></span>
         
           
@@ -1136,17 +1132,13 @@ swapchain's image.</p>
 <span class="kn">import</span> <span class="nn">sdl2.ext</span>
 <span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>  <span class="c1"># pylint: disable=import-error</span>
 
-<span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span>
+<span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span><span class="p">,</span> <span class="n">SDL2Error</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanconstant</span> <span class="k">as</span> <span class="n">vc</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanobject</span> <span class="k">as</span> <span class="n">vo</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 <span class="n">ENGINE_NAME</span> <span class="o">=</span> <span class="s2">&quot;Vulk 3D Engine&quot;</span>
-
-
-<span class="k">class</span> <span class="nc">SDL2Error</span><span class="p">(</span><span class="n">VulkError</span><span class="p">):</span>
-    <span class="k">pass</span>
 
 
 <span class="k">class</span> <span class="nc">VulkWindow</span><span class="p">():</span>
@@ -1161,7 +1153,7 @@ swapchain's image.</p>
 
 <span class="sd">        - `configuration`: Configurations parameters from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_Init</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_InitSubSystem</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t open window: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -1463,6 +1455,9 @@ swapchain's image.</p>
                                                           <span class="n">configuration</span><span class="p">)</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_layers</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">:</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">)</span>
+
         <span class="n">app_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkApplicationInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_APPLICATION_INFO</span><span class="p">,</span>
             <span class="n">pApplicationName</span><span class="o">=</span><span class="n">configuration</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -1653,6 +1648,9 @@ swapchain's image.</p>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_device_extensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_layers</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">:</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">)</span>
 
         <span class="n">graphic_index</span><span class="p">,</span> <span class="n">present_index</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_queue_families</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span>
@@ -2029,46 +2027,6 @@ swapchain's image.</p>
     <h2 class="section-title" id="header-classes">Classes</h2>
       
       <div class="item">
-      <p id="vulk.context.SDL2Error" class="name">class <span class="ident">SDL2Error</span></p>
-      
-  
-    <div class="desc"><p>Common base class for all non-exit exceptions.</p>
-</div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.SDL2Error', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.context.SDL2Error" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">SDL2Error</span><span class="p">(</span><span class="n">VulkError</span><span class="p">):</span>
-    <span class="k">pass</span>
-</pre></div>
-
-  </div>
-</div>
-
-
-      <div class="class">
-          <h3>Ancestors (in MRO)</h3>
-          <ul class="class_list">
-          <li><a href="#vulk.context.SDL2Error">SDL2Error</a></li>
-          <li>vulk.exception.VulkError</li>
-          <li>builtins.Exception</li>
-          <li>builtins.BaseException</li>
-          <li>builtins.object</li>
-          </ul>
-          <h3>Class variables</h3>
-            <div class="item">
-            <p id="vulk.context.SDL2Error.args" class="name">var <span class="ident">args</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-      </div>
-      </div>
-      
-      <div class="item">
       <p id="vulk.context.VulkContext" class="name">class <span class="ident">VulkContext</span></p>
       
   
@@ -2337,6 +2295,9 @@ swapchain's image.</p>
                                                           <span class="n">configuration</span><span class="p">)</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_layers</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">:</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">)</span>
+
         <span class="n">app_info</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkApplicationInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_APPLICATION_INFO</span><span class="p">,</span>
             <span class="n">pApplicationName</span><span class="o">=</span><span class="n">configuration</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -2527,6 +2488,9 @@ swapchain's image.</p>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">extensions</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_device_extensions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
         <span class="n">layers</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_layers</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">:</span>
+            <span class="n">layers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">extra_vulkan_layers</span><span class="p">)</span>
 
         <span class="n">graphic_index</span><span class="p">,</span> <span class="n">present_index</span> <span class="o">=</span> <span class="n">VulkContext</span><span class="o">.</span><span class="n">_get_queue_families</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">physical_device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="p">,</span>
@@ -3366,7 +3330,7 @@ command.</p>
 
 <span class="sd">        - `configuration`: Configurations parameters from Application</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_Init</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_InitSubSystem</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t open window: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -3489,7 +3453,7 @@ command.</p>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `configuration`: Configurations parameters from Application</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_Init</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_InitSubSystem</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_VIDEO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t open window: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>

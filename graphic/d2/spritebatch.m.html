@@ -1062,6 +1062,7 @@ table {
     <li class="mono"><a href="#vulk.graphic.d2.spritebatch.SpriteBatch.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.graphic.d2.spritebatch.SpriteBatch.begin">begin</a></li>
     <li class="mono"><a href="#vulk.graphic.d2.spritebatch.SpriteBatch.draw">draw</a></li>
+    <li class="mono"><a href="#vulk.graphic.d2.spritebatch.SpriteBatch.draw_region">draw_region</a></li>
     <li class="mono"><a href="#vulk.graphic.d2.spritebatch.SpriteBatch.end">end</a></li>
     <li class="mono"><a href="#vulk.graphic.d2.spritebatch.SpriteBatch.flush">flush</a></li>
     <li class="mono"><a href="#vulk.graphic.d2.spritebatch.SpriteBatch.get_default_shaderprogram">get_default_shaderprogram</a></li>
@@ -1607,7 +1608,7 @@ and reliable.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `texture` at position x, y of size `width`, `height`</span>
 
@@ -1629,10 +1630,6 @@ and reliable.</p>
 
         <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
         <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">u2</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">v2</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">g</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
@@ -1644,6 +1641,24 @@ and reliable.</p>
                     <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw `region` at position x, y of size `width`, `height`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `region`: `TextureRegion`</span>
+<span class="sd">        - `x`: X position</span>
+<span class="sd">        - `y`: Y position</span>
+<span class="sd">        - `width`: Width</span>
+<span class="sd">        - `heigth`: Height</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v</span>
+        <span class="n">u2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u2</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2079,7 +2094,7 @@ of draw calls.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `texture` at position x, y of size `width`, `height`</span>
 
@@ -2101,10 +2116,6 @@ of draw calls.</p>
 
         <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
         <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">u2</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">v2</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">g</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
@@ -2116,6 +2127,24 @@ of draw calls.</p>
                     <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw `region` at position x, y of size `width`, `height`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `region`: `TextureRegion`</span>
+<span class="sd">        - `x`: X position</span>
+<span class="sd">        - `y`: Y position</span>
+<span class="sd">        - `width`: Width</span>
+<span class="sd">        - `heigth`: Height</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v</span>
+        <span class="n">u2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u2</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2258,7 +2287,7 @@ of draw calls.</p>
             
   <div class="item">
     <div class="name def" id="vulk.graphic.d2.spritebatch.SpriteBatch.draw">
-    <p>def <span class="ident">draw</span>(</p><p>self, texture, x, y, width, height)</p>
+    <p>def <span class="ident">draw</span>(</p><p>self, texture, x, y, width, height, u=0, v=0, u2=1, v2=1)</p>
     </div>
     
 
@@ -2279,7 +2308,7 @@ of draw calls.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.d2.spritebatch.SpriteBatch.draw', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.d2.spritebatch.SpriteBatch.draw" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Draw `texture` at position x, y of size `width`, `height`</span>
 <span class="sd">    *Parameters:*</span>
@@ -2296,10 +2325,6 @@ of draw calls.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
     <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
     <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">u2</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">v2</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">g</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
@@ -2310,6 +2335,52 @@ of draw calls.</p>
                 <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.d2.spritebatch.SpriteBatch.draw_region">
+    <p>def <span class="ident">draw_region</span>(</p><p>self, region, x, y, width, height)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Draw <code>region</code> at position x, y of size <code>width</code>, <code>height</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>region</code>: <code>TextureRegion</code></li>
+<li><code>x</code>: X position</li>
+<li><code>y</code>: Y position</li>
+<li><code>width</code>: Width</li>
+<li><code>heigth</code>: Height</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.d2.spritebatch.SpriteBatch.draw_region', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.d2.spritebatch.SpriteBatch.draw_region" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Draw `region` at position x, y of size `width`, `height`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `region`: `TextureRegion`</span>
+<span class="sd">    - `x`: X position</span>
+<span class="sd">    - `y`: Y position</span>
+<span class="sd">    - `width`: Width</span>
+<span class="sd">    - `heigth`: Height</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v</span>
+    <span class="n">u2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u2</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v2</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
 </pre></div>
 
   </div>
