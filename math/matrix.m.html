@@ -1054,7 +1054,7 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.Matrix.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix.set">set</a></li>
-    <li class="mono"><a href="#vulk.math.matrix.Matrix.to_matrix">to_matrix</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix.set2">set2</a></li>
   </ul>
 
         </li>
@@ -1065,7 +1065,7 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.Matrix3.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix3.set">set</a></li>
-    <li class="mono"><a href="#vulk.math.matrix.Matrix3.to_matrix">to_matrix</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix3.set2">set2</a></li>
   </ul>
 
         </li>
@@ -1077,10 +1077,52 @@ table {
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.mul">mul</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.set">set</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix4.set2">set2</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.to_identity">to_identity</a></li>
-    <li class="mono"><a href="#vulk.math.matrix.Matrix4.to_matrix">to_matrix</a></li>
-    <li class="mono"><a href="#vulk.math.matrix.Matrix4.to_orthographic">to_orthographic</a></li>
-    <li class="mono"><a href="#vulk.math.matrix.Matrix4.to_orthographic_2d">to_orthographic_2d</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.math.matrix.ProjectionMatrix">ProjectionMatrix</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.mul">mul</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.set">set</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.set2">set2</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.to_identity">to_identity</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.to_orthographic">to_orthographic</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.to_orthographic_2d">to_orthographic_2d</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.math.matrix.TransformationMatrix">TransformationMatrix</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.mul">mul</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.set">set</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.set2">set2</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.to_identity">to_identity</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.to_translation">to_translation</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.math.matrix.ViewMatrix">ViewMatrix</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.mul">mul</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.set">set</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.set2">set2</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.to_identity">to_identity</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.to_look_at">to_look_at</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.to_look_at_direction">to_look_at_direction</a></li>
   </ul>
 
         </li>
@@ -1128,6 +1170,8 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">vulk.math.vector</span> <span class="kn">import</span> <span class="n">Vector3</span>
+
 
 <span class="k">class</span> <span class="nc">Matrix</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;Base class for Matrix&#39;&#39;&#39;</span>
@@ -1141,11 +1185,24 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the matrix size&#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
 
-    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix` to set</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -1154,15 +1211,7 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        - `offset`: Start of the update</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
-
-    <span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Set this matrix&#39;s values to the `matrix` values.</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `matrix`: Other matrix of the same size</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
 
 <span class="k">class</span> <span class="nc">Matrix3</span><span class="p">(</span><span class="n">Matrix</span><span class="p">):</span>
@@ -1206,6 +1255,18 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
         <span class="c1"># Tmp property used during computation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return a beautiful readable matrix&#39;&#39;&#39;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">15</span><span class="p">]))</span>
+
     <span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Multiply this matrix by `matrix`</span>
 <span class="sd">        The order of operation is: `this @ matrix`.</span>
@@ -1221,16 +1282,84 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
         <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
-        <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view1</span><span class="p">,</span> <span class="n">view2</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
 
+        <span class="k">return</span> <span class="bp">self</span>
+
     <span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
 
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+<span class="k">class</span> <span class="nc">ViewMatrix</span><span class="p">(</span><span class="n">Matrix4</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This class represents a view Matrix.</span>
+
+<span class="sd">    View Matrix convert vertex from World space to View space.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">to_look_at_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">up</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Set this matrix to a *look at* matrix with a `direction` and a `up`</span>
+<span class="sd">        vector.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `direction`: Direction `Vector3`</span>
+<span class="sd">        - `up`: Up `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vec_z</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+        <span class="n">vec_x</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+        <span class="n">vec_x</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">up</span><span class="o">.</span><span class="n">nor</span><span class="p">())</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+        <span class="n">vec_y</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">vec_x</span><span class="p">)</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">vec_z</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">z</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">up</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Set this matrix to a *look at* matrix with a `position`, `target` and</span>
+<span class="sd">        `up` vector.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `position`: Position `Vector3`</span>
+<span class="sd">        - `direction`: Direction `Vector3`</span>
+<span class="sd">        - `up`: Up `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># http://www.cs.virginia.edu/~gfx/Courses/1999/intro.fall99.html/lookat.html</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_look_at_direction</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">up</span><span class="p">)</span>
+        <span class="n">translation</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">()</span><span class="o">.</span><span class="n">to_translation</span><span class="p">(</span>
+            <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">translation</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+<span class="k">class</span> <span class="nc">ProjectionMatrix</span><span class="p">(</span><span class="n">Matrix4</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This class represents a projection Matrix.</span>
+
+<span class="sd">    Projection is the last step to compute Vertex position.</span>
+<span class="sd">    It must be applied after the view matrix.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">def</span> <span class="nf">to_orthographic_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">far</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set this matrix to an orthographic matrix used in 2D rendering</span>
 
@@ -1243,7 +1372,7 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        - `near`: Near plane</span>
 <span class="sd">        - `Far`: Far plane</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -1261,22 +1390,61 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        **Note: Vulkan coordinate system is not the same as OpenGL,</span>
 <span class="sd">                thus the matrix is adapted to Vulkan**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># https://matthewwellings.com/blog/the-new-vulkan-coordinate-system/</span>
+
+        <span class="c1"># OpenGL Orthographic matrix</span>
+        <span class="c1"># x_orth = 2 / (right - left)</span>
+        <span class="c1"># y_orth = 2 / (top - bottom)</span>
+        <span class="c1"># z_orth = -2 / (far - near)</span>
+
+        <span class="c1"># tx = -(right + left) / (right - left)</span>
+        <span class="c1"># ty = -(top + bottom) / (top - bottom)</span>
+        <span class="c1"># tz = -(far + near) / (far - near)</span>
+
+        <span class="c1"># Vulkan Orthographic matrix</span>
         <span class="n">x_orth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-        <span class="n">y_orth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
-        <span class="n">z_orth</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span>
+        <span class="n">y_orth</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
+        <span class="n">z_orth</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span>
 
         <span class="n">tx</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">right</span> <span class="o">+</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-        <span class="n">ty</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">top</span> <span class="o">+</span> <span class="n">bottom</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
-        <span class="n">tz</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ty</span> <span class="o">=</span> <span class="p">(</span><span class="n">top</span> <span class="o">+</span> <span class="n">bottom</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
+        <span class="n">tz</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">far</span> <span class="o">+</span> <span class="n">near</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_orth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_orth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">z_orth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">tx</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">ty</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">tz</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+<span class="k">class</span> <span class="nc">TransformationMatrix</span><span class="p">(</span><span class="n">Matrix4</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This class represents a transformation Matrix.</span>
+
+<span class="sd">    It&#39;s a Matrix4 with added capabilities used to transform model space</span>
+<span class="sd">    to world space.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">to_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Set this matrix to a translation matrix.</span>
+<span class="sd">        First set it to identity and then set the 4th column to the</span>
+<span class="sd">        translation vector.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`: x-component of translation vector</span>
+<span class="sd">        - `y`: y-component of translation vector</span>
+<span class="sd">        - `z`: z-component of translation vector</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1309,11 +1477,24 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the matrix size&#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
 
-    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix` to set</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -1322,15 +1503,7 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        - `offset`: Start of the update</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
-
-    <span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Set this matrix&#39;s values to the `matrix` values.</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `matrix`: Other matrix of the same size</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1381,7 +1554,40 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
             
   <div class="item">
     <div class="name def" id="vulk.math.matrix.Matrix.set">
-    <p>def <span class="ident">set</span>(</p><p>self, values, offset=0)</p>
+    <p>def <span class="ident">set</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>matrix</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix</code> to set</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix` to set</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix.set2">
+    <p>def <span class="ident">set2</span>(</p><p>self, values, offset=0)</p>
     </div>
     
 
@@ -1397,48 +1603,16 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 </ul>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix.set', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix.set" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix.set2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix.set2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `values`: `list` of `float`</span>
 <span class="sd">    - `offset`: Start of the update</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="vulk.math.matrix.Matrix.to_matrix">
-    <p>def <span class="ident">to_matrix</span>(</p><p>self, matrix)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Set this matrix's values to the <code>matrix</code> values.</p>
-
-<p><em>Parameters:</em></p>
-
-<ul>
-<li><code>matrix</code>: Other matrix of the same size</li>
-</ul>
-</div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix.to_matrix', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix.to_matrix" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Set this matrix&#39;s values to the `matrix` values.</span>
-<span class="sd">    *Parameters:*</span>
-<span class="sd">    - `matrix`: Other matrix of the same size</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1541,7 +1715,40 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
             
   <div class="item">
     <div class="name def" id="vulk.math.matrix.Matrix3.set">
-    <p>def <span class="ident">set</span>(</p><p>self, values, offset=0)</p>
+    <p>def <span class="ident">set</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>matrix</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix</code> to set</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix3.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix3.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix` to set</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix3.set2">
+    <p>def <span class="ident">set2</span>(</p><p>self, values, offset=0)</p>
     </div>
     
 
@@ -1557,48 +1764,16 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 </ul>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix3.set', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix3.set" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix3.set2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix3.set2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `values`: `list` of `float`</span>
 <span class="sd">    - `offset`: Start of the update</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
-</pre></div>
-
-  </div>
-</div>
-
-  </div>
-  
-            
-  <div class="item">
-    <div class="name def" id="vulk.math.matrix.Matrix3.to_matrix">
-    <p>def <span class="ident">to_matrix</span>(</p><p>self, matrix)</p>
-    </div>
-    
-
-    
-  
-    <div class="desc"><p>Set this matrix's values to the <code>matrix</code> values.</p>
-
-<p><em>Parameters:</em></p>
-
-<ul>
-<li><code>matrix</code>: Other matrix of the same size</li>
-</ul>
-</div>
-  <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix3.to_matrix', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix3.to_matrix" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Set this matrix&#39;s values to the `matrix` values.</span>
-<span class="sd">    *Parameters:*</span>
-<span class="sd">    - `matrix`: Other matrix of the same size</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1655,6 +1830,18 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
         <span class="c1"># Tmp property used during computation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return a beautiful readable matrix&#39;&#39;&#39;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="s1">&#39;{} {} {} {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span>
+                   <span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">15</span><span class="p">]))</span>
+
     <span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Multiply this matrix by `matrix`</span>
 <span class="sd">        The order of operation is: `this @ matrix`.</span>
@@ -1670,62 +1857,22 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
         <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
-        <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view1</span><span class="p">,</span> <span class="n">view2</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
 
+        <span class="k">return</span> <span class="bp">self</span>
+
     <span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
 
-    <span class="k">def</span> <span class="nf">to_orthographic_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">far</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Set this matrix to an orthographic matrix used in 2D rendering</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `x`: X coordinate of the origin</span>
-<span class="sd">        - `y`: Y coordinate of the origin</span>
-<span class="sd">        - `width`: Width</span>
-<span class="sd">        - `hight`: Height</span>
-<span class="sd">        - `near`: Near plane</span>
-<span class="sd">        - `Far`: Far plane</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Set this matrix to an orthographic projection matrix</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `left`: Left clipping plane</span>
-<span class="sd">        - `right`: Right clipping plane</span>
-<span class="sd">        - `bottom`: Bottom clipping plane</span>
-<span class="sd">        - `top`: Top clipping plane</span>
-<span class="sd">        - `near`: Near clipping plane</span>
-<span class="sd">        - `far`: Far clipping plane</span>
-
-<span class="sd">        **Note: Vulkan coordinate system is not the same as OpenGL,</span>
-<span class="sd">                thus the matrix is adapted to Vulkan**</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">x_orth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-        <span class="n">y_orth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
-        <span class="n">z_orth</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span>
-
-        <span class="n">tx</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">right</span> <span class="o">+</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-        <span class="n">ty</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">top</span> <span class="o">+</span> <span class="n">bottom</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
-        <span class="n">tz</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_orth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_orth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">z_orth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">tx</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">ty</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">tz</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1814,9 +1961,10 @@ The order of operation is: <code>this @ matrix</code>.</p>
     <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
     <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view1</span><span class="p">,</span> <span class="n">view2</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1827,7 +1975,40 @@ The order of operation is: <code>this @ matrix</code>.</p>
             
   <div class="item">
     <div class="name def" id="vulk.math.matrix.Matrix4.set">
-    <p>def <span class="ident">set</span>(</p><p>self, values, offset=0)</p>
+    <p>def <span class="ident">set</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>matrix</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix</code> to set</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix4.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix` to set</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix4.set2">
+    <p>def <span class="ident">set2</span>(</p><p>self, values, offset=0)</p>
     </div>
     
 
@@ -1843,15 +2024,16 @@ The order of operation is: <code>this @ matrix</code>.</p>
 </ul>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.set', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix4.set" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.set2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix4.set2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `values`: `list` of `float`</span>
 <span class="sd">    - `offset`: Start of the update</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1875,8 +2057,173 @@ The order of operation is: <code>this @ matrix</code>.</p>
   <div id="source-vulk.math.matrix.Matrix4.to_identity" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[::</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.math.matrix.Matrix4.tmp" class="name">var <span class="ident">tmp</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.math.matrix.Matrix4.values" class="name">var <span class="ident">values</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.math.matrix.ProjectionMatrix" class="name">class <span class="ident">ProjectionMatrix</span></p>
+      
+  
+    <div class="desc"><p>This class represents a projection Matrix.</p>
+
+<p>Projection is the last step to compute Vertex position.
+It must be applied after the view matrix.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ProjectionMatrix</span><span class="p">(</span><span class="n">Matrix4</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This class represents a projection Matrix.</span>
+
+<span class="sd">    Projection is the last step to compute Vertex position.</span>
+<span class="sd">    It must be applied after the view matrix.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">to_orthographic_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">far</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this matrix to an orthographic matrix used in 2D rendering</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`: X coordinate of the origin</span>
+<span class="sd">        - `y`: Y coordinate of the origin</span>
+<span class="sd">        - `width`: Width</span>
+<span class="sd">        - `hight`: Height</span>
+<span class="sd">        - `near`: Near plane</span>
+<span class="sd">        - `Far`: Far plane</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Set this matrix to an orthographic projection matrix</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `left`: Left clipping plane</span>
+<span class="sd">        - `right`: Right clipping plane</span>
+<span class="sd">        - `bottom`: Bottom clipping plane</span>
+<span class="sd">        - `top`: Top clipping plane</span>
+<span class="sd">        - `near`: Near clipping plane</span>
+<span class="sd">        - `far`: Far clipping plane</span>
+
+<span class="sd">        **Note: Vulkan coordinate system is not the same as OpenGL,</span>
+<span class="sd">                thus the matrix is adapted to Vulkan**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># https://matthewwellings.com/blog/the-new-vulkan-coordinate-system/</span>
+
+        <span class="c1"># OpenGL Orthographic matrix</span>
+        <span class="c1"># x_orth = 2 / (right - left)</span>
+        <span class="c1"># y_orth = 2 / (top - bottom)</span>
+        <span class="c1"># z_orth = -2 / (far - near)</span>
+
+        <span class="c1"># tx = -(right + left) / (right - left)</span>
+        <span class="c1"># ty = -(top + bottom) / (top - bottom)</span>
+        <span class="c1"># tz = -(far + near) / (far - near)</span>
+
+        <span class="c1"># Vulkan Orthographic matrix</span>
+        <span class="n">x_orth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
+        <span class="n">y_orth</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
+        <span class="n">z_orth</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span>
+
+        <span class="n">tx</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">right</span> <span class="o">+</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
+        <span class="n">ty</span> <span class="o">=</span> <span class="p">(</span><span class="n">top</span> <span class="o">+</span> <span class="n">bottom</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
+        <span class="n">tz</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">far</span> <span class="o">+</span> <span class="n">near</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_orth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_orth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">z_orth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">tx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">ty</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">tz</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.math.matrix.ProjectionMatrix">ProjectionMatrix</a></li>
+          <li><a href="#vulk.math.matrix.Matrix4">Matrix4</a></li>
+          <li><a href="#vulk.math.matrix.Matrix">Matrix</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, values=None)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.math.matrix.Matrix">Matrix</a></code>.<code><a href="#vulk.math.matrix.Matrix.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 16 <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 16 `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">16</span><span class="p">,):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Matrix4 needs 16 components&quot;</span><span class="p">)</span>
+    <span class="c1"># Tmp property used during computation</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1886,30 +2233,41 @@ The order of operation is: <code>this @ matrix</code>.</p>
   
             
   <div class="item">
-    <div class="name def" id="vulk.math.matrix.Matrix4.to_matrix">
-    <p>def <span class="ident">to_matrix</span>(</p><p>self, matrix)</p>
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.mul">
+    <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Set this matrix's values to the <code>matrix</code> values.</p>
+    <div class="desc"><p>Multiply this matrix by <code>matrix</code>
+The order of operation is: <code>this @ matrix</code>.</p>
 
 <p><em>Parameters:</em></p>
 
 <ul>
-<li><code>matrix</code>: Other matrix of the same size</li>
+<li><code>matrix</code>: <code>Matrix4</code></li>
 </ul>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.to_matrix', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix4.to_matrix" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Set this matrix&#39;s values to the `matrix` values.</span>
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.mul', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.mul" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Multiply this matrix by `matrix`</span>
+<span class="sd">    The order of operation is: `this @ matrix`.</span>
 <span class="sd">    *Parameters:*</span>
-<span class="sd">    - `matrix`: Other matrix of the same size</span>
+<span class="sd">    - `matrix`: `Matrix4`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="c1"># Make a matrix4 shape to matmul function</span>
+    <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1919,7 +2277,105 @@ The order of operation is: <code>this @ matrix</code>.</p>
   
             
   <div class="item">
-    <div class="name def" id="vulk.math.matrix.Matrix4.to_orthographic">
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.set">
+    <p>def <span class="ident">set</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>matrix</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix</code> to set</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix` to set</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.set2">
+    <p>def <span class="ident">set2</span>(</p><p>self, values, offset=0)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>values</code> from <code>offset</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+<li><code>offset</code>: Start of the update</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.set2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.set2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    - `offset`: Start of the update</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.to_identity">
+    <p>def <span class="ident">to_identity</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to identity matrix</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.to_identity', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.to_identity" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.to_orthographic">
     <p>def <span class="ident">to_orthographic</span>(</p><p>self, left, right, bottom, top, near, far)</p>
     </div>
     
@@ -1943,8 +2399,8 @@ The order of operation is: <code>this @ matrix</code>.</p>
         thus the matrix is adapted to Vulkan</strong></p>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.to_orthographic', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix4.to_orthographic" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.to_orthographic', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.to_orthographic" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Set this matrix to an orthographic projection matrix</span>
@@ -1958,20 +2414,29 @@ The order of operation is: <code>this @ matrix</code>.</p>
 <span class="sd">    **Note: Vulkan coordinate system is not the same as OpenGL,</span>
 <span class="sd">            thus the matrix is adapted to Vulkan**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># https://matthewwellings.com/blog/the-new-vulkan-coordinate-system/</span>
+    <span class="c1"># OpenGL Orthographic matrix</span>
+    <span class="c1"># x_orth = 2 / (right - left)</span>
+    <span class="c1"># y_orth = 2 / (top - bottom)</span>
+    <span class="c1"># z_orth = -2 / (far - near)</span>
+    <span class="c1"># tx = -(right + left) / (right - left)</span>
+    <span class="c1"># ty = -(top + bottom) / (top - bottom)</span>
+    <span class="c1"># tz = -(far + near) / (far - near)</span>
+    <span class="c1"># Vulkan Orthographic matrix</span>
     <span class="n">x_orth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-    <span class="n">y_orth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
-    <span class="n">z_orth</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span>
+    <span class="n">y_orth</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
+    <span class="n">z_orth</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span>
     <span class="n">tx</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">right</span> <span class="o">+</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
-    <span class="n">ty</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">top</span> <span class="o">+</span> <span class="n">bottom</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
-    <span class="n">tz</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ty</span> <span class="o">=</span> <span class="p">(</span><span class="n">top</span> <span class="o">+</span> <span class="n">bottom</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">top</span> <span class="o">-</span> <span class="n">bottom</span><span class="p">)</span>
+    <span class="n">tz</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">far</span> <span class="o">+</span> <span class="n">near</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">far</span> <span class="o">-</span> <span class="n">near</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_orth</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_orth</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">z_orth</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">tx</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">ty</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">tz</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1981,7 +2446,7 @@ The order of operation is: <code>this @ matrix</code>.</p>
   
             
   <div class="item">
-    <div class="name def" id="vulk.math.matrix.Matrix4.to_orthographic_2d">
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.to_orthographic_2d">
     <p>def <span class="ident">to_orthographic_2d</span>(</p><p>self, x, y, width, height, near=0, far=1)</p>
     </div>
     
@@ -2002,8 +2467,8 @@ The order of operation is: <code>this @ matrix</code>.</p>
 </ul>
 </div>
   <div class="source_cont">
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.to_orthographic_2d', this);">Show source &equiv;</a></p>
-  <div id="source-vulk.math.matrix.Matrix4.to_orthographic_2d" class="source">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.to_orthographic_2d', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.to_orthographic_2d" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_orthographic_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">far</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set this matrix to an orthographic matrix used in 2D rendering</span>
 <span class="sd">    *Parameters:*</span>
@@ -2014,7 +2479,7 @@ The order of operation is: <code>this @ matrix</code>.</p>
 <span class="sd">    - `near`: Near plane</span>
 <span class="sd">    - `Far`: Far plane</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2024,8 +2489,12 @@ The order of operation is: <code>this @ matrix</code>.</p>
   
           <h3>Instance variables</h3>
             <div class="item">
-            <p id="vulk.math.matrix.Matrix4.tmp" class="name">var <span class="ident">tmp</span></p>
+            <p id="vulk.math.matrix.ProjectionMatrix.values" class="name">var <span class="ident">values</span></p>
             
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.math.matrix.Matrix4">Matrix4</a></code>.<code><a href="#vulk.math.matrix.Matrix4.values">values</a></code>
+    </p>
 
             
   
@@ -2033,9 +2502,682 @@ The order of operation is: <code>this @ matrix</code>.</p>
 </div>
 
             </div>
-            <div class="item">
-            <p id="vulk.math.matrix.Matrix4.values" class="name">var <span class="ident">values</span></p>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.math.matrix.TransformationMatrix" class="name">class <span class="ident">TransformationMatrix</span></p>
+      
+  
+    <div class="desc"><p>This class represents a transformation Matrix.</p>
+
+<p>It's a Matrix4 with added capabilities used to transform model space
+to world space.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">TransformationMatrix</span><span class="p">(</span><span class="n">Matrix4</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This class represents a transformation Matrix.</span>
+
+<span class="sd">    It&#39;s a Matrix4 with added capabilities used to transform model space</span>
+<span class="sd">    to world space.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">to_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Set this matrix to a translation matrix.</span>
+<span class="sd">        First set it to identity and then set the 4th column to the</span>
+<span class="sd">        translation vector.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`: x-component of translation vector</span>
+<span class="sd">        - `y`: y-component of translation vector</span>
+<span class="sd">        - `z`: z-component of translation vector</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.math.matrix.TransformationMatrix">TransformationMatrix</a></li>
+          <li><a href="#vulk.math.matrix.Matrix4">Matrix4</a></li>
+          <li><a href="#vulk.math.matrix.Matrix">Matrix</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
             
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.TransformationMatrix.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, values=None)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.math.matrix.Matrix">Matrix</a></code>.<code><a href="#vulk.math.matrix.Matrix.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 16 <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 16 `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">16</span><span class="p">,):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Matrix4 needs 16 components&quot;</span><span class="p">)</span>
+    <span class="c1"># Tmp property used during computation</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.TransformationMatrix.mul">
+    <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Multiply this matrix by <code>matrix</code>
+The order of operation is: <code>this @ matrix</code>.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix4</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix.mul', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix.mul" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Multiply this matrix by `matrix`</span>
+<span class="sd">    The order of operation is: `this @ matrix`.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix4`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Make a matrix4 shape to matmul function</span>
+    <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.TransformationMatrix.set">
+    <p>def <span class="ident">set</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>matrix</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix</code> to set</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix` to set</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.TransformationMatrix.set2">
+    <p>def <span class="ident">set2</span>(</p><p>self, values, offset=0)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>values</code> from <code>offset</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+<li><code>offset</code>: Start of the update</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix.set2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix.set2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    - `offset`: Start of the update</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.TransformationMatrix.to_identity">
+    <p>def <span class="ident">to_identity</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to identity matrix</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix.to_identity', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix.to_identity" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.TransformationMatrix.to_translation">
+    <p>def <span class="ident">to_translation</span>(</p><p>self, x, y, z)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to a translation matrix.
+First set it to identity and then set the 4th column to the
+translation vector.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>x</code>: x-component of translation vector</li>
+<li><code>y</code>: y-component of translation vector</li>
+<li><code>z</code>: z-component of translation vector</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix.to_translation', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix.to_translation" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Set this matrix to a translation matrix.</span>
+<span class="sd">    First set it to identity and then set the 4th column to the</span>
+<span class="sd">    translation vector.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `x`: x-component of translation vector</span>
+<span class="sd">    - `y`: y-component of translation vector</span>
+<span class="sd">    - `z`: z-component of translation vector</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.math.matrix.TransformationMatrix.values" class="name">var <span class="ident">values</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.math.matrix.Matrix4">Matrix4</a></code>.<code><a href="#vulk.math.matrix.Matrix4.values">values</a></code>
+    </p>
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.math.matrix.ViewMatrix" class="name">class <span class="ident">ViewMatrix</span></p>
+      
+  
+    <div class="desc"><p>This class represents a view Matrix.</p>
+
+<p>View Matrix convert vertex from World space to View space.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ViewMatrix</span><span class="p">(</span><span class="n">Matrix4</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This class represents a view Matrix.</span>
+
+<span class="sd">    View Matrix convert vertex from World space to View space.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">to_look_at_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">up</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Set this matrix to a *look at* matrix with a `direction` and a `up`</span>
+<span class="sd">        vector.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `direction`: Direction `Vector3`</span>
+<span class="sd">        - `up`: Up `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vec_z</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+        <span class="n">vec_x</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+        <span class="n">vec_x</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">up</span><span class="o">.</span><span class="n">nor</span><span class="p">())</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+        <span class="n">vec_y</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">vec_x</span><span class="p">)</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">vec_z</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">z</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">z</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">up</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Set this matrix to a *look at* matrix with a `position`, `target` and</span>
+<span class="sd">        `up` vector.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `position`: Position `Vector3`</span>
+<span class="sd">        - `direction`: Direction `Vector3`</span>
+<span class="sd">        - `up`: Up `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># http://www.cs.virginia.edu/~gfx/Courses/1999/intro.fall99.html/lookat.html</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_look_at_direction</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">up</span><span class="p">)</span>
+        <span class="n">translation</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">()</span><span class="o">.</span><span class="n">to_translation</span><span class="p">(</span>
+            <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">translation</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.math.matrix.ViewMatrix">ViewMatrix</a></li>
+          <li><a href="#vulk.math.matrix.Matrix4">Matrix4</a></li>
+          <li><a href="#vulk.math.matrix.Matrix">Matrix</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, values=None)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.math.matrix.Matrix">Matrix</a></code>.<code><a href="#vulk.math.matrix.Matrix.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 16 <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 16 `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">16</span><span class="p">,):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Matrix4 needs 16 components&quot;</span><span class="p">)</span>
+    <span class="c1"># Tmp property used during computation</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.mul">
+    <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Multiply this matrix by <code>matrix</code>
+The order of operation is: <code>this @ matrix</code>.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix4</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.mul', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.mul" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Multiply this matrix by `matrix`</span>
+<span class="sd">    The order of operation is: `this @ matrix`.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix4`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Make a matrix4 shape to matmul function</span>
+    <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.set">
+    <p>def <span class="ident">set</span>(</p><p>self, matrix)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>matrix</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>matrix</code>: <code>Matrix</code> to set</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `matrix`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `matrix`: `Matrix` to set</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.set2">
+    <p>def <span class="ident">set2</span>(</p><p>self, values, offset=0)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to <code>values</code> from <code>offset</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+<li><code>offset</code>: Start of the update</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.set2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.set2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to `values` from `offset`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    - `offset`: Start of the update</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span> <span class="o">=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.to_identity">
+    <p>def <span class="ident">to_identity</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to identity matrix</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.to_identity', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.to_identity" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.to_look_at">
+    <p>def <span class="ident">to_look_at</span>(</p><p>self, position, target, up)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to a <em>look at</em> matrix with a <code>position</code>, <code>target</code> and
+<code>up</code> vector.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>position</code>: Position <code>Vector3</code></li>
+<li><code>direction</code>: Direction <code>Vector3</code></li>
+<li><code>up</code>: Up <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.to_look_at', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.to_look_at" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">up</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Set this matrix to a *look at* matrix with a `position`, `target` and</span>
+<span class="sd">    `up` vector.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `position`: Position `Vector3`</span>
+<span class="sd">    - `direction`: Direction `Vector3`</span>
+<span class="sd">    - `up`: Up `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># http://www.cs.virginia.edu/~gfx/Courses/1999/intro.fall99.html/lookat.html</span>
+    <span class="n">vec</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_look_at_direction</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">up</span><span class="p">)</span>
+    <span class="n">translation</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">()</span><span class="o">.</span><span class="n">to_translation</span><span class="p">(</span>
+        <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">translation</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.to_look_at_direction">
+    <p>def <span class="ident">to_look_at_direction</span>(</p><p>self, direction, up)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this matrix to a <em>look at</em> matrix with a <code>direction</code> and a <code>up</code>
+vector.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>direction</code>: Direction <code>Vector3</code></li>
+<li><code>up</code>: Up <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.to_look_at_direction', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.to_look_at_direction" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_look_at_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">up</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Set this matrix to a *look at* matrix with a `direction` and a `up`</span>
+<span class="sd">    vector.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `direction`: Direction `Vector3`</span>
+<span class="sd">    - `up`: Up `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vec_z</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+    <span class="n">vec_x</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+    <span class="n">vec_x</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">up</span><span class="o">.</span><span class="n">nor</span><span class="p">())</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+    <span class="n">vec_y</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="n">vec_x</span><span class="p">)</span><span class="o">.</span><span class="n">crs</span><span class="p">(</span><span class="n">vec_z</span><span class="p">)</span><span class="o">.</span><span class="n">nor</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_identity</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_x</span><span class="o">.</span><span class="n">z</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">vec_y</span><span class="o">.</span><span class="n">z</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">vec_z</span><span class="o">.</span><span class="n">z</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.math.matrix.ViewMatrix.values" class="name">var <span class="ident">values</span></p>
+            
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.math.matrix.Matrix4">Matrix4</a></code>.<code><a href="#vulk.math.matrix.Matrix4.values">values</a></code>
+    </p>
 
             
   

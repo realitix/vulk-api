@@ -1053,8 +1053,13 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.vector.Vector.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector.add">add</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector.add2">add2</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector.crs">crs</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector.crs2">crs2</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector.nor">nor</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector.sub">sub</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector.sub2">sub2</a></li>
   </ul>
 
         </li>
@@ -1064,8 +1069,13 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.vector.Vector2.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector2.add">add</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector2.add2">add2</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector2.crs">crs</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector2.crs2">crs2</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector2.nor">nor</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector2.sub">sub</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector2.sub2">sub2</a></li>
   </ul>
 
         </li>
@@ -1075,9 +1085,15 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.vector.Vector3.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector3.add">add</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector3.add2">add2</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector3.crs">crs</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector3.crs2">crs2</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector3.mul_matrix4">mul_matrix4</a></li>
     <li class="mono"><a href="#vulk.math.vector.Vector3.nor">nor</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector3.set">set</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector3.sub">sub</a></li>
+    <li class="mono"><a href="#vulk.math.vector.Vector3.sub2">sub2</a></li>
   </ul>
 
         </li>
@@ -1153,7 +1169,7 @@ Vector are a key of graphic computing.</p>
 
 <span class="sd">        - `values`: `list` of `float`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
@@ -1209,8 +1225,8 @@ Vector are a key of graphic computing.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
 
     <span class="nd">@values.setter</span>
-    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">values</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1223,14 +1239,66 @@ Vector are a key of graphic computing.</p>
         <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+    <span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the cross product between the two vectors</span>
 
 <span class="sd">        *Parameters:*</span>
 
-<span class="sd">        - `value`: `Vector` of the same size</span>
+<span class="sd">        - `vector`: `Vector` of the same size</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crs2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">crs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this vector to the cross product with `values`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 3 float</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Substract vector from this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">sub2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Substract values from this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">-=</span> <span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add vector to this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add values to this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">+=</span> <span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
 
 <span class="k">class</span> <span class="nc">XMixin</span><span class="p">():</span>
@@ -1321,6 +1389,18 @@ Vector are a key of graphic computing.</p>
         <span class="n">mv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set values of this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`, `y`, `z`: `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
 
 
 <span class="c1"># Vector2 constants</span>
@@ -1383,7 +1463,7 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 
 <span class="sd">        - `values`: `list` of `float`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
@@ -1439,8 +1519,8 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
 
     <span class="nd">@values.setter</span>
-    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">values</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1453,14 +1533,66 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
         <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+    <span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the cross product between the two vectors</span>
 
 <span class="sd">        *Parameters:*</span>
 
-<span class="sd">        - `value`: `Vector` of the same size</span>
+<span class="sd">        - `vector`: `Vector` of the same size</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crs2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">crs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this vector to the cross product with `values`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 3 float</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Substract vector from this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">sub2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Substract values from this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">-=</span> <span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add vector to this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add values to this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">+=</span> <span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1497,7 +1629,76 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `values`: `list` of `float`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector.add">
+    <p>def <span class="ident">add</span>(</p><p>self, vector)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add vector to this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vector</code>: <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.add', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector.add" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add vector to this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vector`: `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector.add2">
+    <p>def <span class="ident">add2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add values to this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.add2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector.add2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add values to this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">+=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1508,29 +1709,63 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
             
   <div class="item">
     <div class="name def" id="vulk.math.vector.Vector.crs">
-    <p>def <span class="ident">crs</span>(</p><p>self, value)</p>
+    <p>def <span class="ident">crs</span>(</p><p>self, vector)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Return the croos product between the two vectors</p>
+    <div class="desc"><p>Return the cross product between the two vectors</p>
 
 <p><em>Parameters:</em></p>
 
 <ul>
-<li><code>value</code>: <code>Vector</code> of the same size</li>
+<li><code>vector</code>: <code>Vector</code> of the same size</li>
 </ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.crs', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector.crs" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the cross product between the two vectors</span>
 <span class="sd">    *Parameters:*</span>
-<span class="sd">    - `value`: `Vector` of the same size</span>
+<span class="sd">    - `vector`: `Vector` of the same size</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crs2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector.crs2">
+    <p>def <span class="ident">crs2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this vector to the cross product with <code>values</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 3 float</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.crs2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector.crs2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this vector to the cross product with `values`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 3 float</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1555,6 +1790,75 @@ dot_product = v1 @ v2 # Dot product use the matmul operator
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector.sub">
+    <p>def <span class="ident">sub</span>(</p><p>self, vector)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Substract vector from this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vector</code>: <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.sub', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector.sub" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Substract vector from this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vector`: `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector.sub2">
+    <p>def <span class="ident">sub2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Substract values from this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector.sub2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector.sub2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sub2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Substract values from this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">-=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1699,30 +2003,133 @@ It has two components <code>x</code> and <code>y</code>.</p>
   
             
   <div class="item">
-    <div class="name def" id="vulk.math.vector.Vector2.crs">
-    <p>def <span class="ident">crs</span>(</p><p>self, value)</p>
+    <div class="name def" id="vulk.math.vector.Vector2.add">
+    <p>def <span class="ident">add</span>(</p><p>self, vector)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Return the croos product between the two vectors</p>
+    <div class="desc"><p>Add vector to this vector</p>
 
 <p><em>Parameters:</em></p>
 
 <ul>
-<li><code>value</code>: <code>Vector</code> of the same size</li>
+<li><code>vector</code>: <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.add', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector2.add" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add vector to this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vector`: `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector2.add2">
+    <p>def <span class="ident">add2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add values to this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.add2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector2.add2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add values to this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">+=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector2.crs">
+    <p>def <span class="ident">crs</span>(</p><p>self, vector)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return the cross product between the two vectors</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vector</code>: <code>Vector</code> of the same size</li>
 </ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.crs', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector2.crs" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the cross product between the two vectors</span>
 <span class="sd">    *Parameters:*</span>
-<span class="sd">    - `value`: `Vector` of the same size</span>
+<span class="sd">    - `vector`: `Vector` of the same size</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crs2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector2.crs2">
+    <p>def <span class="ident">crs2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this vector to the cross product with <code>values</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 3 float</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.crs2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector2.crs2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this vector to the cross product with `values`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 3 float</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1747,6 +2154,75 @@ It has two components <code>x</code> and <code>y</code>.</p>
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector2.sub">
+    <p>def <span class="ident">sub</span>(</p><p>self, vector)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Substract vector from this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vector</code>: <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.sub', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector2.sub" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Substract vector from this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vector`: `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector2.sub2">
+    <p>def <span class="ident">sub2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Substract values from this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector2.sub2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector2.sub2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sub2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Substract values from this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">-=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -1851,6 +2327,18 @@ It has two components <code>x</code>, <code>y</code> and <code>z</code>.</p>
         <span class="n">mv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set values of this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`, `y`, `z`: `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
 </pre></div>
 
   </div>
@@ -1950,30 +2438,133 @@ It has two components <code>x</code>, <code>y</code> and <code>z</code>.</p>
   
             
   <div class="item">
-    <div class="name def" id="vulk.math.vector.Vector3.crs">
-    <p>def <span class="ident">crs</span>(</p><p>self, value)</p>
+    <div class="name def" id="vulk.math.vector.Vector3.add">
+    <p>def <span class="ident">add</span>(</p><p>self, vector)</p>
     </div>
     
 
     
   
-    <div class="desc"><p>Return the croos product between the two vectors</p>
+    <div class="desc"><p>Add vector to this vector</p>
 
 <p><em>Parameters:</em></p>
 
 <ul>
-<li><code>value</code>: <code>Vector</code> of the same size</li>
+<li><code>vector</code>: <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.add', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector3.add" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add vector to this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vector`: `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector3.add2">
+    <p>def <span class="ident">add2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Add values to this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.add2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector3.add2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">add2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add values to this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">+=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector3.crs">
+    <p>def <span class="ident">crs</span>(</p><p>self, vector)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return the cross product between the two vectors</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vector</code>: <code>Vector</code> of the same size</li>
 </ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.crs', this);">Show source &equiv;</a></p>
   <div id="source-vulk.math.vector.Vector3.crs" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Return the croos product between the two vectors</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Return the cross product between the two vectors</span>
 <span class="sd">    *Parameters:*</span>
-<span class="sd">    - `value`: `Vector` of the same size</span>
+<span class="sd">    - `vector`: `Vector` of the same size</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crs2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector3.crs2">
+    <p>def <span class="ident">crs2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set this vector to the cross product with <code>values</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of 3 float</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.crs2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector3.crs2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">crs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set this vector to the cross product with `values`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of 3 float</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -2014,6 +2605,7 @@ It has two components <code>x</code>, <code>y</code> and <code>z</code>.</p>
     <span class="n">mv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>
@@ -2038,6 +2630,110 @@ It has two components <code>x</code>, <code>y</code> and <code>z</code>.</p>
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector3.set">
+    <p>def <span class="ident">set</span>(</p><p>self, x, y, z)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set values of this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>x</code>, <code>y</code>, <code>z</code>: <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.set', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector3.set" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set values of this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `x`, `y`, `z`: `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector3.sub">
+    <p>def <span class="ident">sub</span>(</p><p>self, vector)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Substract vector from this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>vector</code>: <code>Vector3</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.sub', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector3.sub" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Substract vector from this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `vector`: `Vector3`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.vector.Vector3.sub2">
+    <p>def <span class="ident">sub2</span>(</p><p>self, values)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Substract values from this vector</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>values</code>: <code>list</code> of <code>float</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.vector.Vector3.sub2', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.vector.Vector3.sub2" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sub2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Substract values from this vector</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `values`: `list` of `float`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">-=</span> <span class="n">values</span>
+    <span class="k">return</span> <span class="bp">self</span>
 </pre></div>
 
   </div>

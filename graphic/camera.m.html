@@ -1055,6 +1055,17 @@ table {
 
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.graphic.camera.OrthographicCamera">OrthographicCamera</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.graphic.camera.OrthographicCamera.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.graphic.camera.OrthographicCamera.to_orthographic">to_orthographic</a></li>
+    <li class="mono"><a href="#vulk.graphic.camera.OrthographicCamera.update">update</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.graphic.camera.PerspectiveCamera">PerspectiveCamera</a></span>
         
           
@@ -1092,29 +1103,63 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.camera" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
 <span class="kn">from</span> <span class="nn">vulk.math.vector</span> <span class="kn">import</span> <span class="n">Vector3</span>
-<span class="kn">from</span> <span class="nn">vulk.math.matrix</span> <span class="kn">import</span> <span class="n">Matrix4</span>
+<span class="kn">from</span> <span class="nn">vulk.math.matrix</span> <span class="kn">import</span> <span class="n">Matrix4</span><span class="p">,</span> <span class="n">ProjectionMatrix</span><span class="p">,</span> <span class="n">ViewMatrix</span>
 
 
-<span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">up</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ProjectionMatrix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">ViewMatrix</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">far</span> <span class="o">=</span> <span class="mi">100</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">far</span> <span class="o">=</span> <span class="mf">100.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">OrthographicCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="n">viewport_width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="n">viewport_height</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">far</span>
+        <span class="p">)</span>
+
+        <span class="n">target</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">PerspectiveCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
@@ -1125,13 +1170,8 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="n">viewport_height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">aspect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="o">.</span><span class="n">to_projection</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">far</span><span class="p">),</span>
-                                      <span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span> <span class="n">aspect</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="n">Vector3</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">),</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="k">pass</span>
 </pre></div>
 
   </div>
@@ -1147,25 +1187,28 @@ table {
       <p id="vulk.graphic.camera.Camera" class="name">class <span class="ident">Camera</span></p>
       
   
+    <div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.Camera', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.camera.Camera" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">up</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ProjectionMatrix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">ViewMatrix</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">far</span> <span class="o">=</span> <span class="mi">100</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">far</span> <span class="o">=</span> <span class="mf">100.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="k">pass</span>
 </pre></div>
 
@@ -1177,6 +1220,7 @@ table {
           <h3>Ancestors (in MRO)</h3>
           <ul class="class_list">
           <li><a href="#vulk.graphic.camera.Camera">Camera</a></li>
+          <li>abc.ABC</li>
           <li>builtins.object</li>
           </ul>
           <h3>Static methods</h3>
@@ -1198,14 +1242,14 @@ table {
     <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">up</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">projection</span> <span class="o">=</span> <span class="n">ProjectionMatrix</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">ViewMatrix</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">combined</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">far</span> <span class="o">=</span> <span class="mi">100</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">far</span> <span class="o">=</span> <span class="mf">100.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 
   </div>
@@ -1216,7 +1260,7 @@ table {
             
   <div class="item">
     <div class="name def" id="vulk.graphic.camera.Camera.update">
-    <p>def <span class="ident">update</span>(</p><p>self)</p>
+    <p>def <span class="ident">update</span>(</p><p>self, update_frustum=True)</p>
     </div>
     
 
@@ -1226,7 +1270,7 @@ table {
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.Camera.update', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.camera.Camera.update" class="source">
     <div class="codehilite"><pre><span></span><span class="nd">@abstractmethod</span>
-<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="k">pass</span>
 </pre></div>
 
@@ -1350,9 +1394,176 @@ table {
       </div>
       
       <div class="item">
+      <p id="vulk.graphic.camera.OrthographicCamera" class="name">class <span class="ident">OrthographicCamera</span></p>
+      
+  
+    <div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.OrthographicCamera', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.camera.OrthographicCamera" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">OrthographicCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="n">viewport_width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="n">viewport_height</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">far</span>
+        <span class="p">)</span>
+
+        <span class="n">target</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.graphic.camera.OrthographicCamera">OrthographicCamera</a></li>
+          <li><a href="#vulk.graphic.camera.Camera">Camera</a></li>
+          <li>abc.ABC</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.camera.OrthographicCamera.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, viewport_width, viewport_height)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.OrthographicCamera.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.camera.OrthographicCamera.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">near</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.camera.OrthographicCamera.to_orthographic">
+    <p>def <span class="ident">to_orthographic</span>(</p><p>self, viewport_width, viewport_height)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.OrthographicCamera.to_orthographic', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.camera.OrthographicCamera.to_orthographic" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="n">viewport_width</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="n">viewport_height</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.camera.OrthographicCamera.update">
+    <p>def <span class="ident">update</span>(</p><p>self, update_frustum=True)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.OrthographicCamera.update', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.camera.OrthographicCamera.update" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">far</span>
+    <span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.graphic.camera.OrthographicCamera.near" class="name">var <span class="ident">near</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.graphic.camera.OrthographicCamera.zoom" class="name">var <span class="ident">zoom</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
       <p id="vulk.graphic.camera.PerspectiveCamera" class="name">class <span class="ident">PerspectiveCamera</span></p>
       
   
+    <div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+</div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.PerspectiveCamera', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.camera.PerspectiveCamera" class="source">
@@ -1364,13 +1575,8 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="n">viewport_height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">aspect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="o">.</span><span class="n">to_projection</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">far</span><span class="p">),</span>
-                                      <span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span> <span class="n">aspect</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="n">Vector3</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">),</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="k">pass</span>
 </pre></div>
 
   </div>
@@ -1382,6 +1588,7 @@ table {
           <ul class="class_list">
           <li><a href="#vulk.graphic.camera.PerspectiveCamera">PerspectiveCamera</a></li>
           <li><a href="#vulk.graphic.camera.Camera">Camera</a></li>
+          <li>abc.ABC</li>
           <li>builtins.object</li>
           </ul>
           <h3>Static methods</h3>
@@ -1415,7 +1622,7 @@ table {
             
   <div class="item">
     <div class="name def" id="vulk.graphic.camera.PerspectiveCamera.update">
-    <p>def <span class="ident">update</span>(</p><p>self)</p>
+    <p>def <span class="ident">update</span>(</p><p>self, update_frustum=True)</p>
     </div>
     
 
@@ -1424,13 +1631,8 @@ table {
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.PerspectiveCamera.update', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.camera.PerspectiveCamera.update" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">aspect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="o">.</span><span class="n">to_projection</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">far</span><span class="p">),</span>
-                                  <span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span> <span class="n">aspect</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="n">Vector3</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">),</span>
-                         <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">pass</span>
 </pre></div>
 
   </div>

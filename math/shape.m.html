@@ -3,7 +3,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>vulk.math API documentation</title>
+    <title>vulk.math.shape API documentation</title>
     <meta name="description" content="" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
@@ -1042,15 +1042,21 @@ table {
     <ul id="index">
 
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
       <ul>
-        <li class="mono"><a href="matrix.m.html">vulk.math.matrix</a></li>
-        <li class="mono"><a href="plane.m.html">vulk.math.plane</a></li>
-        <li class="mono"><a href="shape.m.html">vulk.math.shape</a></li>
-        <li class="mono"><a href="vector.m.html">vulk.math.vector</a></li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.math.shape.Rectangle">Rectangle</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.math.shape.Rectangle.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.shape.Rectangle.contains">contains</a></li>
+  </ul>
+
+        </li>
       </ul>
     </li>
+
     </ul>
   </div>
 
@@ -1065,58 +1071,160 @@ table {
       
         
         :: <a href="/vulk-api/vulk">vulk</a>
+        
+        :: <a href="/vulk-api/vulk/math">vulk.math</a>
     </p>
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">vulk.math</span> module</h1>
+  <h1 class="title"><span class="name">vulk.math.shape</span> module</h1>
   <p></p>
 
   
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.shape', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.shape" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+
+    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;=</span> <span class="n">x</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+  </div>
 
   </header>
 
   <section id="section-items">
 
 
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
       <div class="item">
-      <p class="name"><a href="matrix.m.html">vulk.math.matrix</a></p>
+      <p id="vulk.math.shape.Rectangle" class="name">class <span class="ident">Rectangle</span></p>
       
   
-    <div class="desc"><p>Matrix module</p>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.shape.Rectangle', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.shape.Rectangle" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Rectangle</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
 
-<p>This module contains all class relative to Matrices.
-In graphic computing, matrices is a key to manipulate object in
-space. I recommand you to read this article to understand what is
-the main goal of matrices:
-http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.aspx</p>
+    <span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;=</span> <span class="n">x</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+  </div>
 </div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="plane.m.html">vulk.math.plane</a></p>
-      
-  
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="shape.m.html">vulk.math.shape</a></p>
-      
-  
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.math.shape.Rectangle">Rectangle</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.shape.Rectangle.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, x, y, width, height)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="vector.m.html">vulk.math.vector</a></p>
-      
+    
   
-    <div class="desc"><p>Vector module</p>
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.shape.Rectangle.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.shape.Rectangle.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+</pre></div>
 
-<p>This module contains all Vector classes definition.
-Vector are a key of graphic computing.</p>
+  </div>
 </div>
 
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.math.shape.Rectangle.contains">
+    <p>def <span class="ident">contains</span>(</p><p>self, x, y)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.shape.Rectangle.contains', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.shape.Rectangle.contains" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">&gt;=</span> <span class="n">x</span> <span class="ow">and</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;=</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.math.shape.Rectangle.height" class="name">var <span class="ident">height</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.math.shape.Rectangle.width" class="name">var <span class="ident">width</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.math.shape.Rectangle.x" class="name">var <span class="ident">x</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.math.shape.Rectangle.y" class="name">var <span class="ident">y</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
       </div>
+      </div>
+
   </section>
 
     </article>

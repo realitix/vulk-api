@@ -1141,7 +1141,7 @@ and reliable.</p>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanutil</span> <span class="k">as</span> <span class="n">vu</span>
 <span class="kn">from</span> <span class="nn">vulk.graphic</span> <span class="kn">import</span> <span class="n">mesh</span> <span class="k">as</span> <span class="n">me</span>
 <span class="kn">from</span> <span class="nn">vulk.graphic</span> <span class="kn">import</span> <span class="n">uniform</span>
-<span class="kn">from</span> <span class="nn">vulk.math.matrix</span> <span class="kn">import</span> <span class="n">Matrix4</span>
+<span class="kn">from</span> <span class="nn">vulk.math.matrix</span> <span class="kn">import</span> <span class="n">ProjectionMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">Matrix4</span>
 
 
 <span class="k">class</span> <span class="nc">TextureDescriptorPool</span><span class="p">():</span>
@@ -1210,7 +1210,7 @@ and reliable.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">clear</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">out_view</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">out_view</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Initialize SpriteBatch</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -1232,7 +1232,6 @@ and reliable.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">shaderprogram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_shaderprogram</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
         <span class="c1"># Stored parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span> <span class="o">=</span> <span class="n">clear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span> <span class="o">=</span> <span class="n">out_view</span> <span class="k">if</span> <span class="n">out_view</span> <span class="k">else</span> <span class="n">context</span><span class="o">.</span><span class="n">final_image_view</span>
 
         <span class="c1"># Init rendering attributes</span>
@@ -1249,10 +1248,10 @@ and reliable.</p>
         <span class="c1"># Others attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">ProjectionMatrix</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_orthographic_2d</span><span class="p">(</span>
             <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1326,10 +1325,9 @@ and reliable.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">vk_load</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">CLEAR</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span> <span class="k">else</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">LOAD</span> <span class="c1"># noqa</span>
         <span class="n">attachment</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">AttachmentDescription</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">,</span>
-            <span class="n">vk_load</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">STORE</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">LOAD</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">STORE</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
@@ -1544,10 +1542,6 @@ and reliable.</p>
 
         <span class="c1"># Register commands</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">pull</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="n">vk_clear</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">:</span>
-                <span class="n">vk_clear</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">ClearColorValue</span><span class="p">(</span><span class="n">float32</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">))</span>
-
             <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">width</span>
             <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">height</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">begin_renderpass</span><span class="p">(</span>
@@ -1555,7 +1549,7 @@ and reliable.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
                 <span class="n">vo</span><span class="o">.</span><span class="n">Rect2D</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Offset2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                           <span class="n">vo</span><span class="o">.</span><span class="n">Extent2D</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)),</span>
-                <span class="n">vk_clear</span>
+                <span class="p">[]</span>
             <span class="p">)</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -1575,10 +1569,9 @@ and reliable.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">set_uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">set_uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">False</span>
 
@@ -1592,7 +1585,7 @@ and reliable.</p>
 <span class="sd">        **Note: This function doesn&#39;t keep a reference to the matrix,</span>
 <span class="sd">                it only copies data**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">update_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
@@ -1605,10 +1598,10 @@ and reliable.</p>
 <span class="sd">        **Note: This function doesn&#39;t keep a reference to the matrix,</span>
 <span class="sd">                it only copies data**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `texture` at position x, y of size `width`, `height`</span>
 
@@ -1619,12 +1612,18 @@ and reliable.</p>
 <span class="sd">        - `y`: Y position</span>
 <span class="sd">        - `width`: Width</span>
 <span class="sd">        - `heigth`: Height</span>
+
+<span class="sd">        **Note: if width and height are set to 0, we take the image size**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">texture</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">width</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">height</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">height</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
 
@@ -1696,7 +1695,7 @@ of draw calls.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">clear</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">out_view</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">out_view</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Initialize SpriteBatch</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -1718,7 +1717,6 @@ of draw calls.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">shaderprogram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_shaderprogram</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
         <span class="c1"># Stored parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span> <span class="o">=</span> <span class="n">clear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span> <span class="o">=</span> <span class="n">out_view</span> <span class="k">if</span> <span class="n">out_view</span> <span class="k">else</span> <span class="n">context</span><span class="o">.</span><span class="n">final_image_view</span>
 
         <span class="c1"># Init rendering attributes</span>
@@ -1735,10 +1733,10 @@ of draw calls.</p>
         <span class="c1"># Others attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span> <span class="o">=</span> <span class="bp">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">ProjectionMatrix</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_orthographic_2d</span><span class="p">(</span>
             <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1812,10 +1810,9 @@ of draw calls.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">vk_load</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">CLEAR</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span> <span class="k">else</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">LOAD</span> <span class="c1"># noqa</span>
         <span class="n">attachment</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">AttachmentDescription</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">,</span>
-            <span class="n">vk_load</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">STORE</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">LOAD</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">STORE</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
@@ -2030,10 +2027,6 @@ of draw calls.</p>
 
         <span class="c1"># Register commands</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">pull</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="n">vk_clear</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">:</span>
-                <span class="n">vk_clear</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">ClearColorValue</span><span class="p">(</span><span class="n">float32</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">))</span>
-
             <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">width</span>
             <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">height</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">begin_renderpass</span><span class="p">(</span>
@@ -2041,7 +2034,7 @@ of draw calls.</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
                 <span class="n">vo</span><span class="o">.</span><span class="n">Rect2D</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Offset2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                           <span class="n">vo</span><span class="o">.</span><span class="n">Extent2D</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)),</span>
-                <span class="n">vk_clear</span>
+                <span class="p">[]</span>
             <span class="p">)</span>
             <span class="n">cmd</span><span class="o">.</span><span class="n">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -2061,10 +2054,9 @@ of draw calls.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">set_uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">set_uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">False</span>
 
@@ -2078,7 +2070,7 @@ of draw calls.</p>
 <span class="sd">        **Note: This function doesn&#39;t keep a reference to the matrix,</span>
 <span class="sd">                it only copies data**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
     <span class="k">def</span> <span class="nf">update_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
@@ -2091,10 +2083,10 @@ of draw calls.</p>
 <span class="sd">        **Note: This function doesn&#39;t keep a reference to the matrix,</span>
 <span class="sd">                it only copies data**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `texture` at position x, y of size `width`, `height`</span>
 
@@ -2105,12 +2097,18 @@ of draw calls.</p>
 <span class="sd">        - `y`: Y position</span>
 <span class="sd">        - `width`: Width</span>
 <span class="sd">        - `heigth`: Height</span>
+
+<span class="sd">        **Note: if width and height are set to 0, we take the image size**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">texture</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">width</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">height</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">height</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
 
@@ -2161,7 +2159,7 @@ of draw calls.</p>
             
   <div class="item">
     <div class="name def" id="vulk.graphic.d2.spritebatch.SpriteBatch.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, context, size=1000, shaderprogram=None, clear=None, out_view=None)</p>
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, size=1000, shaderprogram=None, out_view=None)</p>
     </div>
     
 
@@ -2189,7 +2187,7 @@ of draw calls.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.d2.spritebatch.SpriteBatch.__init__', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.d2.spritebatch.SpriteBatch.__init__" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-             <span class="n">clear</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">out_view</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+             <span class="n">out_view</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Initialize SpriteBatch</span>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
@@ -2206,7 +2204,6 @@ of draw calls.</p>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">shaderprogram</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shaderprogram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_shaderprogram</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
     <span class="c1"># Stored parameters</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">clear</span> <span class="o">=</span> <span class="n">clear</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span> <span class="o">=</span> <span class="n">out_view</span> <span class="k">if</span> <span class="n">out_view</span> <span class="k">else</span> <span class="n">context</span><span class="o">.</span><span class="n">final_image_view</span>
     <span class="c1"># Init rendering attributes</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_mesh</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
@@ -2221,10 +2218,10 @@ of draw calls.</p>
     <span class="c1"># Others attributes</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span> <span class="o">=</span> <span class="bp">False</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">ProjectionMatrix</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_orthographic_2d</span><span class="p">(</span>
         <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="bp">None</span>
@@ -2287,7 +2284,7 @@ of draw calls.</p>
             
   <div class="item">
     <div class="name def" id="vulk.graphic.d2.spritebatch.SpriteBatch.draw">
-    <p>def <span class="ident">draw</span>(</p><p>self, texture, x, y, width, height, u=0, v=0, u2=1, v2=1)</p>
+    <p>def <span class="ident">draw</span>(</p><p>self, texture, x, y, width=0, height=0, u=0, v=0, u2=1, v2=1)</p>
     </div>
     
 
@@ -2304,11 +2301,13 @@ of draw calls.</p>
 <li><code>width</code>: Width</li>
 <li><code>heigth</code>: Height</li>
 </ul>
+
+<p><strong>Note: if width and height are set to 0, we take the image size</strong></p>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.d2.spritebatch.SpriteBatch.draw', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.d2.spritebatch.SpriteBatch.draw" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Draw `texture` at position x, y of size `width`, `height`</span>
 <span class="sd">    *Parameters:*</span>
@@ -2317,11 +2316,15 @@ of draw calls.</p>
 <span class="sd">    - `y`: Y position</span>
 <span class="sd">    - `width`: Width</span>
 <span class="sd">    - `heigth`: Height</span>
+<span class="sd">    **Note: if width and height are set to 0, we take the image size**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">texture</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">width</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">height</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">height</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
     <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
     <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
@@ -2475,9 +2478,6 @@ Currently, <code>flush</code> register and submit command.</p>
     <span class="n">indices_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sprites_in_batch</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
     <span class="c1"># Register commands</span>
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">pull</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-        <span class="n">vk_clear</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">:</span>
-            <span class="n">vk_clear</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">ClearColorValue</span><span class="p">(</span><span class="n">float32</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">))</span>
         <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">width</span>
         <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">height</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">begin_renderpass</span><span class="p">(</span>
@@ -2485,7 +2485,7 @@ Currently, <code>flush</code> register and submit command.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
             <span class="n">vo</span><span class="o">.</span><span class="n">Rect2D</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Offset2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                       <span class="n">vo</span><span class="o">.</span><span class="n">Extent2D</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)),</span>
-            <span class="n">vk_clear</span>
+            <span class="p">[]</span>
         <span class="p">)</span>
         <span class="n">cmd</span><span class="o">.</span><span class="n">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
@@ -2890,10 +2890,9 @@ It's done only at initialization for better performance.</p>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">vk_load</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">CLEAR</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear</span> <span class="k">else</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">LOAD</span> <span class="c1"># noqa</span>
     <span class="n">attachment</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">AttachmentDescription</span><span class="p">(</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">,</span>
-        <span class="n">vk_load</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">STORE</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">LOAD</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">STORE</span><span class="p">,</span>
         <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
         <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
         <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
@@ -2986,7 +2985,7 @@ uniforms.</p>
 <span class="sd">    **Note: This function doesn&#39;t keep a reference to the matrix,</span>
 <span class="sd">            it only copies data**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 </pre></div>
 
@@ -3025,7 +3024,7 @@ uniforms.</p>
 <span class="sd">    **Note: This function doesn&#39;t keep a reference to the matrix,</span>
 <span class="sd">            it only copies data**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 </pre></div>
 
@@ -3062,10 +3061,9 @@ Then upload combined matrix.</p>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">set_uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">set_uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">False</span>
 </pre></div>
@@ -3078,16 +3076,6 @@ Then upload combined matrix.</p>
           <h3>Instance variables</h3>
             <div class="item">
             <p id="vulk.graphic.d2.spritebatch.SpriteBatch.cbpool" class="name">var <span class="ident">cbpool</span></p>
-            
-
-            
-  
-  <div class="source_cont">
-</div>
-
-            </div>
-            <div class="item">
-            <p id="vulk.graphic.d2.spritebatch.SpriteBatch.clear" class="name">var <span class="ident">clear</span></p>
             
 
             
