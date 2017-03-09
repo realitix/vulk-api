@@ -1045,6 +1045,7 @@ table {
       
   <ul>
     <li class="mono"><a href="#vulk.util.millis">millis</a></li>
+    <li class="mono"><a href="#vulk.util.nanos">nanos</a></li>
     <li class="mono"><a href="#vulk.util.time_since_millis">time_since_millis</a></li>
   </ul>
 
@@ -1082,6 +1083,11 @@ table {
     <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
 
 
+<span class="k">def</span> <span class="nf">nanos</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Return the time in nanoseconds&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span>
+
+
 <span class="k">def</span> <span class="nf">time_since_millis</span><span class="p">(</span><span class="n">previous_time</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Return the time in millisecons from the previous_time argument&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">previous_time</span>
@@ -1111,6 +1117,30 @@ table {
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">millis</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;Return the time in milliseconds&#39;&#39;&#39;</span>
     <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      
+  <div class="item">
+    <div class="name def" id="vulk.util.nanos">
+    <p>def <span class="ident">nanos</span>(</p><p>)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return the time in nanoseconds</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.util.nanos', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.util.nanos" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">nanos</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Return the time in nanoseconds&#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span>
 </pre></div>
 
   </div>

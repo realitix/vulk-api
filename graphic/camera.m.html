@@ -1050,6 +1050,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.graphic.camera.Camera.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.graphic.camera.Camera.unproject">unproject</a></li>
     <li class="mono"><a href="#vulk.graphic.camera.Camera.update">update</a></li>
   </ul>
 
@@ -1061,6 +1062,7 @@ table {
   <ul>
     <li class="mono"><a href="#vulk.graphic.camera.OrthographicCamera.__init__">__init__</a></li>
     <li class="mono"><a href="#vulk.graphic.camera.OrthographicCamera.to_orthographic">to_orthographic</a></li>
+    <li class="mono"><a href="#vulk.graphic.camera.OrthographicCamera.unproject">unproject</a></li>
     <li class="mono"><a href="#vulk.graphic.camera.OrthographicCamera.update">update</a></li>
   </ul>
 
@@ -1071,6 +1073,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.graphic.camera.PerspectiveCamera.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.graphic.camera.PerspectiveCamera.unproject">unproject</a></li>
     <li class="mono"><a href="#vulk.graphic.camera.PerspectiveCamera.update">update</a></li>
   </ul>
 
@@ -1123,6 +1126,23 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mf">0.0</span>
 
+    <span class="k">def</span> <span class="nf">unproject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">viewport_x</span><span class="p">,</span> <span class="n">viewport_y</span><span class="p">,</span>
+                  <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Unproject `position` to view matrix.</span>
+<span class="sd">        Allow to get world coordinate from screen coordinate.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `position`: `Vector3` screen position right-handed.</span>
+<span class="sd">                      z(0) = near plane, z(1) = far plane</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">viewport_x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">viewport_y</span>
+        <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_width</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_height</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">position</span><span class="o">.</span><span class="n">prj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="p">)</span>
+
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -1160,6 +1180,7 @@ table {
         <span class="n">target</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="p">)</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>
 
 
 <span class="k">class</span> <span class="nc">PerspectiveCamera</span><span class="p">(</span><span class="n">Camera</span><span class="p">):</span>
@@ -1207,6 +1228,23 @@ inheritance.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mf">0.0</span>
 
+    <span class="k">def</span> <span class="nf">unproject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">viewport_x</span><span class="p">,</span> <span class="n">viewport_y</span><span class="p">,</span>
+                  <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Unproject `position` to view matrix.</span>
+<span class="sd">        Allow to get world coordinate from screen coordinate.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `position`: `Vector3` screen position right-handed.</span>
+<span class="sd">                      z(0) = near plane, z(1) = far plane</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">viewport_x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">viewport_y</span>
+        <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_width</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_height</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">position</span><span class="o">.</span><span class="n">prj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="p">)</span>
+
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update_frustum</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -1250,6 +1288,49 @@ inheritance.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">far</span> <span class="o">=</span> <span class="mf">100.0</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="mf">0.0</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.camera.Camera.unproject">
+    <p>def <span class="ident">unproject</span>(</p><p>self, position, viewport_x, viewport_y, viewport_width, viewport_height)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Unproject <code>position</code> to view matrix.
+Allow to get world coordinate from screen coordinate.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>position</code>: <code>Vector3</code> screen position right-handed.
+          z(0) = near plane, z(1) = far plane</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.Camera.unproject', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.camera.Camera.unproject" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unproject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">viewport_x</span><span class="p">,</span> <span class="n">viewport_y</span><span class="p">,</span>
+              <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Unproject `position` to view matrix.</span>
+<span class="sd">    Allow to get world coordinate from screen coordinate.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `position`: `Vector3` screen position right-handed.</span>
+<span class="sd">                  z(0) = near plane, z(1) = far plane</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">viewport_x</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">viewport_y</span>
+    <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_width</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_height</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">position</span><span class="o">.</span><span class="n">prj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1435,6 +1516,7 @@ inheritance.</p>
         <span class="n">target</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="p">)</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -1505,6 +1587,49 @@ inheritance.</p>
   
             
   <div class="item">
+    <div class="name def" id="vulk.graphic.camera.OrthographicCamera.unproject">
+    <p>def <span class="ident">unproject</span>(</p><p>self, position, viewport_x, viewport_y, viewport_width, viewport_height)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Unproject <code>position</code> to view matrix.
+Allow to get world coordinate from screen coordinate.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>position</code>: <code>Vector3</code> screen position right-handed.
+          z(0) = near plane, z(1) = far plane</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.OrthographicCamera.unproject', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.camera.OrthographicCamera.unproject" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unproject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">viewport_x</span><span class="p">,</span> <span class="n">viewport_y</span><span class="p">,</span>
+              <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Unproject `position` to view matrix.</span>
+<span class="sd">    Allow to get world coordinate from screen coordinate.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `position`: `Vector3` screen position right-handed.</span>
+<span class="sd">                  z(0) = near plane, z(1) = far plane</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">viewport_x</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">viewport_y</span>
+    <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_width</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_height</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">position</span><span class="o">.</span><span class="n">prj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.graphic.camera.OrthographicCamera.update">
     <p>def <span class="ident">update</span>(</p><p>self, update_frustum=True)</p>
     </div>
@@ -1526,6 +1651,7 @@ inheritance.</p>
     <span class="n">target</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">to_look_at</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">up</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection</span><span class="p">)</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">combined</span><span class="p">)</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>
 </pre></div>
 
   </div>
@@ -1612,6 +1738,49 @@ inheritance.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">viewport_width</span> <span class="o">=</span> <span class="n">viewport_width</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">viewport_height</span> <span class="o">=</span> <span class="n">viewport_height</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="vulk.graphic.camera.PerspectiveCamera.unproject">
+    <p>def <span class="ident">unproject</span>(</p><p>self, position, viewport_x, viewport_y, viewport_width, viewport_height)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Unproject <code>position</code> to view matrix.
+Allow to get world coordinate from screen coordinate.</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>position</code>: <code>Vector3</code> screen position right-handed.
+          z(0) = near plane, z(1) = far plane</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.camera.PerspectiveCamera.unproject', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.graphic.camera.PerspectiveCamera.unproject" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unproject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">viewport_x</span><span class="p">,</span> <span class="n">viewport_y</span><span class="p">,</span>
+              <span class="n">viewport_width</span><span class="p">,</span> <span class="n">viewport_height</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Unproject `position` to view matrix.</span>
+<span class="sd">    Allow to get world coordinate from screen coordinate.</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `position`: `Vector3` screen position right-handed.</span>
+<span class="sd">                  z(0) = near plane, z(1) = far plane</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">viewport_x</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">viewport_y</span>
+    <span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_width</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">viewport_height</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">position</span><span class="o">.</span><span class="n">prj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inv_projection_view</span><span class="p">)</span>
 </pre></div>
 
   </div>

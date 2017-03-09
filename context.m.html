@@ -1135,6 +1135,7 @@ swapchain's image.</p>
 <span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span><span class="p">,</span> <span class="n">SDL2Error</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanconstant</span> <span class="k">as</span> <span class="n">vc</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanobject</span> <span class="k">as</span> <span class="n">vo</span>
+<span class="kn">from</span> <span class="nn">vulk.eventconstant</span> <span class="kn">import</span> <span class="n">to_vulk_event</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
@@ -1997,7 +1998,8 @@ swapchain's image.</p>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkDeviceWaitIdle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sdl_event</span> <span class="ow">in</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">to_vulk_event</span><span class="p">(</span><span class="n">sdl_event</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2837,7 +2839,8 @@ swapchain's image.</p>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkDeviceWaitIdle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sdl_event</span> <span class="ow">in</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">():</span>
+            <span class="k">yield</span> <span class="n">to_vulk_event</span><span class="p">(</span><span class="n">sdl_event</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -3029,7 +3032,8 @@ swapchain's image.</p>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.context.VulkContext.get_events', this);">Show source &equiv;</a></p>
   <div id="source-vulk.context.VulkContext.get_events" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">sdl_event</span> <span class="ow">in</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">ext</span><span class="o">.</span><span class="n">get_events</span><span class="p">():</span>
+        <span class="k">yield</span> <span class="n">to_vulk_event</span><span class="p">(</span><span class="n">sdl_event</span><span class="p">)</span>
 </pre></div>
 
   </div>

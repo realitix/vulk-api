@@ -1090,7 +1090,7 @@ table {
 
 <span class="kn">from</span> <span class="nn">vulk.audio</span> <span class="kn">import</span> <span class="n">VulkAudio</span>
 <span class="kn">from</span> <span class="nn">vulk.context</span> <span class="kn">import</span> <span class="n">VulkWindow</span><span class="p">,</span> <span class="n">VulkContext</span>
-<span class="kn">from</span> <span class="nn">vulk.event</span> <span class="kn">import</span> <span class="n">QuitEventListener</span>
+<span class="kn">from</span> <span class="nn">vulk.event</span> <span class="kn">import</span> <span class="n">CallbackEventListener</span>
 <span class="kn">from</span> <span class="nn">vulk.util</span> <span class="kn">import</span> <span class="n">millis</span><span class="p">,</span> <span class="n">time_since_millis</span>
 
 
@@ -1129,7 +1129,7 @@ table {
         <span class="n">c</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AppConfiguration&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1185,8 +1185,9 @@ table {
                 <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="p">:</span>
                     <span class="n">listener</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">time_since_millis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">))</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">time_since_millis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
@@ -1203,7 +1204,7 @@ table {
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;This function is called when your App starts&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">QuitEventListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CallbackEventListener</span><span class="p">(</span><span class="n">quit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">))</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1267,7 +1268,7 @@ cycle of the program.</p>
         <span class="n">c</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AppConfiguration&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1323,8 +1324,9 @@ cycle of the program.</p>
                 <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="p">:</span>
                     <span class="n">listener</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">time_since_millis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">))</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">time_since_millis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
@@ -1341,7 +1343,7 @@ cycle of the program.</p>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;This function is called when your App starts&#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">QuitEventListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CallbackEventListener</span><span class="p">(</span><span class="n">quit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">))</span>
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1419,7 +1421,7 @@ cycle of the program.</p>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">c</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;self&#39;</span><span class="p">}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;AppConfiguration&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">keys</span><span class="p">())(</span><span class="o">**</span><span class="n">c</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_init_logger</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">window</span> <span class="o">=</span> <span class="bp">None</span>
@@ -1544,8 +1546,9 @@ This function must be called to quit App</p>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="p">:</span>
                 <span class="n">listener</span><span class="o">.</span><span class="n">handle</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">time_since_millis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">))</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">time_since_millis</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_time</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_time</span> <span class="o">=</span> <span class="n">millis</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1570,7 +1573,7 @@ This function must be called to quit App</p>
     <div class="codehilite"><pre><span></span><span class="nd">@abstractmethod</span>
 <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;This function is called when your App starts&#39;&#39;&#39;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">QuitEventListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">event_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CallbackEventListener</span><span class="p">(</span><span class="n">quit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">))</span>
 </pre></div>
 
   </div>

@@ -1050,9 +1050,6 @@ table {
     <li class="mono"><a href="#vulk.vulkanconstant.DataTypeNumpy">DataTypeNumpy</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.QUEUE_FAMILY_IGNORED">QUEUE_FAMILY_IGNORED</a></li>
     <li class="mono"><a href="#vulk.vulkanconstant.SUBPASS_EXTERNAL">SUBPASS_EXTERNAL</a></li>
-    <li class="mono"><a href="#vulk.vulkanconstant.VK_LAYOUT_NAME">VK_LAYOUT_NAME</a></li>
-    <li class="mono"><a href="#vulk.vulkanconstant.fn">fn</a></li>
-    <li class="mono"><a href="#vulk.vulkanconstant.name">name</a></li>
   </ul>
 
     </li>
@@ -2017,18 +2014,6 @@ specific field <code>NONE</code> which is equals to 0.</p>
     <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">IndexType</span><span class="o">.</span><span class="n">UINT16</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="mi">4</span>
-
-
-<span class="c1"># Mapping between layout value and its name</span>
-<span class="n">VK_LAYOUT_NAME</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span>
-    <span class="s1">&#39;UNDEFINED&#39;</span><span class="p">,</span> <span class="s1">&#39;GENERAL&#39;</span><span class="p">,</span> <span class="s1">&#39;COLOR_ATTACHMENT_OPTIMAL&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;DEPTH_STENCIL_ATTACHMENT_OPTIMAL&#39;</span><span class="p">,</span> <span class="s1">&#39;DEPTH_STENCIL_READ_ONLY_OPTIMAL&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;SHADER_READ_ONLY_OPTIMAL&#39;</span><span class="p">,</span> <span class="s1">&#39;TRANSFER_SRC_OPTIMAL&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;TRANSFER_DST_OPTIMAL&#39;</span><span class="p">,</span> <span class="s1">&#39;PREINITIALIZED&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESENT_SRC_KHR&#39;</span>
-<span class="p">):</span>
-    <span class="n">fn</span> <span class="o">=</span> <span class="s1">&#39;VK_IMAGE_LAYOUT_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">name</span>
-    <span class="n">VK_LAYOUT_NAME</span><span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">vk</span><span class="p">,</span> <span class="n">fn</span><span class="p">)]</span> <span class="o">=</span> <span class="n">fn</span>
 </pre></div>
 
   </div>
@@ -2063,30 +2048,6 @@ specific field <code>NONE</code> which is equals to 0.</p>
       </div>
       <div class="item">
       <p id="vulk.vulkanconstant.SUBPASS_EXTERNAL" class="name">var <span class="ident">SUBPASS_EXTERNAL</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
-      <div class="item">
-      <p id="vulk.vulkanconstant.VK_LAYOUT_NAME" class="name">var <span class="ident">VK_LAYOUT_NAME</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
-      <div class="item">
-      <p id="vulk.vulkanconstant.fn" class="name">var <span class="ident">fn</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
-      <div class="item">
-      <p id="vulk.vulkanconstant.name" class="name">var <span class="ident">name</span></p>
       
   
   <div class="source_cont">

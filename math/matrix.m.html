@@ -1075,6 +1075,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.Matrix4.inv">inv</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.mul">mul</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.set">set</a></li>
     <li class="mono"><a href="#vulk.math.matrix.Matrix4.set2">set2</a></li>
@@ -1088,6 +1089,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.inv">inv</a></li>
     <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.mul">mul</a></li>
     <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.set">set</a></li>
     <li class="mono"><a href="#vulk.math.matrix.ProjectionMatrix.set2">set2</a></li>
@@ -1103,6 +1105,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.inv">inv</a></li>
     <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.mul">mul</a></li>
     <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.set">set</a></li>
     <li class="mono"><a href="#vulk.math.matrix.TransformationMatrix.set2">set2</a></li>
@@ -1117,6 +1120,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.__init__">__init__</a></li>
+    <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.inv">inv</a></li>
     <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.mul">mul</a></li>
     <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.set">set</a></li>
     <li class="mono"><a href="#vulk.math.matrix.ViewMatrix.set2">set2</a></li>
@@ -1276,18 +1280,24 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        - `matrix`: `Matrix4`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Make a matrix4 shape to matmul function</span>
-        <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-        <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-        <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-        <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">view1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">view2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
+        <span class="c1"># np.matmul(view2, view1, out=out)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
 
         <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Inverse this matrix&#39;&#39;&#39;</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+        <span class="n">view</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">tmp_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">tmp_mat</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
@@ -1372,7 +1382,7 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        - `near`: Near plane</span>
 <span class="sd">        - `Far`: Far plane</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -1851,18 +1861,24 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
 <span class="sd">        - `matrix`: `Matrix4`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Make a matrix4 shape to matmul function</span>
-        <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-        <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-        <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-        <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">view1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+        <span class="n">view2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
+        <span class="c1"># np.matmul(view2, view1, out=out)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
 
         <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Inverse this matrix&#39;&#39;&#39;</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+        <span class="n">view</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">tmp_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">tmp_mat</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">to_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set this matrix to identity matrix&#39;&#39;&#39;</span>
@@ -1930,6 +1946,33 @@ http://www.codinglabs.net/article<em>world</em>view<em>projection</em>matrix.asp
   
             
   <div class="item">
+    <div class="name def" id="vulk.math.matrix.Matrix4.inv">
+    <p>def <span class="ident">inv</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Inverse this matrix</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.Matrix4.inv', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.Matrix4.inv" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Inverse this matrix&#39;&#39;&#39;</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">tmp_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">tmp_mat</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.math.matrix.Matrix4.mul">
     <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
     </div>
@@ -1956,11 +1999,10 @@ The order of operation is: <code>this @ matrix</code>.</p>
 <span class="sd">    - `matrix`: `Matrix4`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Make a matrix4 shape to matmul function</span>
-    <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">view1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">view2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># np.matmul(view2, view1, out=out)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
@@ -2124,7 +2166,7 @@ It must be applied after the view matrix.</p>
 <span class="sd">        - `near`: Near plane</span>
 <span class="sd">        - `Far`: Far plane</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">to_orthographic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -2233,6 +2275,33 @@ It must be applied after the view matrix.</p>
   
             
   <div class="item">
+    <div class="name def" id="vulk.math.matrix.ProjectionMatrix.inv">
+    <p>def <span class="ident">inv</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Inverse this matrix</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ProjectionMatrix.inv', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ProjectionMatrix.inv" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Inverse this matrix&#39;&#39;&#39;</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">tmp_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">tmp_mat</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.math.matrix.ProjectionMatrix.mul">
     <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
     </div>
@@ -2259,11 +2328,10 @@ The order of operation is: <code>this @ matrix</code>.</p>
 <span class="sd">    - `matrix`: `Matrix4`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Make a matrix4 shape to matmul function</span>
-    <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">view1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">view2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># np.matmul(view2, view1, out=out)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
@@ -2479,7 +2547,7 @@ The order of operation is: <code>this @ matrix</code>.</p>
 <span class="sd">    - `near`: Near plane</span>
 <span class="sd">    - `Far`: Far plane</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_orthographic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">near</span><span class="p">,</span> <span class="n">far</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2603,6 +2671,33 @@ to world space.</p>
   
             
   <div class="item">
+    <div class="name def" id="vulk.math.matrix.TransformationMatrix.inv">
+    <p>def <span class="ident">inv</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Inverse this matrix</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.TransformationMatrix.inv', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.TransformationMatrix.inv" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Inverse this matrix&#39;&#39;&#39;</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">tmp_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">tmp_mat</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.math.matrix.TransformationMatrix.mul">
     <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
     </div>
@@ -2629,11 +2724,10 @@ The order of operation is: <code>this @ matrix</code>.</p>
 <span class="sd">    - `matrix`: `Matrix4`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Make a matrix4 shape to matmul function</span>
-    <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">view1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">view2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># np.matmul(view2, view1, out=out)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
@@ -2932,6 +3026,33 @@ translation vector.</p>
   
             
   <div class="item">
+    <div class="name def" id="vulk.math.matrix.ViewMatrix.inv">
+    <p>def <span class="ident">inv</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Inverse this matrix</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.math.matrix.ViewMatrix.inv', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.math.matrix.ViewMatrix.inv" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Inverse this matrix&#39;&#39;&#39;</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
+    <span class="n">view</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">tmp_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">view</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">tmp_mat</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
     <div class="name def" id="vulk.math.matrix.ViewMatrix.mul">
     <p>def <span class="ident">mul</span>(</p><p>self, matrix)</p>
     </div>
@@ -2958,11 +3079,10 @@ The order of operation is: <code>this @ matrix</code>.</p>
 <span class="sd">    - `matrix`: `Matrix4`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Make a matrix4 shape to matmul function</span>
-    <span class="n">view1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view2</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">view</span><span class="p">()</span>
-    <span class="n">view1</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">view2</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">view1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">view2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="c1"># np.matmul(view2, view1, out=out)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">view2</span><span class="p">,</span> <span class="n">view1</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>

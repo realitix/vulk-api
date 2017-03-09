@@ -1043,12 +1043,80 @@ table {
     <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
       
   <ul>
-    <li class="mono"><a href="#vulk.eventconstant.QUIT">QUIT</a></li>
+    <li class="mono"><a href="#vulk.eventconstant.map_sdl_vulk">map_sdl_vulk</a></li>
   </ul>
 
     </li>
 
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#vulk.eventconstant.to_vulk_event">to_vulk_event</a></li>
+  </ul>
 
+    </li>
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.BaseEvent">BaseEvent</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.eventconstant.BaseEvent.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.Button">Button</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.EventType">EventType</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.KeyCode">KeyCode</a></span>
+        
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.KeyboardEvent">KeyboardEvent</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.eventconstant.KeyboardEvent.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.MouseButtonEvent">MouseButtonEvent</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.eventconstant.MouseButtonEvent.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.MouseMotionEvent">MouseMotionEvent</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.eventconstant.MouseMotionEvent.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.eventconstant.QuitEvent">QuitEvent</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.eventconstant.QuitEvent.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+      </ul>
+    </li>
 
     </ul>
   </div>
@@ -1073,10 +1141,134 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant', this);">Show source &equiv;</a></p>
   <div id="source-vulk.eventconstant" class="source">
-    <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">sdl2</span>
+    <div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">import</span> <span class="nn">sdl2</span>
 
 
-<span class="n">QUIT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_QUIT</span>
+<span class="k">class</span> <span class="nc">Button</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">LEFT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_LEFT</span>
+    <span class="n">MIDDLE</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_MIDDLE</span>
+    <span class="n">RIGHT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_RIGHT</span>
+    <span class="n">X1</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_X1</span>
+    <span class="n">X2</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_X2</span>
+
+
+<span class="k">class</span> <span class="nc">EventType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">AUDIO_DEVICE_ADDED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_AUDIODEVICEADDED</span>
+    <span class="n">AUDIO_DEVICE_REMOVED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_AUDIODEVICEREMOVED</span>
+    <span class="n">CONTROLLER_AXIS_MOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERAXISMOTION</span>
+    <span class="n">CONTROLLER_BUTTON_DOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERBUTTONDOWN</span>
+    <span class="n">CONTROLLER_BUTTON_UP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERBUTTONUP</span>
+    <span class="n">CONTROLLER_DEVICE_ADDED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERDEVICEADDED</span>
+    <span class="n">CONTROLLER_DEVICE_REMOVED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERDEVICEREMOVED</span>
+    <span class="n">CONTROLLER_DEVICE_REMAPPED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERDEVICEREMAPPED</span>
+    <span class="c1"># No dollar gesture: logic implemented in Vulk</span>
+    <span class="n">DROP_FILE</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPFILE</span>
+    <span class="n">DROP_TEXT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPTEXT</span>
+    <span class="n">DROP_BEGIN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPBEGIN</span>
+    <span class="n">DROP_COMPLETE</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPCOMPLETE</span>
+    <span class="n">FINGER_MOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_FINGERMOTION</span>
+    <span class="n">FINGER_DOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_FINGERDOWN</span>
+    <span class="n">FINGER_UP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_FINGERUP</span>
+    <span class="n">KEY_DOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_KEYDOWN</span>
+    <span class="n">KEY_UP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_KEYUP</span>
+    <span class="n">JOY_AXISMOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYAXISMOTION</span>
+    <span class="n">JOY_BALLMOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYBALLMOTION</span>
+    <span class="n">JOY_HATMOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYHATMOTION</span>
+    <span class="n">JOY_BUTTONDOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYBUTTONDOWN</span>
+    <span class="n">JOY_BUTTONUP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYBUTTONUP</span>
+    <span class="n">JOY_DEVICEADDED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYDEVICEADDED</span>
+    <span class="n">JOY_DEVICEREMOVED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYDEVICEREMOVED</span>
+    <span class="n">MOUSE_MOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEMOTION</span>
+    <span class="n">MOUSE_BUTTONDOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEBUTTONDOWN</span>
+    <span class="n">MOUSE_BUTTONUP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEBUTTONUP</span>
+    <span class="n">MOUSE_WHEEL</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEWHEEL</span>
+    <span class="n">QUIT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_QUIT</span>
+    <span class="n">WINDOW</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_WINDOWEVENT</span>
+
+
+<span class="k">class</span> <span class="nc">KeyCode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">LEFT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_SCANCODE_LEFT</span>
+    <span class="n">RIGHT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_SCANCODE_RIGHT</span>
+
+
+<span class="k">class</span> <span class="nc">BaseEvent</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">timestamp</span>
+
+
+<span class="k">class</span> <span class="nc">KeyboardEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create keyboard event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_KeyboardEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">keysym</span><span class="o">.</span><span class="n">scancode</span>
+
+
+<span class="k">class</span> <span class="nc">MouseButtonEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create mouse button event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_MouseButtonEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">button</span>
+
+
+<span class="k">class</span> <span class="nc">MouseMotionEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create mouse motion event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_MouseMotionEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xr</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">xrel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yr</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">yrel</span>
+
+
+<span class="k">class</span> <span class="nc">QuitEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create quit event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_QuitEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+
+<span class="n">map_sdl_vulk</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">EventType</span><span class="o">.</span><span class="n">KEY_UP</span><span class="p">:</span> <span class="n">KeyboardEvent</span><span class="p">,</span>
+    <span class="n">EventType</span><span class="o">.</span><span class="n">KEY_DOWN</span><span class="p">:</span> <span class="n">KeyboardEvent</span><span class="p">,</span>
+    <span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_BUTTONUP</span><span class="p">:</span> <span class="n">MouseButtonEvent</span><span class="p">,</span>
+    <span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_BUTTONDOWN</span><span class="p">:</span> <span class="n">MouseButtonEvent</span><span class="p">,</span>
+    <span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_MOTION</span><span class="p">:</span> <span class="n">MouseMotionEvent</span><span class="p">,</span>
+    <span class="n">EventType</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span> <span class="n">QuitEvent</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">to_vulk_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Convert a SDL2 event to a Vulk Event</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `event` : `SDL_Event`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vulk_class</span> <span class="o">=</span> <span class="n">map_sdl_vulk</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vulk_class</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="k">if</span> <span class="n">vulk_class</span> <span class="k">else</span> <span class="bp">None</span>
 </pre></div>
 
   </div>
@@ -1086,7 +1278,7 @@ table {
   <section id="section-items">
     <h2 class="section-title" id="header-variables">Module variables</h2>
       <div class="item">
-      <p id="vulk.eventconstant.QUIT" class="name">var <span class="ident">QUIT</span></p>
+      <p id="vulk.eventconstant.map_sdl_vulk" class="name">var <span class="ident">map_sdl_vulk</span></p>
       
   
   <div class="source_cont">
@@ -1094,7 +1286,979 @@ table {
 
       </div>
 
+    <h2 class="section-title" id="header-functions">Functions</h2>
+      
+  <div class="item">
+    <div class="name def" id="vulk.eventconstant.to_vulk_event">
+    <p>def <span class="ident">to_vulk_event</span>(</p><p>event)</p>
+    </div>
+    
 
+    
+  
+    <div class="desc"><p>Convert a SDL2 event to a Vulk Event</p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event</code> : <code>SDL_Event</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.to_vulk_event', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.to_vulk_event" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">to_vulk_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Convert a SDL2 event to a Vulk Event</span>
+
+<span class="sd">    *Parameters:*</span>
+
+<span class="sd">    - `event` : `SDL_Event`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">vulk_class</span> <span class="o">=</span> <span class="n">map_sdl_vulk</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vulk_class</span><span class="p">(</span><span class="n">event</span><span class="p">)</span> <span class="k">if</span> <span class="n">vulk_class</span> <span class="k">else</span> <span class="bp">None</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.BaseEvent" class="name">class <span class="ident">BaseEvent</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.BaseEvent', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.BaseEvent" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">BaseEvent</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">timestamp</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.BaseEvent">BaseEvent</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.eventconstant.BaseEvent.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, event)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.BaseEvent.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.BaseEvent.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">common</span><span class="o">.</span><span class="n">timestamp</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.eventconstant.BaseEvent.timestamp" class="name">var <span class="ident">timestamp</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.BaseEvent.type" class="name">var <span class="ident">type</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.Button" class="name">class <span class="ident">Button</span></p>
+      
+  
+    <div class="desc"><p>An enumeration.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.Button', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.Button" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Button</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">LEFT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_LEFT</span>
+    <span class="n">MIDDLE</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_MIDDLE</span>
+    <span class="n">RIGHT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_RIGHT</span>
+    <span class="n">X1</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_X1</span>
+    <span class="n">X2</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_BUTTON_X2</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.Button">Button</a></li>
+          <li>enum.IntEnum</li>
+          <li>builtins.int</li>
+          <li>enum.Enum</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.eventconstant.Button.LEFT" class="name">var <span class="ident">LEFT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.Button.MIDDLE" class="name">var <span class="ident">MIDDLE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.Button.RIGHT" class="name">var <span class="ident">RIGHT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.Button.X1" class="name">var <span class="ident">X1</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.Button.X2" class="name">var <span class="ident">X2</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.EventType" class="name">class <span class="ident">EventType</span></p>
+      
+  
+    <div class="desc"><p>An enumeration.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.EventType', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.EventType" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">EventType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">AUDIO_DEVICE_ADDED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_AUDIODEVICEADDED</span>
+    <span class="n">AUDIO_DEVICE_REMOVED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_AUDIODEVICEREMOVED</span>
+    <span class="n">CONTROLLER_AXIS_MOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERAXISMOTION</span>
+    <span class="n">CONTROLLER_BUTTON_DOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERBUTTONDOWN</span>
+    <span class="n">CONTROLLER_BUTTON_UP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERBUTTONUP</span>
+    <span class="n">CONTROLLER_DEVICE_ADDED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERDEVICEADDED</span>
+    <span class="n">CONTROLLER_DEVICE_REMOVED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERDEVICEREMOVED</span>
+    <span class="n">CONTROLLER_DEVICE_REMAPPED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_CONTROLLERDEVICEREMAPPED</span>
+    <span class="c1"># No dollar gesture: logic implemented in Vulk</span>
+    <span class="n">DROP_FILE</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPFILE</span>
+    <span class="n">DROP_TEXT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPTEXT</span>
+    <span class="n">DROP_BEGIN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPBEGIN</span>
+    <span class="n">DROP_COMPLETE</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_DROPCOMPLETE</span>
+    <span class="n">FINGER_MOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_FINGERMOTION</span>
+    <span class="n">FINGER_DOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_FINGERDOWN</span>
+    <span class="n">FINGER_UP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_FINGERUP</span>
+    <span class="n">KEY_DOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_KEYDOWN</span>
+    <span class="n">KEY_UP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_KEYUP</span>
+    <span class="n">JOY_AXISMOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYAXISMOTION</span>
+    <span class="n">JOY_BALLMOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYBALLMOTION</span>
+    <span class="n">JOY_HATMOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYHATMOTION</span>
+    <span class="n">JOY_BUTTONDOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYBUTTONDOWN</span>
+    <span class="n">JOY_BUTTONUP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYBUTTONUP</span>
+    <span class="n">JOY_DEVICEADDED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYDEVICEADDED</span>
+    <span class="n">JOY_DEVICEREMOVED</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_JOYDEVICEREMOVED</span>
+    <span class="n">MOUSE_MOTION</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEMOTION</span>
+    <span class="n">MOUSE_BUTTONDOWN</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEBUTTONDOWN</span>
+    <span class="n">MOUSE_BUTTONUP</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEBUTTONUP</span>
+    <span class="n">MOUSE_WHEEL</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_MOUSEWHEEL</span>
+    <span class="n">QUIT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_QUIT</span>
+    <span class="n">WINDOW</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_WINDOWEVENT</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.EventType">EventType</a></li>
+          <li>enum.IntEnum</li>
+          <li>builtins.int</li>
+          <li>enum.Enum</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.AUDIO_DEVICE_ADDED" class="name">var <span class="ident">AUDIO_DEVICE_ADDED</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.AUDIO_DEVICE_REMOVED" class="name">var <span class="ident">AUDIO_DEVICE_REMOVED</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.CONTROLLER_AXIS_MOTION" class="name">var <span class="ident">CONTROLLER_AXIS_MOTION</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.CONTROLLER_BUTTON_DOWN" class="name">var <span class="ident">CONTROLLER_BUTTON_DOWN</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.CONTROLLER_BUTTON_UP" class="name">var <span class="ident">CONTROLLER_BUTTON_UP</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.CONTROLLER_DEVICE_ADDED" class="name">var <span class="ident">CONTROLLER_DEVICE_ADDED</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.CONTROLLER_DEVICE_REMAPPED" class="name">var <span class="ident">CONTROLLER_DEVICE_REMAPPED</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.CONTROLLER_DEVICE_REMOVED" class="name">var <span class="ident">CONTROLLER_DEVICE_REMOVED</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.DROP_BEGIN" class="name">var <span class="ident">DROP_BEGIN</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.DROP_COMPLETE" class="name">var <span class="ident">DROP_COMPLETE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.DROP_FILE" class="name">var <span class="ident">DROP_FILE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.DROP_TEXT" class="name">var <span class="ident">DROP_TEXT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.FINGER_DOWN" class="name">var <span class="ident">FINGER_DOWN</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.FINGER_MOTION" class="name">var <span class="ident">FINGER_MOTION</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.FINGER_UP" class="name">var <span class="ident">FINGER_UP</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.JOY_AXISMOTION" class="name">var <span class="ident">JOY_AXISMOTION</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.JOY_BALLMOTION" class="name">var <span class="ident">JOY_BALLMOTION</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.JOY_BUTTONDOWN" class="name">var <span class="ident">JOY_BUTTONDOWN</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.JOY_BUTTONUP" class="name">var <span class="ident">JOY_BUTTONUP</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.JOY_DEVICEADDED" class="name">var <span class="ident">JOY_DEVICEADDED</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.JOY_DEVICEREMOVED" class="name">var <span class="ident">JOY_DEVICEREMOVED</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.JOY_HATMOTION" class="name">var <span class="ident">JOY_HATMOTION</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.KEY_DOWN" class="name">var <span class="ident">KEY_DOWN</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.KEY_UP" class="name">var <span class="ident">KEY_UP</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.MOUSE_BUTTONDOWN" class="name">var <span class="ident">MOUSE_BUTTONDOWN</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.MOUSE_BUTTONUP" class="name">var <span class="ident">MOUSE_BUTTONUP</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.MOUSE_MOTION" class="name">var <span class="ident">MOUSE_MOTION</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.MOUSE_WHEEL" class="name">var <span class="ident">MOUSE_WHEEL</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.QUIT" class="name">var <span class="ident">QUIT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.EventType.WINDOW" class="name">var <span class="ident">WINDOW</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.KeyCode" class="name">class <span class="ident">KeyCode</span></p>
+      
+  
+    <div class="desc"><p>An enumeration.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.KeyCode', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.KeyCode" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">KeyCode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">LEFT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_SCANCODE_LEFT</span>
+    <span class="n">RIGHT</span> <span class="o">=</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_SCANCODE_RIGHT</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.KeyCode">KeyCode</a></li>
+          <li>enum.IntEnum</li>
+          <li>builtins.int</li>
+          <li>enum.Enum</li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.eventconstant.KeyCode.LEFT" class="name">var <span class="ident">LEFT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.KeyCode.RIGHT" class="name">var <span class="ident">RIGHT</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.KeyboardEvent" class="name">class <span class="ident">KeyboardEvent</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.KeyboardEvent', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.KeyboardEvent" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">KeyboardEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create keyboard event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_KeyboardEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">keysym</span><span class="o">.</span><span class="n">scancode</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.KeyboardEvent">KeyboardEvent</a></li>
+          <li><a href="#vulk.eventconstant.BaseEvent">BaseEvent</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.eventconstant.KeyboardEvent.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, event)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create keyboard event from <code>event</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event</code>: <code>SDL_KeyboardEvent</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.KeyboardEvent.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.KeyboardEvent.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create keyboard event from `event`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `event`: `SDL_KeyboardEvent`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">keysym</span><span class="o">.</span><span class="n">scancode</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.eventconstant.KeyboardEvent.key" class="name">var <span class="ident">key</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.MouseButtonEvent" class="name">class <span class="ident">MouseButtonEvent</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.MouseButtonEvent', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.MouseButtonEvent" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MouseButtonEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create mouse button event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_MouseButtonEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">button</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.MouseButtonEvent">MouseButtonEvent</a></li>
+          <li><a href="#vulk.eventconstant.BaseEvent">BaseEvent</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.eventconstant.MouseButtonEvent.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, event)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create mouse button event from <code>event</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event</code>: <code>SDL_MouseButtonEvent</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.MouseButtonEvent.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.MouseButtonEvent.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create mouse button event from `event`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `event`: `SDL_MouseButtonEvent`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">button</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.eventconstant.MouseButtonEvent.button" class="name">var <span class="ident">button</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.MouseButtonEvent.x" class="name">var <span class="ident">x</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.MouseButtonEvent.y" class="name">var <span class="ident">y</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.MouseMotionEvent" class="name">class <span class="ident">MouseMotionEvent</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.MouseMotionEvent', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.MouseMotionEvent" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MouseMotionEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create mouse motion event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_MouseMotionEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xr</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">xrel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yr</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">yrel</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.MouseMotionEvent">MouseMotionEvent</a></li>
+          <li><a href="#vulk.eventconstant.BaseEvent">BaseEvent</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.eventconstant.MouseMotionEvent.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, event)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create mouse motion event from <code>event</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event</code>: <code>SDL_MouseMotionEvent</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.MouseMotionEvent.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.MouseMotionEvent.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create mouse motion event from `event`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `event`: `SDL_MouseMotionEvent`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">x</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">y</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">xr</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">xrel</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">yr</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">motion</span><span class="o">.</span><span class="n">yrel</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="vulk.eventconstant.MouseMotionEvent.x" class="name">var <span class="ident">x</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.MouseMotionEvent.xr" class="name">var <span class="ident">xr</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.MouseMotionEvent.y" class="name">var <span class="ident">y</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="vulk.eventconstant.MouseMotionEvent.yr" class="name">var <span class="ident">yr</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.eventconstant.QuitEvent" class="name">class <span class="ident">QuitEvent</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.QuitEvent', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.QuitEvent" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">QuitEvent</span><span class="p">(</span><span class="n">BaseEvent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create quit event from `event`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `event`: `SDL_QuitEvent`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.eventconstant.QuitEvent">QuitEvent</a></li>
+          <li><a href="#vulk.eventconstant.BaseEvent">BaseEvent</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.eventconstant.QuitEvent.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, event)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.eventconstant.BaseEvent">BaseEvent</a></code>.<code><a href="#vulk.eventconstant.BaseEvent.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p>Create quit event from <code>event</code></p>
+
+<p><em>Parameters:</em></p>
+
+<ul>
+<li><code>event</code>: <code>SDL_QuitEvent</code></li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.eventconstant.QuitEvent.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.eventconstant.QuitEvent.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create quit event from `event`</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `event`: `SDL_QuitEvent`</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
 
   </section>
 

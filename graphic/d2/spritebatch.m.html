@@ -1134,6 +1134,7 @@ and reliable.</p>
 <span class="sd">and reliable.</span>
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">import</span> <span class="nn">math</span>
 
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">PATH_VULK_SHADER</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="kn">import</span> <span class="n">vulkanconstant</span> <span class="k">as</span> <span class="n">vc</span>
@@ -1427,20 +1428,15 @@ and reliable.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.vs.spv&quot;</span><span class="p">)</span>
-        <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.fs.spv&quot;</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">spirv_v</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">spirv_f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.vs.glsl&quot;</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.fs.glsl&quot;</span><span class="p">)</span>
 
         <span class="n">shaders_mapping</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">spirv_v</span><span class="p">,</span>
-            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">spirv_f</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">vs</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">fs</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgram</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">texture</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Update descriptor set containing texture</span>
@@ -1601,7 +1597,8 @@ and reliable.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `texture` at position x, y of size `width`, `height`</span>
 
@@ -1612,6 +1609,15 @@ and reliable.</p>
 <span class="sd">        - `y`: Y position</span>
 <span class="sd">        - `width`: Width</span>
 <span class="sd">        - `heigth`: Height</span>
+<span class="sd">        - `u`: U texture coordinate</span>
+<span class="sd">        - `v`: V texture coordinate</span>
+<span class="sd">        - `r`: Red channel</span>
+<span class="sd">        - `g`: Green channel</span>
+<span class="sd">        - `b`: Blue channel</span>
+<span class="sd">        - `a`: Alpha channel</span>
+<span class="sd">        - `scale_x`: Scaling on x axis</span>
+<span class="sd">        - `scale_y`: Scaling on y axis</span>
+<span class="sd">        - `rotation`: Rotation in radian (clockwise)</span>
 
 <span class="sd">        **Note: if width and height are set to 0, we take the image size**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -1627,21 +1633,58 @@ and reliable.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
 
+        <span class="n">width</span> <span class="o">*=</span> <span class="n">scale_x</span>
+        <span class="n">height</span> <span class="o">*=</span> <span class="n">scale_y</span>
+
         <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
         <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                    <span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
+        <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x2</span>
+        <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
+            <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+            <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+
+            <span class="c1"># Set coordinates at origin to do a proper rotation</span>
+            <span class="n">w1</span> <span class="o">=</span> <span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">w2</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="o">-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h1</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h1</span>
+
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x3</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y3</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x4</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x3</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
+            <span class="n">y4</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+
+            <span class="n">x1</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x2</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x3</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x4</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">y1</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y2</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y3</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y4</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span> <span class="o">=</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span>
+            <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">y4</span> <span class="o">=</span> <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `region` at position x, y of size `width`, `height`</span>
 
@@ -1652,12 +1695,20 @@ and reliable.</p>
 <span class="sd">        - `y`: Y position</span>
 <span class="sd">        - `width`: Width</span>
 <span class="sd">        - `heigth`: Height</span>
+<span class="sd">        - `r`: Red channel</span>
+<span class="sd">        - `g`: Green channel</span>
+<span class="sd">        - `b`: Blue channel</span>
+<span class="sd">        - `a`: Alpha channel</span>
+<span class="sd">        - `scale_x`: Scaling on x axis</span>
+<span class="sd">        - `scale_y`: Scaling on y axis</span>
+<span class="sd">        - `rotation`: Rotation in radian (clockwise)</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v</span>
         <span class="n">u2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u2</span>
         <span class="n">v2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span>
+                  <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">scale_x</span><span class="p">,</span> <span class="n">scale_y</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -1912,20 +1963,15 @@ of draw calls.</p>
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.vs.spv&quot;</span><span class="p">)</span>
-        <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.fs.spv&quot;</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">spirv_v</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">spirv_f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.vs.glsl&quot;</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.fs.glsl&quot;</span><span class="p">)</span>
 
         <span class="n">shaders_mapping</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">spirv_v</span><span class="p">,</span>
-            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">spirv_f</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">vs</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">fs</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgram</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">texture</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Update descriptor set containing texture</span>
@@ -2086,7 +2132,8 @@ of draw calls.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="bp">True</span>
 
-    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `texture` at position x, y of size `width`, `height`</span>
 
@@ -2097,6 +2144,15 @@ of draw calls.</p>
 <span class="sd">        - `y`: Y position</span>
 <span class="sd">        - `width`: Width</span>
 <span class="sd">        - `heigth`: Height</span>
+<span class="sd">        - `u`: U texture coordinate</span>
+<span class="sd">        - `v`: V texture coordinate</span>
+<span class="sd">        - `r`: Red channel</span>
+<span class="sd">        - `g`: Green channel</span>
+<span class="sd">        - `b`: Blue channel</span>
+<span class="sd">        - `a`: Alpha channel</span>
+<span class="sd">        - `scale_x`: Scaling on x axis</span>
+<span class="sd">        - `scale_y`: Scaling on y axis</span>
+<span class="sd">        - `rotation`: Rotation in radian (clockwise)</span>
 
 <span class="sd">        **Note: if width and height are set to 0, we take the image size**</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -2112,21 +2168,58 @@ of draw calls.</p>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
 
+        <span class="n">width</span> <span class="o">*=</span> <span class="n">scale_x</span>
+        <span class="n">height</span> <span class="o">*=</span> <span class="n">scale_y</span>
+
         <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
         <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
 
-        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                    <span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
+        <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x2</span>
+        <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
+            <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+            <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+
+            <span class="c1"># Set coordinates at origin to do a proper rotation</span>
+            <span class="n">w1</span> <span class="o">=</span> <span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">w2</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="o">-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h1</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h1</span>
+
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x3</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y3</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x4</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x3</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
+            <span class="n">y4</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+
+            <span class="n">x1</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x2</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x3</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x4</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">y1</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y2</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y3</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y4</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span> <span class="o">=</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span>
+            <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">y4</span> <span class="o">=</span> <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Draw `region` at position x, y of size `width`, `height`</span>
 
@@ -2137,12 +2230,20 @@ of draw calls.</p>
 <span class="sd">        - `y`: Y position</span>
 <span class="sd">        - `width`: Width</span>
 <span class="sd">        - `heigth`: Height</span>
+<span class="sd">        - `r`: Red channel</span>
+<span class="sd">        - `g`: Green channel</span>
+<span class="sd">        - `b`: Blue channel</span>
+<span class="sd">        - `a`: Alpha channel</span>
+<span class="sd">        - `scale_x`: Scaling on x axis</span>
+<span class="sd">        - `scale_y`: Scaling on y axis</span>
+<span class="sd">        - `rotation`: Rotation in radian (clockwise)</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v</span>
         <span class="n">u2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u2</span>
         <span class="n">v2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span>
+                  <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">scale_x</span><span class="p">,</span> <span class="n">scale_y</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2284,7 +2385,7 @@ of draw calls.</p>
             
   <div class="item">
     <div class="name def" id="vulk.graphic.d2.spritebatch.SpriteBatch.draw">
-    <p>def <span class="ident">draw</span>(</p><p>self, texture, x, y, width=0, height=0, u=0, v=0, u2=1, v2=1)</p>
+    <p>def <span class="ident">draw</span>(</p><p>self, texture, x, y, width=0, height=0, u=0, v=0, u2=1, v2=1, r=1, g=1, b=1, a=1, scale_x=1, scale_y=1, rotation=0)</p>
     </div>
     
 
@@ -2300,6 +2401,15 @@ of draw calls.</p>
 <li><code>y</code>: Y position</li>
 <li><code>width</code>: Width</li>
 <li><code>heigth</code>: Height</li>
+<li><code>u</code>: U texture coordinate</li>
+<li><code>v</code>: V texture coordinate</li>
+<li><code>r</code>: Red channel</li>
+<li><code>g</code>: Green channel</li>
+<li><code>b</code>: Blue channel</li>
+<li><code>a</code>: Alpha channel</li>
+<li><code>scale_x</code>: Scaling on x axis</li>
+<li><code>scale_y</code>: Scaling on y axis</li>
+<li><code>rotation</code>: Rotation in radian (clockwise)</li>
 </ul>
 
 <p><strong>Note: if width and height are set to 0, we take the image size</strong></p>
@@ -2307,7 +2417,8 @@ of draw calls.</p>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.d2.spritebatch.SpriteBatch.draw', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.d2.spritebatch.SpriteBatch.draw" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+         <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Draw `texture` at position x, y of size `width`, `height`</span>
 <span class="sd">    *Parameters:*</span>
@@ -2316,6 +2427,15 @@ of draw calls.</p>
 <span class="sd">    - `y`: Y position</span>
 <span class="sd">    - `width`: Width</span>
 <span class="sd">    - `heigth`: Height</span>
+<span class="sd">    - `u`: U texture coordinate</span>
+<span class="sd">    - `v`: V texture coordinate</span>
+<span class="sd">    - `r`: Red channel</span>
+<span class="sd">    - `g`: Green channel</span>
+<span class="sd">    - `b`: Blue channel</span>
+<span class="sd">    - `a`: Alpha channel</span>
+<span class="sd">    - `scale_x`: Scaling on x axis</span>
+<span class="sd">    - `scale_y`: Scaling on y axis</span>
+<span class="sd">    - `rotation`: Rotation in radian (clockwise)</span>
 <span class="sd">    **Note: if width and height are set to 0, we take the image size**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
@@ -2326,16 +2446,43 @@ of draw calls.</p>
         <span class="n">width</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">width</span>
         <span class="n">height</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">height</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
+    <span class="n">width</span> <span class="o">*=</span> <span class="n">scale_x</span>
+    <span class="n">height</span> <span class="o">*=</span> <span class="n">scale_y</span>
     <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
     <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">g</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                <span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
-                <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
+    <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x2</span>
+    <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y</span>
+    <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
+        <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+        <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+        <span class="c1"># Set coordinates at origin to do a proper rotation</span>
+        <span class="n">w1</span> <span class="o">=</span> <span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">w2</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="o">-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">h2</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h1</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h1</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+        <span class="n">y3</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+        <span class="n">x4</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x3</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
+        <span class="n">y4</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+        <span class="n">x1</span> <span class="o">+=</span> <span class="n">p1x</span>
+        <span class="n">x2</span> <span class="o">+=</span> <span class="n">p1x</span>
+        <span class="n">x3</span> <span class="o">+=</span> <span class="n">p1x</span>
+        <span class="n">x4</span> <span class="o">+=</span> <span class="n">p1x</span>
+        <span class="n">y1</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="n">y2</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="n">y3</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="n">y4</span> <span class="o">+=</span> <span class="n">p1y</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span> <span class="o">=</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span>
+        <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">y4</span> <span class="o">=</span> <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                <span class="p">([</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                <span class="p">([</span><span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
 </pre></div>
@@ -2348,7 +2495,7 @@ of draw calls.</p>
             
   <div class="item">
     <div class="name def" id="vulk.graphic.d2.spritebatch.SpriteBatch.draw_region">
-    <p>def <span class="ident">draw_region</span>(</p><p>self, region, x, y, width, height)</p>
+    <p>def <span class="ident">draw_region</span>(</p><p>self, region, x, y, width, height, r=1, g=1, b=1, a=1, scale_x=1, scale_y=1, rotation=0)</p>
     </div>
     
 
@@ -2364,12 +2511,20 @@ of draw calls.</p>
 <li><code>y</code>: Y position</li>
 <li><code>width</code>: Width</li>
 <li><code>heigth</code>: Height</li>
+<li><code>r</code>: Red channel</li>
+<li><code>g</code>: Green channel</li>
+<li><code>b</code>: Blue channel</li>
+<li><code>a</code>: Alpha channel</li>
+<li><code>scale_x</code>: Scaling on x axis</li>
+<li><code>scale_y</code>: Scaling on y axis</li>
+<li><code>rotation</code>: Rotation in radian (clockwise)</li>
 </ul>
 </div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.graphic.d2.spritebatch.SpriteBatch.draw_region', this);">Show source &equiv;</a></p>
   <div id="source-vulk.graphic.d2.spritebatch.SpriteBatch.draw_region" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Draw `region` at position x, y of size `width`, `height`</span>
 <span class="sd">    *Parameters:*</span>
@@ -2378,12 +2533,20 @@ of draw calls.</p>
 <span class="sd">    - `y`: Y position</span>
 <span class="sd">    - `width`: Width</span>
 <span class="sd">    - `heigth`: Height</span>
+<span class="sd">    - `r`: Red channel</span>
+<span class="sd">    - `g`: Green channel</span>
+<span class="sd">    - `b`: Blue channel</span>
+<span class="sd">    - `a`: Alpha channel</span>
+<span class="sd">    - `scale_x`: Scaling on x axis</span>
+<span class="sd">    - `scale_y`: Scaling on y axis</span>
+<span class="sd">    - `rotation`: Rotation in radian (clockwise)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">u</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v</span>
     <span class="n">u2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u2</span>
     <span class="n">v2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v2</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span>
+              <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">scale_x</span><span class="p">,</span> <span class="n">scale_y</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -2526,17 +2689,13 @@ Currently, <code>flush</code> register and submit command.</p>
 <span class="sd">    *Parameters:*</span>
 <span class="sd">    - `context`: `VulkContext`</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.vs.spv&quot;</span><span class="p">)</span>
-    <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.fs.spv&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">vs</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">spirv_v</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">spirv_f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.vs.glsl&quot;</span><span class="p">)</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.fs.glsl&quot;</span><span class="p">)</span>
     <span class="n">shaders_mapping</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">spirv_v</span><span class="p">,</span>
-        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">spirv_f</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">vs</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">fs</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgram</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span>
 </pre></div>
 
   </div>

@@ -1366,6 +1366,24 @@ table {
 
         </li>
         <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.ShaderProgramGlsl">ShaderProgramGlsl</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.ShaderProgramGlsl.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#vulk.vulkanobject.ShaderProgramGlslFile">ShaderProgramGlslFile</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#vulk.vulkanobject.ShaderProgramGlslFile.__init__">__init__</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
         <span class="class_name"><a href="#vulk.vulkanobject.SubmitInfo">SubmitInfo</a></span>
         
         </li>
@@ -1458,6 +1476,7 @@ module.</p>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pyshaderc</span>
 <span class="kn">import</span> <span class="nn">vulkan</span> <span class="kn">as</span> <span class="nn">vk</span>  <span class="c1"># pylint: disable=import-error</span>
 
 <span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="kn">import</span> <span class="n">VulkError</span>
@@ -1492,11 +1511,10 @@ module.</p>
 <span class="sd">    **Todo: I made a bitwise comparaison with `type_filter`, I have to test</span>
 <span class="sd">            it to be sure it&#39;s working**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">find_memory_type</span><span class="o">.</span><span class="n">cache_properties</span><span class="p">:</span>
-        <span class="n">find_memory_type</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceMemoryProperties</span><span class="p">(</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
+    <span class="n">cache_properties</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceMemoryProperties</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">memory_type</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">find_memory_type</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">memoryTypes</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">memory_type</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cache_properties</span><span class="o">.</span><span class="n">memoryTypes</span><span class="p">):</span>
         <span class="c1"># TODO: Test type_filter</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">type_filter</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">))</span> <span class="ow">and</span> \
            <span class="p">(</span><span class="n">memory_type</span><span class="o">.</span><span class="n">propertyFlags</span> <span class="o">&amp;</span> <span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="n">properties</span><span class="p">:</span>
@@ -1505,11 +1523,6 @@ module.</p>
     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Can&#39;t find suitable memory type&quot;</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-
-<span class="c1"># Set physical device memory properties in cache since it depends</span>
-<span class="c1"># only on the physical device</span>
-<span class="n">find_memory_type</span><span class="o">.</span><span class="n">cache_properties</span> <span class="o">=</span> <span class="bp">None</span>
 
 
 <span class="nd">@contextmanager</span>
@@ -1919,8 +1932,6 @@ module.</p>
 
 <span class="n">PipelineVertexInputState</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;PipelineVertexInputState&#39;</span><span class="p">,</span>
                                       <span class="p">[</span><span class="s1">&#39;bindings&#39;</span><span class="p">,</span> <span class="s1">&#39;attributes&#39;</span><span class="p">])</span>
-<span class="n">PipelineVertexInputState</span><span class="o">.</span><span class="fm">__new__</span><span class="o">.</span><span class="vm">__defaults__</span> <span class="o">=</span> \
-        <span class="p">([],)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">PipelineVertexInputState</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>
 <span class="n">PipelineVertexInputState</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">    *Parameters:*</span>
 
@@ -3832,6 +3843,71 @@ module.</p>
 
             <span class="n">module</span> <span class="o">=</span> <span class="n">ShaderModule</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">spirv</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PipelineShaderStage</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">ShaderProgramGlsl</span><span class="p">(</span><span class="n">ShaderProgram</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;ShaderProgramGlsl</span>
+
+<span class="sd">    A `ShaderProgramGlsl` is a `ShaderProgram` which compiles glsl to spirv.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">shaderc_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="s1">&#39;vert&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">TESSELLATION_CONTROL</span><span class="p">:</span> <span class="s1">&#39;tesc&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">TESSELLATION_EVALUATION</span><span class="p">:</span> <span class="s1">&#39;tese&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">GEOMETRY</span><span class="p">:</span> <span class="s1">&#39;geom&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="s1">&#39;frag&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">COMPUTE</span><span class="p">:</span> <span class="s1">&#39;comp&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `modules`: `dict` containing a mapping between `ShaderStage` and</span>
+<span class="sd">                     shader information.</span>
+<span class="sd">                     modules = {</span>
+<span class="sd">                         &#39;stage&#39;: {</span>
+<span class="sd">                             &#39;glsl&#39;: glsl shader, `bytes` object,</span>
+<span class="sd">                             &#39;path&#39;: path to file, needed if #include &quot;file&quot;</span>
+<span class="sd">                         }</span>
+<span class="sd">                     }</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">spirv_modules</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">glsl</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;glsl&#39;</span><span class="p">]</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;nofile&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">glsl</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;shader must be a bytes object&quot;</span><span class="p">)</span>
+
+            <span class="n">stage_shaderc</span> <span class="o">=</span> <span class="n">ShaderProgramGlsl</span><span class="o">.</span><span class="n">shaderc_mapping</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span>
+            <span class="n">spirv</span> <span class="o">=</span> <span class="n">pyshaderc</span><span class="o">.</span><span class="n">compile_into_spirv</span><span class="p">(</span><span class="n">glsl</span><span class="p">,</span> <span class="n">stage_shaderc</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">spirv_modules</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="n">spirv</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">spirv_modules</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">ShaderProgramGlsl</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;ShaderProgramGlslFile</span>
+
+<span class="sd">    It&#39;s a `ShaderProgramGlsl` which needs only file paths.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `modules`: `dict` containing a mapping between `ShaderStage` and</span>
+<span class="sd">                     shader path (glsl format).</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">glsl_modules</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">glsl_modules</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;glsl&#39;</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">path</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">glsl_modules</span><span class="p">)</span>
 </pre></div>
 
   </div>
@@ -3922,11 +3998,10 @@ own application requirements to find the right type of memory to use.</p>
 <span class="sd">    **Todo: I made a bitwise comparaison with `type_filter`, I have to test</span>
 <span class="sd">            it to be sure it&#39;s working**</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">find_memory_type</span><span class="o">.</span><span class="n">cache_properties</span><span class="p">:</span>
-        <span class="n">find_memory_type</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceMemoryProperties</span><span class="p">(</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
+    <span class="n">cache_properties</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetPhysicalDeviceMemoryProperties</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">physical_device</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">memory_type</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">find_memory_type</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">memoryTypes</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">memory_type</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cache_properties</span><span class="o">.</span><span class="n">memoryTypes</span><span class="p">):</span>
         <span class="c1"># TODO: Test type_filter</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">type_filter</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">))</span> <span class="ow">and</span> \
            <span class="p">(</span><span class="n">memory_type</span><span class="o">.</span><span class="n">propertyFlags</span> <span class="o">&amp;</span> <span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="n">properties</span><span class="p">:</span>
@@ -11210,6 +11285,245 @@ The real Vulkan module can be accessed by the 'module' property.</p>
 </div>
 
             </div>
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.ShaderProgramGlsl" class="name">class <span class="ident">ShaderProgramGlsl</span></p>
+      
+  
+    <div class="desc"><p>ShaderProgramGlsl</p>
+
+<p>A <code>ShaderProgramGlsl</code> is a <code>ShaderProgram</code> which compiles glsl to spirv.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ShaderProgramGlsl', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.ShaderProgramGlsl" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ShaderProgramGlsl</span><span class="p">(</span><span class="n">ShaderProgram</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;ShaderProgramGlsl</span>
+
+<span class="sd">    A `ShaderProgramGlsl` is a `ShaderProgram` which compiles glsl to spirv.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">shaderc_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="s1">&#39;vert&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">TESSELLATION_CONTROL</span><span class="p">:</span> <span class="s1">&#39;tesc&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">TESSELLATION_EVALUATION</span><span class="p">:</span> <span class="s1">&#39;tese&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">GEOMETRY</span><span class="p">:</span> <span class="s1">&#39;geom&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="s1">&#39;frag&#39;</span><span class="p">,</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">COMPUTE</span><span class="p">:</span> <span class="s1">&#39;comp&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `modules`: `dict` containing a mapping between `ShaderStage` and</span>
+<span class="sd">                     shader information.</span>
+<span class="sd">                     modules = {</span>
+<span class="sd">                         &#39;stage&#39;: {</span>
+<span class="sd">                             &#39;glsl&#39;: glsl shader, `bytes` object,</span>
+<span class="sd">                             &#39;path&#39;: path to file, needed if #include &quot;file&quot;</span>
+<span class="sd">                         }</span>
+<span class="sd">                     }</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">spirv_modules</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">glsl</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;glsl&#39;</span><span class="p">]</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;nofile&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">glsl</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;shader must be a bytes object&quot;</span><span class="p">)</span>
+
+            <span class="n">stage_shaderc</span> <span class="o">=</span> <span class="n">ShaderProgramGlsl</span><span class="o">.</span><span class="n">shaderc_mapping</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span>
+            <span class="n">spirv</span> <span class="o">=</span> <span class="n">pyshaderc</span><span class="o">.</span><span class="n">compile_into_spirv</span><span class="p">(</span><span class="n">glsl</span><span class="p">,</span> <span class="n">stage_shaderc</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">spirv_modules</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="n">spirv</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">spirv_modules</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.ShaderProgramGlsl">ShaderProgramGlsl</a></li>
+          <li><a href="#vulk.vulkanobject.ShaderProgram">ShaderProgram</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.ShaderProgramGlsl.shaderc_mapping" class="name">var <span class="ident">shaderc_mapping</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.ShaderProgramGlsl.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, modules)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>modules</code>: <code>dict</code> containing a mapping between <code>ShaderStage</code> and
+         shader information.
+         modules = {
+             'stage': {
+                 'glsl': glsl shader, <code>bytes</code> object,
+                 'path': path to file, needed if #include "file"
+             }
+         }</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ShaderProgramGlsl.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.ShaderProgramGlsl.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `modules`: `dict` containing a mapping between `ShaderStage` and</span>
+<span class="sd">                 shader information.</span>
+<span class="sd">                 modules = {</span>
+<span class="sd">                     &#39;stage&#39;: {</span>
+<span class="sd">                         &#39;glsl&#39;: glsl shader, `bytes` object,</span>
+<span class="sd">                         &#39;path&#39;: path to file, needed if #include &quot;file&quot;</span>
+<span class="sd">                     }</span>
+<span class="sd">                 }</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">spirv_modules</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">glsl</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;glsl&#39;</span><span class="p">]</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="s1">&#39;nofile&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">glsl</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;shader must be a bytes object&quot;</span><span class="p">)</span>
+        <span class="n">stage_shaderc</span> <span class="o">=</span> <span class="n">ShaderProgramGlsl</span><span class="o">.</span><span class="n">shaderc_mapping</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span>
+        <span class="n">spirv</span> <span class="o">=</span> <span class="n">pyshaderc</span><span class="o">.</span><span class="n">compile_into_spirv</span><span class="p">(</span><span class="n">glsl</span><span class="p">,</span> <span class="n">stage_shaderc</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">spirv_modules</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="n">spirv</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">spirv_modules</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="vulk.vulkanobject.ShaderProgramGlslFile" class="name">class <span class="ident">ShaderProgramGlslFile</span></p>
+      
+  
+    <div class="desc"><p>ShaderProgramGlslFile</p>
+
+<p>It's a <code>ShaderProgramGlsl</code> which needs only file paths.</p>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ShaderProgramGlslFile', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.ShaderProgramGlslFile" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">ShaderProgramGlsl</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;ShaderProgramGlslFile</span>
+
+<span class="sd">    It&#39;s a `ShaderProgramGlsl` which needs only file paths.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `modules`: `dict` containing a mapping between `ShaderStage` and</span>
+<span class="sd">                     shader path (glsl format).</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">glsl_modules</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">glsl_modules</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;glsl&#39;</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">path</span><span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">glsl_modules</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#vulk.vulkanobject.ShaderProgramGlslFile">ShaderProgramGlslFile</a></li>
+          <li><a href="#vulk.vulkanobject.ShaderProgramGlsl">ShaderProgramGlsl</a></li>
+          <li><a href="#vulk.vulkanobject.ShaderProgram">ShaderProgram</a></li>
+          <li>builtins.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="vulk.vulkanobject.ShaderProgramGlslFile.shaderc_mapping" class="name">var <span class="ident">shaderc_mapping</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Static methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="vulk.vulkanobject.ShaderProgramGlslFile.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, context, modules)</p>
+    </div>
+    
+    <p class="inheritance">
+     <strong>Inheritance:</strong>
+       <code><a href="#vulk.vulkanobject.ShaderProgramGlsl">ShaderProgramGlsl</a></code>.<code><a href="#vulk.vulkanobject.ShaderProgramGlsl.__init__">__init__</a></code>
+    </p>
+
+    
+  
+    <div class="desc"><p><em>Parameters:</em></p>
+
+<ul>
+<li><code>context</code>: <code>VulkContext</code></li>
+<li><code>modules</code>: <code>dict</code> containing a mapping between <code>ShaderStage</code> and
+         shader path (glsl format).</li>
+</ul>
+</div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-vulk.vulkanobject.ShaderProgramGlslFile.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-vulk.vulkanobject.ShaderProgramGlslFile.__init__" class="source">
+    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">modules</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    *Parameters:*</span>
+<span class="sd">    - `context`: `VulkContext`</span>
+<span class="sd">    - `modules`: `dict` containing a mapping between `ShaderStage` and</span>
+<span class="sd">                 shader path (glsl format).</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">glsl_modules</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">stage</span><span class="p">,</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">glsl_modules</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;glsl&#39;</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">path</span><span class="p">}</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">glsl_modules</span><span class="p">)</span>
+</pre></div>
+
+  </div>
+</div>
+
+  </div>
+  
       </div>
       </div>
       
