@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>vulk.graphic package &#8212; Vulk 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="vulk-graphic-package">
+<h1>vulk.graphic package<a class="headerlink" href="#vulk-graphic-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vulk.graphic.d2.html">vulk.graphic.d2 package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#vulk-graphic-d2-batch-module">vulk.graphic.d2.batch module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#vulk-graphic-d2-scene-module">vulk.graphic.d2.scene module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vulk.graphic.d3.html">vulk.graphic.d3 package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d3.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d3.html#module-vulk.graphic.d3.attribute">vulk.graphic.d3.attribute module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d3.html#module-vulk.graphic.d3">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vulk.graphic.camera">
+<span id="vulk-graphic-camera-module"></span><h2>vulk.graphic.camera module<a class="headerlink" href="#module-vulk.graphic.camera" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vulk.graphic.camera.Camera">
+<em class="property">class </em><code class="descclassname">vulk.graphic.camera.</code><code class="descname">Camera</code><a class="reference internal" href="_modules/vulk/graphic/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.Camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">abc.ABC</span></code></p>
+<dl class="method">
+<dt id="vulk.graphic.camera.Camera.unproject">
+<code class="descname">unproject</code><span class="sig-paren">(</span><em>position</em>, <em>viewport_x</em>, <em>viewport_y</em>, <em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#Camera.unproject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.Camera.unproject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unproject <cite>position</cite> to view matrix.
+Allow to get world coordinate from screen coordinate.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><cite>position</cite>: <cite>Vector3</cite> screen position right-handed.</dt>
+<dd>z(0) = near plane, z(1) = far plane</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.camera.Camera.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>update_frustum=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#Camera.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.Camera.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.camera.OrthographicCamera">
+<em class="property">class </em><code class="descclassname">vulk.graphic.camera.</code><code class="descname">OrthographicCamera</code><span class="sig-paren">(</span><em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#OrthographicCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.OrthographicCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.camera.Camera" title="vulk.graphic.camera.Camera"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.camera.Camera</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.camera.OrthographicCamera.to_orthographic">
+<code class="descname">to_orthographic</code><span class="sig-paren">(</span><em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#OrthographicCamera.to_orthographic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.OrthographicCamera.to_orthographic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.camera.OrthographicCamera.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>update_frustum=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#OrthographicCamera.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.OrthographicCamera.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.camera.PerspectiveCamera">
+<em class="property">class </em><code class="descclassname">vulk.graphic.camera.</code><code class="descname">PerspectiveCamera</code><span class="sig-paren">(</span><em>fov</em>, <em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#PerspectiveCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.PerspectiveCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.camera.Camera" title="vulk.graphic.camera.Camera"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.camera.Camera</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.camera.PerspectiveCamera.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>update_frustum=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#PerspectiveCamera.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.PerspectiveCamera.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="vulk-graphic-mesh-module">
+<h2>vulk.graphic.mesh module<a class="headerlink" href="#vulk-graphic-mesh-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="vulk-graphic-texture-module">
+<h2>vulk.graphic.texture module<a class="headerlink" href="#vulk-graphic-texture-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="vulk-graphic-uniform-module">
+<h2>vulk.graphic.uniform module<a class="headerlink" href="#vulk-graphic-uniform-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vulk.graphic.util">
+<span id="vulk-graphic-util-module"></span><h2>vulk.graphic.util module<a class="headerlink" href="#module-vulk.graphic.util" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vulk.graphic.util.Color">
+<em class="property">class </em><code class="descclassname">vulk.graphic.util.</code><code class="descname">Color</code><span class="sig-paren">(</span><em>r=1</em>, <em>g=1</em>, <em>b=1</em>, <em>a=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/util.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.util.Color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.a">
+<code class="descname">a</code><a class="headerlink" href="#vulk.graphic.util.Color.a" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.b">
+<code class="descname">b</code><a class="headerlink" href="#vulk.graphic.util.Color.b" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.g">
+<code class="descname">g</code><a class="headerlink" href="#vulk.graphic.util.Color.g" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.r">
+<code class="descname">r</code><a class="headerlink" href="#vulk.graphic.util.Color.r" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vulk.graphic">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vulk.graphic" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">vulk.graphic package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.camera">vulk.graphic.camera module</a></li>
+<li><a class="reference internal" href="#vulk-graphic-mesh-module">vulk.graphic.mesh module</a></li>
+<li><a class="reference internal" href="#vulk-graphic-texture-module">vulk.graphic.texture module</a></li>
+<li><a class="reference internal" href="#vulk-graphic-uniform-module">vulk.graphic.uniform module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.util">vulk.graphic.util module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/vulk.graphic.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Vulk Engine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/vulk.graphic.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

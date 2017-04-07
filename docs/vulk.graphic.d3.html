@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>vulk.graphic.d3 package &#8212; Vulk 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="vulk-graphic-d3-package">
+<h1>vulk.graphic.d3 package<a class="headerlink" href="#vulk-graphic-d3-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vulk.graphic.d3.attribute">
+<span id="vulk-graphic-d3-attribute-module"></span><h2>vulk.graphic.d3.attribute module<a class="headerlink" href="#module-vulk.graphic.d3.attribute" title="Permalink to this headline">¶</a></h2>
+<p>This package contains material and attributes class</p>
+<dl class="class">
+<dt id="vulk.graphic.d3.attribute.Attribute">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d3.attribute.</code><code class="descname">Attribute</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d3/attribute.html#Attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d3.attribute.Attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Base class for attribute classes.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d3.attribute.Attributes">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d3.attribute.</code><code class="descname">Attributes</code><span class="sig-paren">(</span><em>attributes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d3/attribute.html#Attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d3.attribute.Attributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Attributes is the base class for all attributes container.
+<cite>Environment</cite> and <cite>Material</cite> are attribute container</p>
+<dl class="method">
+<dt id="vulk.graphic.d3.attribute.Attributes.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>attribute_class</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d3/attribute.html#Attributes.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d3.attribute.Attributes.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an attribute by class</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>attribute_class</cite>: Class of the attribute to retrieve</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d3.attribute.Attributes.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>attribute</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d3/attribute.html#Attributes.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d3.attribute.Attributes.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a material attribute</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>attribute</cite>: <cite>Attribute</cite> to set</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d3.attribute.ColorAttribute">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d3.attribute.</code><code class="descname">ColorAttribute</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d3/attribute.html#ColorAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d3.attribute.ColorAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d3.attribute.Attribute" title="vulk.graphic.d3.attribute.Attribute"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d3.attribute.Attribute</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d3.attribute.Environments">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d3.attribute.</code><code class="descname">Environments</code><span class="sig-paren">(</span><em>attributes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d3/attribute.html#Environments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d3.attribute.Environments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d3.attribute.Attributes" title="vulk.graphic.d3.attribute.Attributes"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d3.attribute.Attributes</span></code></a></p>
+<p>Environment contains all <cite>Attribute</cite> related to the environment,
+like lights, fogs...</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d3.attribute.Material">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d3.attribute.</code><code class="descname">Material</code><span class="sig-paren">(</span><em>attributes=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d3/attribute.html#Material"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d3.attribute.Material" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d3.attribute.Attributes" title="vulk.graphic.d3.attribute.Attributes"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d3.attribute.Attributes</span></code></a></p>
+<p>Material is a container for <cite>Attribute</cite> objects</p>
+<p>Only one object of the same <cite>Attribute</cite> class can be inside the
+material. If you set an attribute which is already in the <cite>Material</cite>,
+the old one is replaced by the new one.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vulk.graphic.d3">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vulk.graphic.d3" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">vulk.graphic.d3 package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.d3.attribute">vulk.graphic.d3.attribute module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.d3">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/vulk.graphic.d3.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Vulk Engine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/vulk.graphic.d3.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
