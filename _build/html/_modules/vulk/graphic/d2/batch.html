@@ -1,0 +1,1116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>vulk.graphic.d2.batch &#8212; Vulk 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for vulk.graphic.d2.batch</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;BaseBatch module</span>
+
+<span class="sd">BaseBatch is used by SpriteBatch and BlockBatch.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="k">import</span> <span class="n">PATH_VULK_SHADER</span>
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="k">import</span> <span class="n">vulkanconstant</span> <span class="k">as</span> <span class="n">vc</span>
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="k">import</span> <span class="n">vulkanobject</span> <span class="k">as</span> <span class="n">vo</span>
+<span class="kn">from</span> <span class="nn">vulk</span> <span class="k">import</span> <span class="n">vulkanutil</span> <span class="k">as</span> <span class="n">vu</span>
+<span class="kn">from</span> <span class="nn">vulk.graphic</span> <span class="k">import</span> <span class="n">mesh</span> <span class="k">as</span> <span class="n">me</span>
+<span class="kn">from</span> <span class="nn">vulk.graphic</span> <span class="k">import</span> <span class="n">uniform</span>
+<span class="kn">from</span> <span class="nn">vulk.math.matrix</span> <span class="k">import</span> <span class="n">ProjectionMatrix</span><span class="p">,</span> <span class="n">TransformationMatrix</span><span class="p">,</span> <span class="n">Matrix4</span>
+
+
+<div class="viewcode-block" id="BaseBatch"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch">[docs]</a><span class="k">class</span> <span class="nc">BaseBatch</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">out_view</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize BaseBatch</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `size`: Max number of block in one batch</span>
+<span class="sd">        - `shaderprogram`: Custom `ShaderProgram`</span>
+<span class="sd">        - `clear`: `list` of 4 `float` (r,g,b,a) or `None`</span>
+<span class="sd">        - `out_view`: Out `ImageView` to render into</span>
+
+<span class="sd">        **Note: By default, `BaseBatch` doesn&#39;t clear `out_image`, you have</span>
+<span class="sd">                to fill `clear` to clear `out_image`**</span>
+
+<span class="sd">        **Note: By default, out image is the context `final_image`, you can</span>
+<span class="sd">                override this behavior with the `out_view` parameter**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># ShaderProgram</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">shaderprogram</span><span class="p">:</span>
+            <span class="n">shaderprogram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_default_shaderprogram</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shaderprogram</span> <span class="o">=</span> <span class="n">shaderprogram</span>
+
+        <span class="c1"># Stored parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span> <span class="o">=</span> <span class="n">out_view</span> <span class="k">if</span> <span class="n">out_view</span> <span class="k">else</span> <span class="n">context</span><span class="o">.</span><span class="n">final_image_view</span>
+
+        <span class="c1"># Init rendering attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_mesh</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_indices</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_uniform</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_commandpool</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_renderpass</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_descriptorpool</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorlayout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_descriptorlayout</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipelinelayout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_pipelinelayout</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_pipeline</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_framebuffer</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="c1"># Others attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span> <span class="o">=</span> <span class="n">ProjectionMatrix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">to_orthographic_2d</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span> <span class="o">=</span> <span class="n">TransformationMatrix</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span> <span class="o">=</span> <span class="n">Matrix4</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="BaseBatch.init_indices"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.init_indices">[docs]</a>    <span class="k">def</span> <span class="nf">init_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize mesh&#39;s indices.</span>
+<span class="sd">        It&#39;s done only at initialization for better performance.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `size`: Number of blocks to handle</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">indices_array</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+            <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+            <span class="n">indices</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">indices</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="n">indices</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span>
+            <span class="n">indices</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">3</span>
+            <span class="n">indices</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">4</span></div>
+
+<div class="viewcode-block" id="BaseBatch.init_uniform"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.init_uniform">[docs]</a>    <span class="k">def</span> <span class="nf">init_uniform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize `BlockBatch` uniforms.</span>
+<span class="sd">        It contains only the `combined_matrix` but you can extend it to add</span>
+<span class="sd">        uniforms.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">matrix_attribute</span> <span class="o">=</span> <span class="n">uniform</span><span class="o">.</span><span class="n">UniformAttribute</span><span class="p">(</span>
+            <span class="n">uniform</span><span class="o">.</span><span class="n">UniformShapeType</span><span class="o">.</span><span class="n">MATRIX4</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">DataType</span><span class="o">.</span><span class="n">SFLOAT32</span><span class="p">)</span>
+        <span class="n">uniform_attributes</span> <span class="o">=</span> <span class="n">uniform</span><span class="o">.</span><span class="n">UniformAttributes</span><span class="p">([</span><span class="n">matrix_attribute</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">uniform</span><span class="o">.</span><span class="n">UniformBlock</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">uniform_attributes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseBatch.init_commandpool"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.init_commandpool">[docs]</a>    <span class="k">def</span> <span class="nf">init_commandpool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">vu</span><span class="o">.</span><span class="n">CommandBufferSynchronizedPool</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseBatch.init_renderpass"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.init_renderpass">[docs]</a>    <span class="k">def</span> <span class="nf">init_renderpass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize `BlockBatch` renderpass</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">attachment</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">AttachmentDescription</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out_view</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">LOAD</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">STORE</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentLoadOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">AttachmentStoreOp</span><span class="o">.</span><span class="n">DONT_CARE</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">)</span>
+        <span class="n">subpass</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">SubpassDescription</span><span class="p">([</span><span class="n">vo</span><span class="o">.</span><span class="n">AttachmentReference</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OPTIMAL</span><span class="p">)],</span>
+            <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[])</span>
+        <span class="n">dependency</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">SubpassDependency</span><span class="p">(</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">SUBPASS_EXTERNAL</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OUTPUT</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_OUTPUT</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_READ</span> <span class="o">|</span> <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">COLOR_ATTACHMENT_WRITE</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">Renderpass</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">[</span><span class="n">attachment</span><span class="p">],</span> <span class="p">[</span><span class="n">subpass</span><span class="p">],</span> <span class="p">[</span><span class="n">dependency</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="BaseBatch.init_pipelinelayout"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.init_pipelinelayout">[docs]</a>    <span class="k">def</span> <span class="nf">init_pipelinelayout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize pipeline layout</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorlayout</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="BaseBatch.init_pipeline"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.init_pipeline">[docs]</a>    <span class="k">def</span> <span class="nf">init_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize pipeline</span>
+
+<span class="sd">        Here we are to set the Vulkan pipeline.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># Vertex attribute</span>
+        <span class="n">vertex_description</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">VertexInputBindingDescription</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">VertexInputRate</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">)</span>
+
+        <span class="n">vk_attrs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="n">vk_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">VertexInputAttributeDescription</span><span class="p">(</span>
+                <span class="n">attr</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">attr</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">attr</span><span class="o">.</span><span class="n">offset</span><span class="p">))</span>
+
+        <span class="n">vertex_input</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineVertexInputState</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">vertex_description</span><span class="p">],</span> <span class="n">vk_attrs</span><span class="p">)</span>
+        <span class="n">input_assembly</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineInputAssemblyState</span><span class="p">(</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">PrimitiveTopology</span><span class="o">.</span><span class="n">TRIANGLE_LIST</span><span class="p">)</span>
+
+        <span class="c1"># Viewport and Scissor</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Viewport</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">scissor</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Rect2D</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Offset2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                            <span class="n">vo</span><span class="o">.</span><span class="n">Extent2D</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+        <span class="n">viewport_state</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineViewportState</span><span class="p">([</span><span class="n">viewport</span><span class="p">],</span> <span class="p">[</span><span class="n">scissor</span><span class="p">])</span>
+
+        <span class="c1"># Rasterization</span>
+        <span class="n">rasterization</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineRasterizationState</span><span class="p">(</span>
+            <span class="kc">False</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">PolygonMode</span><span class="o">.</span><span class="n">FILL</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">CullMode</span><span class="o">.</span><span class="n">BACK</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">FrontFace</span><span class="o">.</span><span class="n">COUNTER_CLOCKWISE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Disable multisampling</span>
+        <span class="n">multisample</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineMultisampleState</span><span class="p">(</span>
+            <span class="kc">False</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SampleCount</span><span class="o">.</span><span class="n">COUNT_1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Disable depth</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Enable blending</span>
+        <span class="n">blend_attachment</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineColorBlendAttachmentState</span><span class="p">(</span>
+            <span class="kc">True</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BlendFactor</span><span class="o">.</span><span class="n">SRC_ALPHA</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">BlendFactor</span><span class="o">.</span><span class="n">ONE_MINUS_SRC_ALPHA</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BlendOp</span><span class="o">.</span><span class="n">ADD</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">BlendFactor</span><span class="o">.</span><span class="n">SRC_ALPHA</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BlendFactor</span><span class="o">.</span><span class="n">ONE_MINUS_SRC_ALPHA</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">BlendOp</span><span class="o">.</span><span class="n">ADD</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ColorComponent</span><span class="o">.</span><span class="n">R</span> <span class="o">|</span> <span class="n">vc</span><span class="o">.</span><span class="n">ColorComponent</span><span class="o">.</span><span class="n">G</span> <span class="o">|</span> <span class="n">vc</span><span class="o">.</span><span class="n">ColorComponent</span><span class="o">.</span><span class="n">B</span> <span class="o">|</span> <span class="n">vc</span><span class="o">.</span><span class="n">ColorComponent</span><span class="o">.</span><span class="n">A</span> <span class="c1"># noqa</span>
+        <span class="p">)</span>
+        <span class="n">blend</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">PipelineColorBlendState</span><span class="p">(</span>
+            <span class="kc">False</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">LogicOp</span><span class="o">.</span><span class="n">COPY</span><span class="p">,</span> <span class="p">[</span><span class="n">blend_attachment</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">dynamic</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">Pipeline</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shaderprogram</span><span class="o">.</span><span class="n">stages</span><span class="p">,</span> <span class="n">vertex_input</span><span class="p">,</span> <span class="n">input_assembly</span><span class="p">,</span>
+            <span class="n">viewport_state</span><span class="p">,</span> <span class="n">rasterization</span><span class="p">,</span> <span class="n">multisample</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span>
+            <span class="n">blend</span><span class="p">,</span> <span class="n">dynamic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelinelayout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseBatch.init_framebuffer"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.init_framebuffer">[docs]</a>    <span class="k">def</span> <span class="nf">init_framebuffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create the framebuffer with the final_image (from context)</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">Framebuffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">out_view</span><span class="p">],</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseBatch.begin"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.begin">[docs]</a>    <span class="k">def</span> <span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">semaphores</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Begin drawing sprites</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `semaphore`: `list` of `Semaphore` to wait on before</span>
+<span class="sd">                       starting all drawing operations</span>
+
+<span class="sd">        **Note: `context` is borrowed until `end` call**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">upload_matrices</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Keep the context only during rendering and release it at `end` call</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">semaphores</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseBatch.end"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.end">[docs]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;End drawing of sprite</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        `Semaphore` signaled when all drawing operations in</span>
+<span class="sd">        `SpriteBatch` are finished</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">end</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseBatch.upload_matrices"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.upload_matrices">[docs]</a>    <span class="k">def</span> <span class="nf">upload_matrices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Compute combined matrix from transform and projection matrix.</span>
+<span class="sd">        Then upload combined matrix.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">set_uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">combined_matrix</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BaseBatch.update_transform"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.update_transform">[docs]</a>    <span class="k">def</span> <span class="nf">update_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Update the transfrom matrix with `matrix`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix4`</span>
+
+<span class="sd">        **Note: This function doesn&#39;t keep a reference to the matrix,</span>
+<span class="sd">                it only copies data**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="BaseBatch.update_projection"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BaseBatch.update_projection">[docs]</a>    <span class="k">def</span> <span class="nf">update_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Update the projection matrix with `matrix`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix4`</span>
+
+<span class="sd">        **Note: This function doesn&#39;t keep a reference to the matrix,</span>
+<span class="sd">                it only copies data**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projection_matrix</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrices_dirty</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="BlockProperty"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockProperty">[docs]</a><span class="k">class</span> <span class="nc">BlockProperty</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Allow to set properties for a draw call&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        x, y: position</span>
+<span class="sd">        width, height: size</span>
+<span class="sd">        colors: color of each point (top-left, top-right, bot-right, bot-left)</span>
+<span class="sd">        scale: x and y scale</span>
+<span class="sd">        rotation: rotation in clockwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">border_widths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">border_radius</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">border_colors</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span></div>
+
+
+<div class="viewcode-block" id="BlockBatch"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch">[docs]</a><span class="k">class</span> <span class="nc">BlockBatch</span><span class="p">(</span><span class="n">BaseBatch</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    BlockBatch allows to batch lot of block (small and stylized quad) into</span>
+<span class="sd">    minimum of draw calls.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">out_view</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="p">,</span> <span class="n">out_view</span><span class="p">)</span>
+
+        <span class="c1"># Init rendering attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_descriptorsets</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BlockBatch.init_mesh"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch.init_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">init_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize the Mesh handling blocks</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `size`: Number of blocks to handle</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vertex_attributes</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">VertexAttributes</span><span class="p">([</span>
+            <span class="c1"># Position</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Texture UV</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Color</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border widths</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (top)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (right)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (bottom)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (left)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border radius</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">)</span>
+        <span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">me</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span> <span class="n">vertex_attributes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BlockBatch.init_descriptorpool"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch.init_descriptorpool">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorpool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="c1"># Only 1 uniform buffer</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">pool_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">vo</span><span class="o">.</span><span class="n">DescriptorPoolSize</span><span class="p">(</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span> <span class="n">size</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorPool</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">pool_sizes</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BlockBatch.init_descriptorlayout"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch.init_descriptorlayout">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorlayout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">ubo_descriptor</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorSetLayoutBinding</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">bindings</span> <span class="o">=</span> <span class="p">[</span><span class="n">ubo_descriptor</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorSetLayout</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">bindings</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BlockBatch.init_descriptorsets"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch.init_descriptorsets">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the descriptor set (for mat4)&quot;&quot;&quot;</span>
+        <span class="n">descriptorsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span><span class="o">.</span><span class="n">allocate_descriptorsets</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorlayout</span><span class="p">])</span>
+
+        <span class="n">descriptorub_info</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorBufferInfo</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">uniform_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">descriptorub_write</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">WriteDescriptorSet</span><span class="p">(</span>
+            <span class="n">descriptorsets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">descriptorub_info</span><span class="p">])</span>
+
+        <span class="n">vo</span><span class="o">.</span><span class="n">update_descriptorsets</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">[</span><span class="n">descriptorub_write</span><span class="p">],</span> <span class="p">[])</span>
+
+        <span class="k">return</span> <span class="n">descriptorsets</span></div>
+
+<div class="viewcode-block" id="BlockBatch.get_default_shaderprogram"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch.get_default_shaderprogram">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_shaderprogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Generate a basic shader program if none given</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;block.vs.glsl&quot;</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;block.fs.glsl&quot;</span><span class="p">)</span>
+
+        <span class="n">shaders_mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">vs</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">fs</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BlockBatch.flush"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Flush all draws to graphic card.</span>
+<span class="sd">        Currently, `flush` register and submit command.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Upload mesh data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="c1"># Compute indices count</span>
+        <span class="n">blocks_in_batch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">/</span> <span class="mi">4</span>  <span class="c1"># 4 idx per vertex</span>
+        <span class="n">indices_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">blocks_in_batch</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
+
+        <span class="c1"># Register commands</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">pull</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">height</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">begin_renderpass</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
+                <span class="n">vo</span><span class="o">.</span><span class="n">Rect2D</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Offset2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                          <span class="n">vo</span><span class="o">.</span><span class="n">Extent2D</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)),</span>
+                <span class="p">[]</span>
+            <span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">bind_descriptor_sets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipelinelayout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsets</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">indices_count</span><span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">end_renderpass</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="BlockBatch.draw"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.BlockBatch.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw a block with `properties`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `properties`: `BlockProperty`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="n">width</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">properties</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">properties</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
+
+        <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x2</span>
+        <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="n">rotation</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">rotation</span>
+
+        <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
+            <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+            <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+
+            <span class="c1"># Set coordinates at origin to do a proper rotation</span>
+            <span class="n">w1</span> <span class="o">=</span> <span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">w2</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="o">-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h1</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h1</span>
+
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x3</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y3</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x4</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x3</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
+            <span class="n">y4</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+
+            <span class="n">x1</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x2</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x3</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x4</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">y1</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y2</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y3</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y4</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span> <span class="o">=</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span>
+            <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">y4</span> <span class="o">=</span> <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">colors</span>
+        <span class="n">bw</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_widths</span>
+        <span class="n">bct</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">bcr</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">bcb</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bcl</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">br</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_radius</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">),</span>
+                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">),</span>
+                    <span class="p">([</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">),</span>
+                    <span class="p">([</span><span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">)]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span></div></div>
+
+
+<div class="viewcode-block" id="SpriteBatchDescriptorPool"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatchDescriptorPool">[docs]</a><span class="k">class</span> <span class="nc">SpriteBatchDescriptorPool</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Manage pool of descriptor sets dedicated to spritebatch textures.</span>
+<span class="sd">    Theses sets contain uniform buffer and texture.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">descriptorpool</span><span class="p">,</span> <span class="n">descriptorlayout</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorset_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span> <span class="o">=</span> <span class="n">descriptorpool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorlayout</span> <span class="o">=</span> <span class="n">descriptorlayout</span>
+
+<div class="viewcode-block" id="SpriteBatchDescriptorPool.pull"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatchDescriptorPool.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorset_id</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">descriptorset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorset_id</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="n">descriptorset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span><span class="o">.</span><span class="n">allocate_descriptorsets</span><span class="p">(</span>
+                <span class="n">context</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorlayout</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">descriptorset</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">descriptorset</span></div>
+
+<div class="viewcode-block" id="SpriteBatchDescriptorPool.reset"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatchDescriptorPool.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorset_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span></div></div>
+
+
+<div class="viewcode-block" id="SpriteBatch"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch">[docs]</a><span class="k">class</span> <span class="nc">SpriteBatch</span><span class="p">(</span><span class="n">BaseBatch</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    SpriteBatch allows to batch lot of sprites (small quad) into minimum</span>
+<span class="sd">    of draw calls.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">out_view</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="p">,</span> <span class="n">out_view</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dspool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_dspool</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SpriteBatch.init_mesh"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.init_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">init_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize the Mesh handling sprites</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `size`: Number of sprites to handle</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vertex_attributes</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">VertexAttributes</span><span class="p">([</span>
+            <span class="c1"># Position</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Texture UV</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Color</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">)</span>
+        <span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">me</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span> <span class="n">vertex_attributes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.init_descriptorpool"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.init_descriptorpool">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorpool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create the descriptor pool</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">type_uniform</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span>
+        <span class="n">type_sampler</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">COMBINED_IMAGE_SAMPLER</span>
+        <span class="n">pool_sizes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorPoolSize</span><span class="p">(</span><span class="n">type_uniform</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span>
+            <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorPoolSize</span><span class="p">(</span><span class="n">type_sampler</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorPool</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">pool_sizes</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.init_descriptorlayout"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.init_descriptorlayout">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorlayout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize descriptor layout for one uniform and one texture</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">ubo_descriptor</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorSetLayoutBinding</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">texture_descriptor</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorSetLayoutBinding</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">COMBINED_IMAGE_SAMPLER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">layout_bindings</span> <span class="o">=</span> <span class="p">[</span><span class="n">ubo_descriptor</span><span class="p">,</span> <span class="n">texture_descriptor</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorSetLayout</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">layout_bindings</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.init_dspool"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.init_dspool">[docs]</a>    <span class="k">def</span> <span class="nf">init_dspool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SpriteBatchDescriptorPool</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptorlayout</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.get_default_shaderprogram"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.get_default_shaderprogram">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_shaderprogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Generate a basic shader program if nono given</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.vs.glsl&quot;</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;spritebatch.fs.glsl&quot;</span><span class="p">)</span>
+
+        <span class="n">shaders_mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">vs</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">fs</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.get_descriptor"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.get_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">get_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">texture</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Update descriptor set containing texture</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `texture`: `RawTexture` to update</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">descriptorset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dspool</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="n">descriptorub_info</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorBufferInfo</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">uniform_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">descriptorub_write</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">WriteDescriptorSet</span><span class="p">(</span>
+            <span class="n">descriptorset</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">descriptorub_info</span><span class="p">])</span>
+
+        <span class="n">descriptorimage_info</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorImageInfo</span><span class="p">(</span>
+            <span class="n">texture</span><span class="o">.</span><span class="n">sampler</span><span class="p">,</span> <span class="n">texture</span><span class="o">.</span><span class="n">view</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">SHADER_READ_ONLY_OPTIMAL</span><span class="p">)</span>
+        <span class="n">descriptorimage_write</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">WriteDescriptorSet</span><span class="p">(</span>
+            <span class="n">descriptorset</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">COMBINED_IMAGE_SAMPLER</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">descriptorimage_info</span><span class="p">])</span>
+
+        <span class="n">vo</span><span class="o">.</span><span class="n">update_descriptorsets</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="p">[</span><span class="n">descriptorub_write</span><span class="p">,</span> <span class="n">descriptorimage_write</span><span class="p">],</span> <span class="p">[])</span>
+
+        <span class="k">return</span> <span class="n">descriptorset</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.end"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.end">[docs]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">semaphore</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dspool</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">semaphore</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.flush"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Flush all draws to graphic card.</span>
+<span class="sd">        Currently, `flush` register and submit command.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Upload mesh data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="c1"># Bind texture</span>
+        <span class="n">descriptorset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span><span class="p">)</span>
+
+        <span class="c1"># Compute indices count</span>
+        <span class="n">sprites_in_batch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">/</span> <span class="mi">4</span>  <span class="c1"># 4 idx per vertex</span>
+        <span class="n">indices_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sprites_in_batch</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
+
+        <span class="c1"># Register commands</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">pull</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">height</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">begin_renderpass</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
+                <span class="n">vo</span><span class="o">.</span><span class="n">Rect2D</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Offset2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                          <span class="n">vo</span><span class="o">.</span><span class="n">Extent2D</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)),</span>
+                <span class="p">[]</span>
+            <span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">bind_descriptor_sets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipelinelayout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                     <span class="p">[</span><span class="n">descriptorset</span><span class="p">],</span> <span class="p">[])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">indices_count</span><span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">end_renderpass</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.draw"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+             <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw `texture` at position x, y of size `width`, `height`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `texture`: `RawTexture`</span>
+<span class="sd">        - `x`: X position</span>
+<span class="sd">        - `y`: Y position</span>
+<span class="sd">        - `width`: Width</span>
+<span class="sd">        - `heigth`: Height</span>
+<span class="sd">        - `u`: U texture coordinate</span>
+<span class="sd">        - `v`: V texture coordinate</span>
+<span class="sd">        - `r`: Red channel</span>
+<span class="sd">        - `g`: Green channel</span>
+<span class="sd">        - `b`: Blue channel</span>
+<span class="sd">        - `a`: Alpha channel</span>
+<span class="sd">        - `scale_x`: Scaling on x axis</span>
+<span class="sd">        - `scale_y`: Scaling on y axis</span>
+<span class="sd">        - `rotation`: Rotation in radian (clockwise)</span>
+
+<span class="sd">        **Note: if width and height are set to 0, we take the image size**</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">texture</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">width</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">height</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="n">texture</span><span class="o">.</span><span class="n">height</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_texture</span> <span class="o">=</span> <span class="n">texture</span>
+
+        <span class="n">width</span> <span class="o">*=</span> <span class="n">scale_x</span>
+        <span class="n">height</span> <span class="o">*=</span> <span class="n">scale_y</span>
+
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
+
+        <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x2</span>
+        <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
+            <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+            <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+
+            <span class="c1"># Set coordinates at origin to do a proper rotation</span>
+            <span class="n">w1</span> <span class="o">=</span> <span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">w2</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="o">-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h1</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h1</span>
+
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x3</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y3</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x4</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x3</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
+            <span class="n">y4</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+
+            <span class="n">x1</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x2</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x3</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x4</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">y1</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y2</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y3</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y4</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span> <span class="o">=</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span>
+            <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">y4</span> <span class="o">=</span> <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">]),</span>
+                    <span class="p">([</span><span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">],</span> <span class="p">[</span><span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">],</span> <span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">])]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="SpriteBatch.draw_region"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.draw_region">[docs]</a>    <span class="k">def</span> <span class="nf">draw_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">scale_x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale_y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw `region` at position x, y of size `width`, `height`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `region`: `TextureRegion`</span>
+<span class="sd">        - `x`: X position</span>
+<span class="sd">        - `y`: Y position</span>
+<span class="sd">        - `width`: Width</span>
+<span class="sd">        - `heigth`: Height</span>
+<span class="sd">        - `r`: Red channel</span>
+<span class="sd">        - `g`: Green channel</span>
+<span class="sd">        - `b`: Blue channel</span>
+<span class="sd">        - `a`: Alpha channel</span>
+<span class="sd">        - `scale_x`: Scaling on x axis</span>
+<span class="sd">        - `scale_y`: Scaling on y axis</span>
+<span class="sd">        - `rotation`: Rotation in radian (clockwise)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v</span>
+        <span class="n">u2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">u2</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">v2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span>
+                  <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">scale_x</span><span class="p">,</span> <span class="n">scale_y</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="TextBatch"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch">[docs]</a><span class="k">class</span> <span class="nc">TextBatch</span><span class="p">(</span><span class="n">SpriteBatch</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TextBatch allows to batch lot of text into minimum of draw calls.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">out_view</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="p">,</span> <span class="n">out_view</span><span class="p">)</span>
+
+        <span class="c1"># Init rendering attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_descriptorsets</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TextBatch.init_mesh"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch.init_mesh">[docs]</a>    <span class="k">def</span> <span class="nf">init_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialize the Mesh handling blocks</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        - `size`: Number of blocks to handle</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vertex_attributes</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="n">VertexAttributes</span><span class="p">([</span>
+            <span class="c1"># Position</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Texture UV</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Color</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border widths</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (top)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (right)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (bottom)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border color (left)</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">),</span>
+            <span class="c1"># Border radius</span>
+            <span class="n">me</span><span class="o">.</span><span class="n">VertexAttribute</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Format</span><span class="o">.</span><span class="n">R32G32B32A32_SFLOAT</span><span class="p">)</span>
+        <span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">me</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span> <span class="n">vertex_attributes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextBatch.init_descriptorpool"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch.init_descriptorpool">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorpool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="c1"># Only 1 uniform buffer</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">pool_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">vo</span><span class="o">.</span><span class="n">DescriptorPoolSize</span><span class="p">(</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span> <span class="n">size</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorPool</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">pool_sizes</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextBatch.init_descriptorlayout"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch.init_descriptorlayout">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorlayout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">ubo_descriptor</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorSetLayoutBinding</span><span class="p">(</span>
+            <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">bindings</span> <span class="o">=</span> <span class="p">[</span><span class="n">ubo_descriptor</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorSetLayout</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">bindings</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextBatch.init_descriptorsets"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch.init_descriptorsets">[docs]</a>    <span class="k">def</span> <span class="nf">init_descriptorsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the descriptor set (for mat4)&quot;&quot;&quot;</span>
+        <span class="n">descriptorsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span><span class="o">.</span><span class="n">allocate_descriptorsets</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptorlayout</span><span class="p">])</span>
+
+        <span class="n">descriptorub_info</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">DescriptorBufferInfo</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">uniform_buffer</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniformblock</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">descriptorub_write</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">WriteDescriptorSet</span><span class="p">(</span>
+            <span class="n">descriptorsets</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">DescriptorType</span><span class="o">.</span><span class="n">UNIFORM_BUFFER</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">descriptorub_info</span><span class="p">])</span>
+
+        <span class="n">vo</span><span class="o">.</span><span class="n">update_descriptorsets</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="p">[</span><span class="n">descriptorub_write</span><span class="p">],</span> <span class="p">[])</span>
+
+        <span class="k">return</span> <span class="n">descriptorsets</span></div>
+
+<div class="viewcode-block" id="TextBatch.get_default_shaderprogram"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch.get_default_shaderprogram">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_shaderprogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Generate a basic shader program if none given</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;block.vs.glsl&quot;</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;block.fs.glsl&quot;</span><span class="p">)</span>
+
+        <span class="n">shaders_mapping</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">VERTEX</span><span class="p">:</span> <span class="n">vs</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">ShaderStage</span><span class="o">.</span><span class="n">FRAGMENT</span><span class="p">:</span> <span class="n">fs</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextBatch.flush"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Flush all draws to graphic card.</span>
+<span class="sd">        Currently, `flush` register and submit command.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `context`: `VulkContext`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Upload mesh data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="c1"># Compute indices count</span>
+        <span class="n">blocks_in_batch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">/</span> <span class="mi">4</span>  <span class="c1"># 4 idx per vertex</span>
+        <span class="n">indices_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">blocks_in_batch</span><span class="p">)</span> <span class="o">*</span> <span class="mi">6</span>
+
+        <span class="c1"># Register commands</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">cbpool</span><span class="o">.</span><span class="n">pull</span><span class="p">()</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">width</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">height</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">begin_renderpass</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span><span class="p">,</span>
+                <span class="n">vo</span><span class="o">.</span><span class="n">Rect2D</span><span class="p">(</span><span class="n">vo</span><span class="o">.</span><span class="n">Offset2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                          <span class="n">vo</span><span class="o">.</span><span class="n">Extent2D</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)),</span>
+                <span class="p">[]</span>
+            <span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">bind_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">bind_descriptor_sets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipelinelayout</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsets</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">indices_count</span><span class="p">)</span>
+            <span class="n">cmd</span><span class="o">.</span><span class="n">end_renderpass</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="TextBatch.draw"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.TextBatch.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Draw a block with `properties`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `properties`: `BlockProperty`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">drawing</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Not currently drawing&quot;</span><span class="p">)</span>
+
+        <span class="n">width</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">properties</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">height</span> <span class="o">*</span> <span class="n">properties</span><span class="o">.</span><span class="n">scale</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">width</span>
+        <span class="n">y2</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">height</span>
+
+        <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x2</span>
+        <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y</span>
+
+        <span class="n">rotation</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">rotation</span>
+
+        <span class="k">if</span> <span class="n">rotation</span><span class="p">:</span>
+            <span class="n">cos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+            <span class="n">sin</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation</span><span class="p">)</span>
+
+            <span class="c1"># Set coordinates at origin to do a proper rotation</span>
+            <span class="n">w1</span> <span class="o">=</span> <span class="o">-</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">w2</span> <span class="o">=</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="o">-</span><span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">h2</span> <span class="o">=</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h1</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h1</span>
+
+            <span class="n">x2</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w1</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x3</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
+            <span class="n">y3</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
+
+            <span class="n">x4</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x3</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
+            <span class="n">y4</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+
+            <span class="n">x1</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x2</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x3</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">x4</span> <span class="o">+=</span> <span class="n">p1x</span>
+            <span class="n">y1</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y2</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y3</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">y4</span> <span class="o">+=</span> <span class="n">p1y</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span> <span class="o">=</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span>
+            <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">y4</span> <span class="o">=</span> <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">colors</span>
+        <span class="n">bw</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_widths</span>
+        <span class="n">bct</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">bcr</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">bcb</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bcl</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">br</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="n">border_radius</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="p">[([</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">),</span>
+                    <span class="p">([</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">),</span>
+                    <span class="p">([</span><span class="n">x3</span><span class="p">,</span> <span class="n">y3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">),</span>
+                    <span class="p">([</span><span class="n">x4</span><span class="p">,</span> <span class="n">y4</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bw</span><span class="p">,</span> <span class="n">bct</span><span class="p">,</span> <span class="n">bcr</span><span class="p">,</span> <span class="n">bcb</span><span class="p">,</span> <span class="n">bcl</span><span class="p">,</span> <span class="n">br</span><span class="p">)]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">set_vertex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Vulk Engine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

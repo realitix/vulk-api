@@ -1,0 +1,532 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>vulk.graphic package &#8212; Vulk 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="vulk-graphic-package">
+<h1>vulk.graphic package<a class="headerlink" href="#vulk-graphic-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vulk.graphic.d2.html">vulk.graphic.d2 package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.batch">vulk.graphic.d2.batch module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.scene">vulk.graphic.d2.scene module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vulk.graphic.d3.html">vulk.graphic.d3 package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d3.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d3.html#module-vulk.graphic.d3.attribute">vulk.graphic.d3.attribute module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d3.html#module-vulk.graphic.d3">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vulk.graphic.camera">
+<span id="vulk-graphic-camera-module"></span><h2>vulk.graphic.camera module<a class="headerlink" href="#module-vulk.graphic.camera" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vulk.graphic.camera.Camera">
+<em class="property">class </em><code class="descclassname">vulk.graphic.camera.</code><code class="descname">Camera</code><a class="reference internal" href="_modules/vulk/graphic/camera.html#Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.Camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">abc.ABC</span></code></p>
+<dl class="method">
+<dt id="vulk.graphic.camera.Camera.unproject">
+<code class="descname">unproject</code><span class="sig-paren">(</span><em>position</em>, <em>viewport_x</em>, <em>viewport_y</em>, <em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#Camera.unproject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.Camera.unproject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unproject <cite>position</cite> to view matrix.
+Allow to get world coordinate from screen coordinate.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><cite>position</cite>: <cite>Vector3</cite> screen position right-handed.</dt>
+<dd>z(0) = near plane, z(1) = far plane</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.camera.Camera.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>update_frustum=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#Camera.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.Camera.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.camera.OrthographicCamera">
+<em class="property">class </em><code class="descclassname">vulk.graphic.camera.</code><code class="descname">OrthographicCamera</code><span class="sig-paren">(</span><em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#OrthographicCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.OrthographicCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.camera.Camera" title="vulk.graphic.camera.Camera"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.camera.Camera</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.camera.OrthographicCamera.to_orthographic">
+<code class="descname">to_orthographic</code><span class="sig-paren">(</span><em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#OrthographicCamera.to_orthographic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.OrthographicCamera.to_orthographic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.camera.OrthographicCamera.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>update_frustum=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#OrthographicCamera.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.OrthographicCamera.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.camera.PerspectiveCamera">
+<em class="property">class </em><code class="descclassname">vulk.graphic.camera.</code><code class="descname">PerspectiveCamera</code><span class="sig-paren">(</span><em>fov</em>, <em>viewport_width</em>, <em>viewport_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#PerspectiveCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.PerspectiveCamera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.camera.Camera" title="vulk.graphic.camera.Camera"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.camera.Camera</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.camera.PerspectiveCamera.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>update_frustum=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/camera.html#PerspectiveCamera.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.camera.PerspectiveCamera.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vulk.graphic.mesh">
+<span id="vulk-graphic-mesh-module"></span><h2>vulk.graphic.mesh module<a class="headerlink" href="#module-vulk.graphic.mesh" title="Permalink to this headline">¶</a></h2>
+<p>This module contains mesh</p>
+<dl class="class">
+<dt id="vulk.graphic.mesh.Mesh">
+<em class="property">class </em><code class="descclassname">vulk.graphic.mesh.</code><code class="descname">Mesh</code><span class="sig-paren">(</span><em>context</em>, <em>max_vertices</em>, <em>max_indices</em>, <em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.bind">
+<code class="descname">bind</code><span class="sig-paren">(</span><em>cmd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind the buffers during command buffer registering</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>command</cite>: <cite>CommandBufferRegister</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>cmd</em>, <em>offset=0</em>, <em>count=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the mesh during command buffer registration</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>cmd</cite>: <cite>CommandBufferRegister</cite></li>
+<li><cite>offset</cite>: Start drawing at <cite>offset</cite> vertices</li>
+<li><cite>count</cite>: Draw <cite>count</cite> vertices</li>
+</ul>
+<p><strong>Note: `offset` and `count` target indices if mesh is indexed</strong></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.set_indices">
+<code class="descname">set_indices</code><span class="sig-paren">(</span><em>indices</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.set_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.set_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set indices of mesh</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>indices</cite>: <cite>list</cite> of <cite>float</cite></li>
+<li><cite>offset</cite>: Offset in mesh indices array</li>
+</ul>
+<p><strong>Note: Mesh must be indexed</strong></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.set_vertex">
+<code class="descname">set_vertex</code><span class="sig-paren">(</span><em>index</em>, <em>vertex</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.set_vertex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.set_vertex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set one vertex of the mesh at position <cite>index</cite></p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>index</cite>: Vertex index</li>
+<li><cite>vertex</cite>: Vertex data (tuple format)</li>
+</ul>
+<p><em>Exemple:</em></p>
+<p>For a mesh with two attributes (2 components and 4 components):</p>
+<p><code class="docutils literal"><span class="pre">`</span>
+<span class="pre">vertex</span> <span class="pre">=</span> <span class="pre">([x,</span> <span class="pre">y],</span> <span class="pre">[r,</span> <span class="pre">g,</span> <span class="pre">b,</span> <span class="pre">a])</span>
+<span class="pre">mesh.set_vertex(idx,</span> <span class="pre">vertex)</span>
+<span class="pre">`</span></code></p>
+<dl class="docutils">
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>Note: Vertex data type depends on <cite>VertexAttributes</cite> of the mesh.</dt>
+<dd>It must be a tuple containing an array for each attributes**</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>Note: Once mesh vertices are updated, you need to <cite>upload</cite> the mesh</dt>
+<dd>to take into account the changes.**</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.set_vertices">
+<code class="descname">set_vertices</code><span class="sig-paren">(</span><em>vertices</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.set_vertices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.set_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set vertices of the mesh.
+Report to <cite>set_vertex</cite>, it works the same but it waits for an array
+of vertex.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>vertices</cite>: <cite>list</cite> of Vertex data (see <cite>set_vertex</cite>)</li>
+<li><cite>offset</cite>: Offset in the mesh vertices array</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.upload">
+<code class="descname">upload</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.upload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload vertices and indices to graphic card</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.upload_indices">
+<code class="descname">upload_indices</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.upload_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.upload_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload indices to graphic card</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+<p><strong>Note: Mesh must be indexed</strong></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.mesh.Mesh.upload_vertices">
+<code class="descname">upload_vertices</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#Mesh.upload_vertices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.Mesh.upload_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload vertices to graphic card</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.mesh.VertexAttribute">
+<em class="property">class </em><code class="descclassname">vulk.graphic.mesh.</code><code class="descname">VertexAttribute</code><span class="sig-paren">(</span><em>location</em>, <em>attribute_format</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#VertexAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.VertexAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.mesh.VertexAttributes">
+<em class="property">class </em><code class="descclassname">vulk.graphic.mesh.</code><code class="descname">VertexAttributes</code><span class="sig-paren">(</span><em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/mesh.html#VertexAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.mesh.VertexAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
+<dt id="vulk.graphic.mesh.VertexAttributes.size">
+<code class="descname">size</code><a class="headerlink" href="#vulk.graphic.mesh.VertexAttributes.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vulk.graphic.texture">
+<span id="vulk-graphic-texture-module"></span><h2>vulk.graphic.texture module<a class="headerlink" href="#module-vulk.graphic.texture" title="Permalink to this headline">¶</a></h2>
+<p>This module allows to load texture and to sample from it</p>
+<dl class="class">
+<dt id="vulk.graphic.texture.BinaryTexture">
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">BinaryTexture</code><span class="sig-paren">(</span><em>context</em>, <em>width</em>, <em>height</em>, <em>texture_format</em>, <em>raw_bitmap</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.texture.RawTexture" title="vulk.graphic.texture.RawTexture"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.texture.RawTexture</span></code></a></p>
+<p>RawTexture with provided bitmap buffer.</p>
+<p><strong>Warning: You are responsible of the bitmap buffer</strong></p>
+<dl class="method">
+<dt id="vulk.graphic.texture.BinaryTexture.init_bitmap">
+<code class="descname">init_bitmap</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize bitmap array with <cite>raw_bitmap</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.texture.RawTexture">
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">RawTexture</code><span class="sig-paren">(</span><em>context</em>, <em>width</em>, <em>height</em>, <em>texture_format</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>A Raw texture is not initialized with an image file but can be filled
+manually</p>
+<dl class="method">
+<dt id="vulk.graphic.texture.RawTexture.init_bitmap">
+<code class="descname">init_bitmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the numpy array containing bitmap</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.RawTexture.set_sampler">
+<code class="descname">set_sampler</code><span class="sig-paren">(</span><em>context</em>, <em>mag_filter=&lt;Filter.LINEAR: 1&gt;</em>, <em>min_filter=&lt;Filter.LINEAR: 1&gt;</em>, <em>address_mode_u=&lt;SamplerAddressMode.NONE: 0&gt;</em>, <em>address_mode_v=&lt;SamplerAddressMode.NONE: 0&gt;</em>, <em>anisotropy_enable=True</em>, <em>max_anisotropy=16</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.set_sampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.set_sampler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow to customize the texture sampler</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+<li><cite>mag_filter</cite>: <cite>Filter</cite> vulk constant</li>
+<li><cite>min_filter</cite>: <cite>Filter</cite> vulk constant</li>
+<li><cite>address_mode_u</cite>: <cite>SamplerAddressMode</cite> vulk constant</li>
+<li><cite>address_mode_v</cite>: <cite>SamplerAddressMode</cite> vulk constant</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.RawTexture.set_view">
+<code class="descname">set_view</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.set_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.set_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow to customize the texture view</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.RawTexture.upload">
+<code class="descname">upload</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.upload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload bitmap into Vulkan memory</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.texture.Texture">
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">Texture</code><span class="sig-paren">(</span><em>context</em>, <em>path_file</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#Texture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.Texture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.texture.BinaryTexture" title="vulk.graphic.texture.BinaryTexture"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.texture.BinaryTexture</span></code></a></p>
+<p>BinaryTexture with file managing.</p>
+<dl class="staticmethod">
+<dt id="vulk.graphic.texture.Texture.components_to_format">
+<em class="property">static </em><code class="descname">components_to_format</code><span class="sig-paren">(</span><em>components</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#Texture.components_to_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.Texture.components_to_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert number of channel components in image to Vulkan format</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>components</cite>: Number of components</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.texture.TextureRegion">
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">TextureRegion</code><span class="sig-paren">(</span><em>texture</em>, <em>u=0</em>, <em>u2=1</em>, <em>v=0</em>, <em>v2=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Defines a rectangular area of a texture. The coordinate system used has
+its origin in the upper left corner with the x-axis pointing to the
+right and the y axis pointing downwards.</p>
+<dl class="method">
+<dt id="vulk.graphic.texture.TextureRegion.set_region">
+<code class="descname">set_region</code><span class="sig-paren">(</span><em>u</em>, <em>u2</em>, <em>v</em>, <em>v2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion.set_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion.set_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set coordinate relatively to texture size</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>u</cite>, <cite>u2</cite>: X coordinate relative to texture size</li>
+<li><cite>v</cite>, <cite>v2</cite>: Y coordinate relative to texture size</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.TextureRegion.set_region_pixel">
+<code class="descname">set_region_pixel</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>width</em>, <em>height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion.set_region_pixel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion.set_region_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set coordinate relatively to pixel size</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>x</cite>: X coordinate of the texture</li>
+<li><cite>y</cite>: Y coordinate of the texture</li>
+<li><cite>width</cite>: Width of the region</li>
+<li><cite>height</cite>: Height of the region</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.TextureRegion.set_texture">
+<code class="descname">set_texture</code><span class="sig-paren">(</span><em>texture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion.set_texture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion.set_texture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set texture of <cite>TextureRegion</cite></p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>texture</cite>: <cite>RawTexture</cite></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vulk.graphic.uniform">
+<span id="vulk-graphic-uniform-module"></span><h2>vulk.graphic.uniform module<a class="headerlink" href="#module-vulk.graphic.uniform" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vulk.graphic.uniform.UniformAttribute">
+<em class="property">class </em><code class="descclassname">vulk.graphic.uniform.</code><code class="descname">UniformAttribute</code><span class="sig-paren">(</span><em>shape_type</em>, <em>data_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/uniform.html#UniformAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.uniform.UniformAttribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.uniform.UniformAttributes">
+<em class="property">class </em><code class="descclassname">vulk.graphic.uniform.</code><code class="descname">UniformAttributes</code><span class="sig-paren">(</span><em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/uniform.html#UniformAttributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.uniform.UniformAttributes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
+<dt id="vulk.graphic.uniform.UniformAttributes.size">
+<code class="descname">size</code><a class="headerlink" href="#vulk.graphic.uniform.UniformAttributes.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.uniform.UniformBlock">
+<em class="property">class </em><code class="descclassname">vulk.graphic.uniform.</code><code class="descname">UniformBlock</code><span class="sig-paren">(</span><em>context</em>, <em>attributes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/uniform.html#UniformBlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.uniform.UniformBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.uniform.UniformBlock.set_uniform">
+<code class="descname">set_uniform</code><span class="sig-paren">(</span><em>index</em>, <em>uniform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/uniform.html#UniformBlock.set_uniform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.uniform.UniformBlock.set_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update uniform at <cite>index</cite> position</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>index</cite>: Position of uniform in <cite>UniformAttributes</cite></li>
+<li><cite>uniform</cite>: Uniform data to pass (flattened)</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.uniform.UniformBlock.upload">
+<code class="descname">upload</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/uniform.html#UniformBlock.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.uniform.UniformBlock.upload" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.uniform.UniformShapeType">
+<em class="property">class </em><code class="descclassname">vulk.graphic.uniform.</code><code class="descname">UniformShapeType</code><a class="reference internal" href="_modules/vulk/graphic/uniform.html#UniformShapeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.uniform.UniformShapeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="vulk.graphic.uniform.UniformShapeType.MATRIX4">
+<code class="descname">MATRIX4</code><em class="property"> = 16</em><a class="headerlink" href="#vulk.graphic.uniform.UniformShapeType.MATRIX4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vulk.graphic.util">
+<span id="vulk-graphic-util-module"></span><h2>vulk.graphic.util module<a class="headerlink" href="#module-vulk.graphic.util" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vulk.graphic.util.Color">
+<em class="property">class </em><code class="descclassname">vulk.graphic.util.</code><code class="descname">Color</code><span class="sig-paren">(</span><em>r=1</em>, <em>g=1</em>, <em>b=1</em>, <em>a=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/util.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.util.Color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.a">
+<code class="descname">a</code><a class="headerlink" href="#vulk.graphic.util.Color.a" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.b">
+<code class="descname">b</code><a class="headerlink" href="#vulk.graphic.util.Color.b" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.g">
+<code class="descname">g</code><a class="headerlink" href="#vulk.graphic.util.Color.g" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.util.Color.r">
+<code class="descname">r</code><a class="headerlink" href="#vulk.graphic.util.Color.r" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vulk.graphic">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vulk.graphic" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">vulk.graphic package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.camera">vulk.graphic.camera module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.mesh">vulk.graphic.mesh module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.texture">vulk.graphic.texture module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.uniform">vulk.graphic.uniform module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.util">vulk.graphic.util module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/vulk.graphic.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Vulk Engine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/vulk.graphic.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

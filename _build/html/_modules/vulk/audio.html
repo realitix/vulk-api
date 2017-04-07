@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>vulk.audio &#8212; Vulk 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for vulk.audio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;Audio module</span>
+
+<span class="sd">This module contains all audio related classes.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sdl2</span>
+<span class="kn">from</span> <span class="nn">sdl2</span> <span class="k">import</span> <span class="n">sdlmixer</span> <span class="k">as</span> <span class="n">mixer</span>
+<span class="kn">from</span> <span class="nn">sdl2.ext.compat</span> <span class="k">import</span> <span class="n">byteify</span>
+
+<span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="k">import</span> <span class="n">SDL2Error</span><span class="p">,</span> <span class="n">SoundError</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="VulkAudio"><a class="viewcode-back" href="../../vulk.html#vulk.audio.VulkAudio">[docs]</a><span class="k">class</span> <span class="nc">VulkAudio</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;This class is only used in baseapp.</span>
+
+<span class="sd">    It initializes and close the audio system.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="VulkAudio.open"><a class="viewcode-back" href="../../vulk.html#vulk.audio.VulkAudio.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Open and configure audio system</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `configuration`: Configuration parameters from Application</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_InitSubSystem</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_AUDIO</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot initialize audio system: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_GetError</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_OpenAudio</span><span class="p">(</span><span class="n">mixer</span><span class="o">.</span><span class="n">MIX_DEFAULT_FREQUENCY</span><span class="p">,</span>
+                               <span class="n">mixer</span><span class="o">.</span><span class="n">MIX_DEFAULT_FORMAT</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1024</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot open mixed audio: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_GetError</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SDL2Error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_AllocateChannels</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">audio_channel</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Audio initialized&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VulkAudio.close"><a class="viewcode-back" href="../../vulk.html#vulk.audio.VulkAudio.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Close the audio system&#39;&#39;&#39;</span>
+        <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_CloseAudio</span><span class="p">()</span>
+        <span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_Quit</span><span class="p">(</span><span class="n">sdl2</span><span class="o">.</span><span class="n">SDL_INIT_AUDIO</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Audio stopped&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Sound"><a class="viewcode-back" href="../../vulk.html#vulk.audio.Sound">[docs]</a><span class="k">class</span> <span class="nc">Sound</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Sound effects are small audio samples, usually no longer than a few</span>
+<span class="sd">    seconds, that are played back on specific game events such as a character</span>
+<span class="sd">    jumping or shooting a gun.</span>
+
+<span class="sd">    Sound effects can be stored in various formats. Vulk is based on SDL2 and</span>
+<span class="sd">    thus supports WAVE, AIFF, RIFF, OGG, and VOC files.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Load the sound file</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `path`: Path to the sound file</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample</span> <span class="o">=</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_LoadWAV</span><span class="p">(</span><span class="n">byteify</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot load file </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Sound.play"><a class="viewcode-back" href="../../vulk.html#vulk.audio.Sound.play">[docs]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Play the sound</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `volume`: Sound volume 0.0 to 1.0</span>
+<span class="sd">        - `repeat`: Number of time to repeat the sound, 0=infinity</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        Channel id of the sound</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_PlayChannel</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample</span><span class="p">,</span> <span class="n">repeat</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">channel</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot play the sound: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_GetError</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_Volume</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">mixer</span><span class="o">.</span><span class="n">MIX_MAX_VOLUME</span> <span class="o">*</span> <span class="n">volume</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">channel</span></div></div>
+
+
+<div class="viewcode-block" id="Music"><a class="viewcode-back" href="../../vulk.html#vulk.audio.Music">[docs]</a><span class="k">class</span> <span class="nc">Music</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    For any sound that&#39;s longer than a few seconds it is preferable to stream</span>
+<span class="sd">    it from disk instead of fully loading it into RAM. Vulk provides a Music</span>
+<span class="sd">    class that lets you do that.</span>
+
+<span class="sd">    Music can be stored in various formats. Vulk is based on SDL2 and</span>
+<span class="sd">    thus supports WAVE, MOD, MIDI, OGG, MP3, FLAC files.</span>
+
+<span class="sd">    **Note: You can play only one music at a time**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Load the music file</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `path`: Path to the music file</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">music</span> <span class="o">=</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_LoadMUS</span><span class="p">(</span><span class="n">byteify</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">music</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot load file </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Music.play"><a class="viewcode-back" href="../../vulk.html#vulk.audio.Music.play">[docs]</a>    <span class="k">def</span> <span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Play the music</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `volume`: Sound volume 0.0 to 1.0</span>
+<span class="sd">        - `repeat`: Number of time to repeat the sound, 0=infinity</span>
+
+<span class="sd">        *Returns:*</span>
+
+<span class="sd">        Channel id of the sound</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">repeat</span><span class="p">:</span>
+            <span class="n">repeat</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_PlayMusic</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">music</span><span class="p">,</span> <span class="n">repeat</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Cannot play the music: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_GetError</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">mixer</span><span class="o">.</span><span class="n">Mix_VolumeMusic</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mixer</span><span class="o">.</span><span class="n">MIX_MAX_VOLUME</span> <span class="o">*</span> <span class="n">volume</span><span class="p">))</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Vulk Engine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
