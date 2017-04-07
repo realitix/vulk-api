@@ -1,0 +1,479 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>vulk.math.vector &#8212; Vulk 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for vulk.math.vector</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;Vector module</span>
+
+<span class="sd">This module contains all Vector classes definition.</span>
+<span class="sd">Vector are a key of graphic computing.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">linalg</span>
+
+
+<div class="viewcode-block" id="Vector"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector">[docs]</a><span class="k">class</span> <span class="nc">Vector</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Base class for Vector</span>
+
+<span class="sd">    *Exemple:*</span>
+
+<span class="sd">    ```</span>
+<span class="sd">    v1 += 10 # Add 10 to all components</span>
+<span class="sd">    v1 += [10, 9, 8] # Add a different value to each component</span>
+<span class="sd">    dot_product = v1 @ v2 # Dot product use the matmul operator</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    **Note: Vector is just a wrapper around a numpy array. You can</span>
+<span class="sd">            get directly the numpy array if you need more power**</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">+=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">-=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__sub__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">*=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__matmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">@</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__imatmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__matmul__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">/=</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__itruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__truediv__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
+
+    <span class="nd">@values</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">values</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Return the size of vector</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Vector.nor"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector.nor">[docs]</a>    <span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Normalize the vector and return it for chaining&#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Vector.crs"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector.crs">[docs]</a>    <span class="k">def</span> <span class="nf">crs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Return the cross product between the two vectors</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector` of the same size</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crs2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Vector.crs2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector.crs2">[docs]</a>    <span class="k">def</span> <span class="nf">crs2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this vector to the cross product with `values`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 3 float</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Vector.sub"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector.sub">[docs]</a>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Substract vector from this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sub2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Vector.sub2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector.sub2">[docs]</a>    <span class="k">def</span> <span class="nf">sub2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Substract values from this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">-=</span> <span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Vector.add"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add vector to this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Vector.add2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector.add2">[docs]</a>    <span class="k">def</span> <span class="nf">add2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Add values to this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">+=</span> <span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="XMixin"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.XMixin">[docs]</a><span class="k">class</span> <span class="nc">XMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `x` property to class&#39;&#39;&#39;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@x</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="YMixin"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.YMixin">[docs]</a><span class="k">class</span> <span class="nc">YMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `y` property to class&#39;&#39;&#39;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@y</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="ZMixin"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.ZMixin">[docs]</a><span class="k">class</span> <span class="nc">ZMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `z` property to class&#39;&#39;&#39;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="nd">@z</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="WMixin"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.WMixin">[docs]</a><span class="k">class</span> <span class="nc">WMixin</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Mixin adding `w` property to class&#39;&#39;&#39;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">w</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="nd">@w</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">w</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="Vector2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector2">[docs]</a><span class="k">class</span> <span class="nc">Vector2</span><span class="p">(</span><span class="n">Vector</span><span class="p">,</span> <span class="n">XMixin</span><span class="p">,</span> <span class="n">YMixin</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Vector2 class represents a Vector in 2D space.</span>
+<span class="sd">    It has two components `x` and `y`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">Zero</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 2 `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector2 needs 2 components&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Vector3"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector3">[docs]</a><span class="k">class</span> <span class="nc">Vector3</span><span class="p">(</span><span class="n">Vector</span><span class="p">,</span> <span class="n">XMixin</span><span class="p">,</span> <span class="n">YMixin</span><span class="p">,</span> <span class="n">ZMixin</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Vector3 class represents a Vector in 3D space.</span>
+<span class="sd">    It has three components `x`, `y` and `z`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">Zero</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 3 `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector3 needs 3 components&quot;</span><span class="p">)</span>
+
+        <span class="c1"># tmp properties used during computation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_v4</span> <span class="o">=</span> <span class="n">Vector4</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Vector3.mul"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector3.mul">[docs]</a>    <span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Multiply this vector by `vector`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># TODO: To test and valid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">*=</span> <span class="n">vector</span><span class="o">.</span><span class="n">values</span></div>
+
+<div class="viewcode-block" id="Vector3.mul2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector3.mul2">[docs]</a>    <span class="k">def</span> <span class="nf">mul2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Multiply this vector by a `Matrix4`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix4`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_v4</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">mul2</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_v4</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Vector3.prj"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector3.prj">[docs]</a>    <span class="k">def</span> <span class="nf">prj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Project this vector to the `matrix` parameter.</span>
+<span class="sd">        It&#39;s just a multiplication followed by a division by w.</span>
+
+
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix4`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_v4</span><span class="o">.</span><span class="n">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">mul2</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span><span class="o">.</span><span class="n">norw</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_v4</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Vector3.set"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector3.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set values of this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `x`, `y`, `z`: `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span></div>
+
+<div class="viewcode-block" id="Vector3.set2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector3.set2">[docs]</a>    <span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set values of this vector</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Vector4"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector4">[docs]</a><span class="k">class</span> <span class="nc">Vector4</span><span class="p">(</span><span class="n">Vector</span><span class="p">,</span> <span class="n">XMixin</span><span class="p">,</span> <span class="n">YMixin</span><span class="p">,</span> <span class="n">ZMixin</span><span class="p">,</span> <span class="n">WMixin</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Vector4 class represents a Vector in 3D space.</span>
+<span class="sd">    It has four components `x`, `y`, `z`, `w`.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `values`: `list` of 4 `float`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Vector4 needs 4 components&quot;</span><span class="p">)</span>
+
+        <span class="c1"># tmp properties used during computation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Vector4.set"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector4.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this `Vector4` to `vector`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector4`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Vector4.set2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector4.set2">[docs]</a>    <span class="k">def</span> <span class="nf">set2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Set this `Vector4` to `vector` and set `w` to 1.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector3`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Vector4.mul"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector4.mul">[docs]</a>    <span class="k">def</span> <span class="nf">mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vector</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Multiply this vector by `vector`.</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `vector`: `Vector4`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># TODO: To test and valid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">*=</span> <span class="n">vector</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Vector4.mul2"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector4.mul2">[docs]</a>    <span class="k">def</span> <span class="nf">mul2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Multiply this vector by a `Matrix4`</span>
+
+<span class="sd">        *Parameters:*</span>
+
+<span class="sd">        - `matrix`: `Matrix4`</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># load matrix in column order (default is row order)</span>
+        <span class="c1"># reshape returns a view (I hope!)</span>
+        <span class="n">mv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mv</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Vector4.norw"><a class="viewcode-back" href="../../../vulk.math.html#vulk.math.vector.Vector4.norw">[docs]</a>    <span class="k">def</span> <span class="nf">norw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        W normalization of this vector.</span>
+<span class="sd">        All components are divided by w, w must not be 0.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span></div></div>
+
+
+<span class="c1"># Vector2 constants</span>
+<span class="n">Vector2</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">Vector2</span><span class="o">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">Vector2</span><span class="o">.</span><span class="n">Zero</span> <span class="o">=</span> <span class="n">Vector2</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Vector3 constants</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">Vector3</span><span class="o">.</span><span class="n">Zero</span> <span class="o">=</span> <span class="n">Vector3</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Vulk Engine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
