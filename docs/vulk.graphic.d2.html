@@ -46,11 +46,762 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="vulk-graphic-d2-batch-module">
-<h2>vulk.graphic.d2.batch module<a class="headerlink" href="#vulk-graphic-d2-batch-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-vulk.graphic.d2.batch">
+<span id="vulk-graphic-d2-batch-module"></span><h2>vulk.graphic.d2.batch module<a class="headerlink" href="#module-vulk.graphic.d2.batch" title="Permalink to this headline">¶</a></h2>
+<p>BaseBatch module</p>
+<p>BaseBatch is used by SpriteBatch and BlockBatch.</p>
+<dl class="class">
+<dt id="vulk.graphic.d2.batch.BaseBatch">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">BaseBatch</code><span class="sig-paren">(</span><em>context</em>, <em>size=1000</em>, <em>shaderprogram=None</em>, <em>out_view=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.begin">
+<code class="descname">begin</code><span class="sig-paren">(</span><em>context</em>, <em>semaphores=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Begin drawing sprites</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+<li><dl class="first docutils">
+<dt><cite>semaphore</cite>: <cite>list</cite> of <cite>Semaphore</cite> to wait on before</dt>
+<dd>starting all drawing operations</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Note: `context` is borrowed until `end` call</strong></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.end">
+<code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>End drawing of sprite</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+<p><em>Returns:</em></p>
+<p><cite>Semaphore</cite> signaled when all drawing operations in
+<cite>SpriteBatch</cite> are finished</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.init_commandpool">
+<code class="descname">init_commandpool</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.init_commandpool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.init_commandpool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.init_framebuffer">
+<code class="descname">init_framebuffer</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.init_framebuffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.init_framebuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the framebuffer with the final_image (from context)</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.init_indices">
+<code class="descname">init_indices</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.init_indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.init_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize mesh&#8217;s indices.
+It&#8217;s done only at initialization for better performance.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>size</cite>: Number of blocks to handle</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.init_pipeline">
+<code class="descname">init_pipeline</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.init_pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.init_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize pipeline</p>
+<p>Here we are to set the Vulkan pipeline.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.init_pipelinelayout">
+<code class="descname">init_pipelinelayout</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.init_pipelinelayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.init_pipelinelayout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize pipeline layout</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.init_renderpass">
+<code class="descname">init_renderpass</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.init_renderpass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.init_renderpass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize <cite>BlockBatch</cite> renderpass</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.init_uniform">
+<code class="descname">init_uniform</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.init_uniform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.init_uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize <cite>BlockBatch</cite> uniforms.
+It contains only the <cite>combined_matrix</cite> but you can extend it to add
+uniforms.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.update_projection">
+<code class="descname">update_projection</code><span class="sig-paren">(</span><em>matrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.update_projection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.update_projection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the projection matrix with <cite>matrix</cite></p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>matrix</cite>: <cite>Matrix4</cite></li>
+</ul>
+<dl class="docutils">
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>Note: This function doesn&#8217;t keep a reference to the matrix,</dt>
+<dd>it only copies data**</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.update_transform">
+<code class="descname">update_transform</code><span class="sig-paren">(</span><em>matrix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.update_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.update_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the transfrom matrix with <cite>matrix</cite></p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>matrix</cite>: <cite>Matrix4</cite></li>
+</ul>
+<dl class="docutils">
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>Note: This function doesn&#8217;t keep a reference to the matrix,</dt>
+<dd>it only copies data**</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BaseBatch.upload_matrices">
+<code class="descname">upload_matrices</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BaseBatch.upload_matrices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BaseBatch.upload_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute combined matrix from transform and projection matrix.
+Then upload combined matrix.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.batch.BlockBatch">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">BlockBatch</code><span class="sig-paren">(</span><em>context</em>, <em>size=1000</em>, <em>shaderprogram=None</em>, <em>out_view=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.batch.BaseBatch" title="vulk.graphic.d2.batch.BaseBatch"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.batch.BaseBatch</span></code></a></p>
+<p>BlockBatch allows to batch lot of block (small and stylized quad) into
+minimum of draw calls.</p>
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BlockBatch.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>properties</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a block with <cite>properties</cite></p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>properties</cite>: <cite>BlockProperty</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BlockBatch.flush">
+<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush all draws to graphic card.
+Currently, <cite>flush</cite> register and submit command.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BlockBatch.get_default_shaderprogram">
+<code class="descname">get_default_shaderprogram</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch.get_default_shaderprogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch.get_default_shaderprogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a basic shader program if none given</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BlockBatch.init_descriptorlayout">
+<code class="descname">init_descriptorlayout</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch.init_descriptorlayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch.init_descriptorlayout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BlockBatch.init_descriptorpool">
+<code class="descname">init_descriptorpool</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch.init_descriptorpool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch.init_descriptorpool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BlockBatch.init_descriptorsets">
+<code class="descname">init_descriptorsets</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch.init_descriptorsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch.init_descriptorsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the descriptor set (for mat4)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.BlockBatch.init_mesh">
+<code class="descname">init_mesh</code><span class="sig-paren">(</span><em>context</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockBatch.init_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockBatch.init_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the Mesh handling blocks</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+<li><cite>size</cite>: Number of blocks to handle</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.batch.BlockProperty">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">BlockProperty</code><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#BlockProperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.BlockProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Allow to set properties for a draw call</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.batch.SpriteBatch">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">SpriteBatch</code><span class="sig-paren">(</span><em>context</em>, <em>size=1000</em>, <em>shaderprogram=None</em>, <em>out_view=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.batch.BaseBatch" title="vulk.graphic.d2.batch.BaseBatch"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.batch.BaseBatch</span></code></a></p>
+<p>SpriteBatch allows to batch lot of sprites (small quad) into minimum
+of draw calls.</p>
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>texture</em>, <em>x</em>, <em>y</em>, <em>width=0</em>, <em>height=0</em>, <em>u=0</em>, <em>v=0</em>, <em>u2=1</em>, <em>v2=1</em>, <em>r=1</em>, <em>g=1</em>, <em>b=1</em>, <em>a=1</em>, <em>scale_x=1</em>, <em>scale_y=1</em>, <em>rotation=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw <cite>texture</cite> at position x, y of size <cite>width</cite>, <cite>height</cite></p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>texture</cite>: <cite>RawTexture</cite></li>
+<li><cite>x</cite>: X position</li>
+<li><cite>y</cite>: Y position</li>
+<li><cite>width</cite>: Width</li>
+<li><cite>heigth</cite>: Height</li>
+<li><cite>u</cite>: U texture coordinate</li>
+<li><cite>v</cite>: V texture coordinate</li>
+<li><cite>r</cite>: Red channel</li>
+<li><cite>g</cite>: Green channel</li>
+<li><cite>b</cite>: Blue channel</li>
+<li><cite>a</cite>: Alpha channel</li>
+<li><cite>scale_x</cite>: Scaling on x axis</li>
+<li><cite>scale_y</cite>: Scaling on y axis</li>
+<li><cite>rotation</cite>: Rotation in radian (clockwise)</li>
+</ul>
+<p><strong>Note: if width and height are set to 0, we take the image size</strong></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.draw_region">
+<code class="descname">draw_region</code><span class="sig-paren">(</span><em>region</em>, <em>x</em>, <em>y</em>, <em>width</em>, <em>height</em>, <em>r=1</em>, <em>g=1</em>, <em>b=1</em>, <em>a=1</em>, <em>scale_x=1</em>, <em>scale_y=1</em>, <em>rotation=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.draw_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.draw_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw <cite>region</cite> at position x, y of size <cite>width</cite>, <cite>height</cite></p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>region</cite>: <cite>TextureRegion</cite></li>
+<li><cite>x</cite>: X position</li>
+<li><cite>y</cite>: Y position</li>
+<li><cite>width</cite>: Width</li>
+<li><cite>heigth</cite>: Height</li>
+<li><cite>r</cite>: Red channel</li>
+<li><cite>g</cite>: Green channel</li>
+<li><cite>b</cite>: Blue channel</li>
+<li><cite>a</cite>: Alpha channel</li>
+<li><cite>scale_x</cite>: Scaling on x axis</li>
+<li><cite>scale_y</cite>: Scaling on y axis</li>
+<li><cite>rotation</cite>: Rotation in radian (clockwise)</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.end">
+<code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.flush">
+<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush all draws to graphic card.
+Currently, <cite>flush</cite> register and submit command.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.get_default_shaderprogram">
+<code class="descname">get_default_shaderprogram</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.get_default_shaderprogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.get_default_shaderprogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a basic shader program if nono given</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.get_descriptor">
+<code class="descname">get_descriptor</code><span class="sig-paren">(</span><em>context</em>, <em>texture</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.get_descriptor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.get_descriptor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update descriptor set containing texture</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+<li><cite>texture</cite>: <cite>RawTexture</cite> to update</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.init_descriptorlayout">
+<code class="descname">init_descriptorlayout</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.init_descriptorlayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.init_descriptorlayout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize descriptor layout for one uniform and one texture</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.init_descriptorpool">
+<code class="descname">init_descriptorpool</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.init_descriptorpool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.init_descriptorpool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the descriptor pool</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.init_dspool">
+<code class="descname">init_dspool</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.init_dspool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.init_dspool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatch.init_mesh">
+<code class="descname">init_mesh</code><span class="sig-paren">(</span><em>context</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch.init_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch.init_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the Mesh handling sprites</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+<li><cite>size</cite>: Number of sprites to handle</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.batch.SpriteBatchDescriptorPool">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">SpriteBatchDescriptorPool</code><span class="sig-paren">(</span><em>descriptorpool</em>, <em>descriptorlayout</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatchDescriptorPool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatchDescriptorPool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Manage pool of descriptor sets dedicated to spritebatch textures.
+Theses sets contain uniform buffer and texture.</p>
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatchDescriptorPool.pull">
+<code class="descname">pull</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatchDescriptorPool.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatchDescriptorPool.pull" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.SpriteBatchDescriptorPool.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatchDescriptorPool.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatchDescriptorPool.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.batch.TextBatch">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">TextBatch</code><span class="sig-paren">(</span><em>context</em>, <em>size=1000</em>, <em>shaderprogram=None</em>, <em>out_view=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.batch.SpriteBatch" title="vulk.graphic.d2.batch.SpriteBatch"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.batch.SpriteBatch</span></code></a></p>
+<p>TextBatch allows to batch lot of text into minimum of draw calls.</p>
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.TextBatch.flush">
+<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush all draws to graphic card.
+Currently, <cite>flush</cite> register and submit command.</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.TextBatch.get_default_shaderprogram">
+<code class="descname">get_default_shaderprogram</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.get_default_shaderprogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.get_default_shaderprogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a basic shader program if none given</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.TextBatch.init_descriptorlayout">
+<code class="descname">init_descriptorlayout</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_descriptorlayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_descriptorlayout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.TextBatch.init_descriptorpool">
+<code class="descname">init_descriptorpool</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_descriptorpool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_descriptorpool" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.TextBatch.init_descriptorsets">
+<code class="descname">init_descriptorsets</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_descriptorsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_descriptorsets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the descriptor set (for mat4)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.TextBatch.init_mesh">
+<code class="descname">init_mesh</code><span class="sig-paren">(</span><em>context</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the Mesh handling blocks</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+<li><cite>size</cite>: Number of blocks to handle</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="vulk-graphic-d2-scene-module">
-<h2>vulk.graphic.d2.scene module<a class="headerlink" href="#vulk-graphic-d2-scene-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-vulk.graphic.d2.scene">
+<span id="vulk-graphic-d2-scene-module"></span><h2>vulk.graphic.d2.scene module<a class="headerlink" href="#module-vulk.graphic.d2.scene" title="Permalink to this headline">¶</a></h2>
+<p>This module contains scene related functions and classes</p>
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Action">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Action</code><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Action.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Action.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Action.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init action from widget</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Action.unset_widget">
+<code class="descname">unset_widget</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Action.unset_widget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Action.unset_widget" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Block">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Block</code><span class="sig-paren">(</span><em>parent</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Widget" title="vulk.graphic.d2.scene.Widget"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Widget</span></code></a></p>
+<p>Widget using the shader &#8216;block&#8217; with allow lot of customization</p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Block.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>spritebatch</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Block.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Block.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Composite">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Composite</code><span class="sig-paren">(</span><em>actions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Composite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Composite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Action" title="vulk.graphic.d2.scene.Action"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Action</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Composite.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Composite.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Composite.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.FadeIn">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">FadeIn</code><span class="sig-paren">(</span><em>duration</em>, <em>interpolation=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeIn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.TemporalAction" title="vulk.graphic.d2.scene.TemporalAction"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.TemporalAction</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.FadeIn.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeIn.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeIn.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.FadeIn.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeIn.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeIn.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.FadeOut">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">FadeOut</code><span class="sig-paren">(</span><em>duration</em>, <em>interpolation=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeOut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeOut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.TemporalAction" title="vulk.graphic.d2.scene.TemporalAction"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.TemporalAction</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.FadeOut.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeOut.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeOut.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.FadeOut.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeOut.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeOut.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.FadeTo">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">FadeTo</code><span class="sig-paren">(</span><em>fade</em>, <em>duration</em>, <em>interpolation=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeTo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.TemporalAction" title="vulk.graphic.d2.scene.TemporalAction"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.TemporalAction</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.FadeTo.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeTo.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeTo.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.FadeTo.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#FadeTo.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.FadeTo.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Image">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Image</code><span class="sig-paren">(</span><em>parent</em>, <em>texture_region</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Widget" title="vulk.graphic.d2.scene.Widget"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Widget</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Image.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>spritebatch</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Image.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Image.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.MoveBy">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">MoveBy</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>duration</em>, <em>interpolation=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#MoveBy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.MoveBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.TemporalAction" title="vulk.graphic.d2.scene.TemporalAction"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.TemporalAction</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.MoveBy.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#MoveBy.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.MoveBy.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.MoveBy.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#MoveBy.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.MoveBy.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.MoveTo">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">MoveTo</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>duration</em>, <em>interpolation=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#MoveTo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.MoveTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.TemporalAction" title="vulk.graphic.d2.scene.TemporalAction"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.TemporalAction</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.MoveTo.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#MoveTo.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.MoveTo.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.MoveTo.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#MoveTo.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.MoveTo.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Parallel">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Parallel</code><span class="sig-paren">(</span><em>actions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Parallel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Composite" title="vulk.graphic.d2.scene.Composite"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Composite</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Parallel.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Parallel.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Parallel.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Parallel.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Parallel.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Parallel.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Repeat">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Repeat</code><span class="sig-paren">(</span><em>action</em>, <em>count=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Repeat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Repeat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Action" title="vulk.graphic.d2.scene.Action"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Action</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Repeat.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Repeat.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Repeat.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Repeat.restart_action">
+<code class="descname">restart_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Repeat.restart_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Repeat.restart_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Repeat.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Repeat.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Repeat.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Scene">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Scene</code><span class="sig-paren">(</span><em>context</em>, <em>width</em>, <em>height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Scene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Scene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Widget" title="vulk.graphic.d2.scene.Widget"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Widget</span></code></a></p>
+<p>Main 2D Scene</p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Scene.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Scene.render"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Scene.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Scene.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Scene.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Scene.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Sequence">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Sequence</code><span class="sig-paren">(</span><em>actions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Composite" title="vulk.graphic.d2.scene.Composite"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Composite</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Sequence.next_action">
+<code class="descname">next_action</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Sequence.next_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Sequence.next_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Sequence.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Sequence.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Sequence.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.TemporalAction">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">TemporalAction</code><span class="sig-paren">(</span><em>duration</em>, <em>interpolation</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#TemporalAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.TemporalAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Action" title="vulk.graphic.d2.scene.Action"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Action</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.TemporalAction.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>widget</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#TemporalAction.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.TemporalAction.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.TemporalAction.percent">
+<code class="descname">percent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#TemporalAction.percent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.TemporalAction.percent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.TemporalAction.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#TemporalAction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.TemporalAction.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.scene.Widget">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Widget</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.add_action">
+<code class="descname">add_action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.add_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.add_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.add_child_to_grid">
+<code class="descname">add_child_to_grid</code><span class="sig-paren">(</span><em>child</em>, <em>column</em>, <em>row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.add_child_to_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.add_child_to_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the child ask a place in the parent grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.add_child_to_place">
+<code class="descname">add_child_to_place</code><span class="sig-paren">(</span><em>child</em>, <em>width</em>, <em>height</em>, <em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.add_child_to_place"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.add_child_to_place" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.d2.scene.Widget.alpha">
+<code class="descname">alpha</code><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.alpha" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.collect_children">
+<code class="descname">collect_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.collect_children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.collect_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all chidren recursively</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.d2.scene.Widget.color_abs">
+<code class="descname">color_abs</code><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.color_abs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute color (not depending on parent color)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.d2.scene.Widget.column_width">
+<code class="descname">column_width</code><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.column_width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.grid">
+<code class="descname">grid</code><span class="sig-paren">(</span><em>column=0</em>, <em>row=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.grid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.grid_position_to_xy">
+<code class="descname">grid_position_to_xy</code><span class="sig-paren">(</span><em>grid_position</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.grid_position_to_xy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.grid_position_to_xy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.place">
+<code class="descname">place</code><span class="sig-paren">(</span><em>width</em>, <em>height</em>, <em>x=0</em>, <em>y=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.place"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.place" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.register_child_grid">
+<code class="descname">register_child_grid</code><span class="sig-paren">(</span><em>child</em>, <em>column</em>, <em>row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.register_child_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.register_child_grid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.remove_action">
+<code class="descname">remove_action</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.remove_action"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.remove_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.reshape">
+<code class="descname">reshape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.reshape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.reshape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.reshape_all">
+<code class="descname">reshape_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.reshape_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.reshape_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ascend all parent until root and ask to reshape all</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.reshape_grid">
+<code class="descname">reshape_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.reshape_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.reshape_grid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.d2.scene.Widget.row_width">
+<code class="descname">row_width</code><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.row_width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>delta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method allowing to perform actions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.scene.Widget.update_grid_size">
+<code class="descname">update_grid_size</code><span class="sig-paren">(</span><em>column</em>, <em>row</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Widget.update_grid_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.update_grid_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.d2.scene.Widget.x_rel">
+<code class="descname">x_rel</code><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.x_rel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vulk.graphic.d2.scene.Widget.y_rel">
+<code class="descname">y_rel</code><a class="headerlink" href="#vulk.graphic.d2.scene.Widget.y_rel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-vulk.graphic.d2">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vulk.graphic.d2" title="Permalink to this headline">¶</a></h2>
@@ -67,8 +818,8 @@
   <ul>
 <li><a class="reference internal" href="#">vulk.graphic.d2 package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#vulk-graphic-d2-batch-module">vulk.graphic.d2.batch module</a></li>
-<li><a class="reference internal" href="#vulk-graphic-d2-scene-module">vulk.graphic.d2.scene module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.d2.batch">vulk.graphic.d2.batch module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.d2.scene">vulk.graphic.d2.scene module</a></li>
 <li><a class="reference internal" href="#module-vulk.graphic.d2">Module contents</a></li>
 </ul>
 </li>
