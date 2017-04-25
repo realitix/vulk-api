@@ -86,7 +86,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RawTexture.init_bitmap"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.init_bitmap">[docs]</a>    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RawTexture.init_bitmap"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.init_bitmap">[docs]</a>    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=unused-argument</span>
         <span class="sd">&#39;&#39;&#39;Return the numpy array containing bitmap&#39;&#39;&#39;</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">pixel_size</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">pixel_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span></div>
@@ -121,6 +122,9 @@
 <span class="sd">        - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
 <span class="sd">        - `address_mode_v`: `SamplerAddressMode` vulk constant</span>
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">destroy</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
             <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
@@ -213,7 +217,7 @@
 <span class="sd">    right and the y axis pointing downwards.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">v2</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Initialize texture region</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -227,6 +231,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">u2</span> <span class="o">=</span> <span class="n">u2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="TextureRegion.from_pixels"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.TextureRegion.from_pixels">[docs]</a>    <span class="k">def</span> <span class="nf">from_pixels</span><span class="p">(</span><span class="n">texture</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a TextureRegion with pixel coordinates</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            texture (Texture): Base texture of region</span>
+<span class="sd">            x (int): X offset (left to right)</span>
+<span class="sd">            y (int): Y offset (top to bottom)</span>
+<span class="sd">            width (int): Region width</span>
+<span class="sd">            height (int): Region height</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The new TextureRegion</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">u2</span> <span class="o">=</span> <span class="n">u</span> <span class="o">+</span> <span class="n">width</span> <span class="o">/</span> <span class="n">texture</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="n">texture</span><span class="o">.</span><span class="n">height</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="n">height</span> <span class="o">/</span> <span class="n">texture</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">return</span> <span class="n">TextureRegion</span><span class="p">(</span><span class="n">texture</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">u2</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TextureRegion.set_texture"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.TextureRegion.set_texture">[docs]</a>    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Set texture of `TextureRegion`</span>

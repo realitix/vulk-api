@@ -267,6 +267,44 @@ Currently, <cite>flush</cite> register and submit command.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="vulk.graphic.d2.batch.CharBatch">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">CharBatch</code><span class="sig-paren">(</span><em>context</em>, <em>size=1000</em>, <em>shaderprogram=None</em>, <em>out_view=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#CharBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.CharBatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.batch.SpriteBatch" title="vulk.graphic.d2.batch.SpriteBatch"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.batch.SpriteBatch</span></code></a></p>
+<p>CharBatch allows to batch chars into minimum of draw calls.</p>
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.CharBatch.draw_char">
+<code class="descname">draw_char</code><span class="sig-paren">(</span><em>fontdata</em>, <em>char</em>, <em>x</em>, <em>y</em>, <em>r=1.0</em>, <em>g=1.0</em>, <em>b=1.0</em>, <em>a=1.0</em>, <em>scale_x=1.0</em>, <em>scale_y=1.0</em>, <em>rotation=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#CharBatch.draw_char"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.CharBatch.draw_char" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a char</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>fontdata (FontData): Data on font
+char (str): One character to draw
+size (float): Size
+x (int): X position
+y (int): Y position
+r (float): Red channel
+g (float): Green channel
+b (float): Blue channel
+a (float): Alpha channel
+scale_x (float): Scaling on x axis
+scale_y (float): Scaling on y axis
+rotation (float): Rotation in radian (clockwise)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.batch.CharBatch.get_default_shaderprogram">
+<code class="descname">get_default_shaderprogram</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#CharBatch.get_default_shaderprogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.CharBatch.get_default_shaderprogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a basic shader program if nono given</p>
+<p><em>Parameters:</em></p>
+<ul class="simple">
+<li><cite>context</cite>: <cite>VulkContext</cite></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="vulk.graphic.d2.batch.SpriteBatch">
 <em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">SpriteBatch</code><span class="sig-paren">(</span><em>context</em>, <em>size=1000</em>, <em>shaderprogram=None</em>, <em>out_view=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#SpriteBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.SpriteBatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.batch.BaseBatch" title="vulk.graphic.d2.batch.BaseBatch"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.batch.BaseBatch</span></code></a></p>
@@ -410,57 +448,100 @@ Theses sets contain uniform buffer and texture.</p>
 
 </dd></dl>
 
+</div>
+<div class="section" id="module-vulk.graphic.d2.font">
+<span id="vulk-graphic-d2-font-module"></span><h2>vulk.graphic.d2.font module<a class="headerlink" href="#module-vulk.graphic.d2.font" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="vulk.graphic.d2.batch.TextBatch">
-<em class="property">class </em><code class="descclassname">vulk.graphic.d2.batch.</code><code class="descname">TextBatch</code><span class="sig-paren">(</span><em>context</em>, <em>size=1000</em>, <em>shaderprogram=None</em>, <em>out_view=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.batch.SpriteBatch" title="vulk.graphic.d2.batch.SpriteBatch"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.batch.SpriteBatch</span></code></a></p>
-<p>TextBatch allows to batch lot of text into minimum of draw calls.</p>
+<dt id="vulk.graphic.d2.font.FontData">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.font.</code><code class="descname">FontData</code><span class="sig-paren">(</span><em>context</em>, <em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#FontData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.FontData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Load a BMFont Text file into a FontData</p>
+<p>The FontData can be rendered with the CharBatch.
+See <a class="reference external" href="http://www.angelcode.com/products/bmfont/doc/file_format.html">http://www.angelcode.com/products/bmfont/doc/file_format.html</a></p>
 <dl class="method">
-<dt id="vulk.graphic.d2.batch.TextBatch.flush">
-<code class="descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.flush" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flush all draws to graphic card.
-Currently, <cite>flush</cite> register and submit command.</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: <cite>VulkContext</cite></li>
-</ul>
+<dt id="vulk.graphic.d2.font.FontData.get_kerning">
+<code class="descname">get_kerning</code><span class="sig-paren">(</span><em>previous_char</em>, <em>current_char</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#FontData.get_kerning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.FontData.get_kerning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get kerning between last and current char</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>previous_char (str): Previous character
+current_char (str): Current character</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="vulk.graphic.d2.batch.TextBatch.get_default_shaderprogram">
-<code class="descname">get_default_shaderprogram</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.get_default_shaderprogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.get_default_shaderprogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a basic shader program if none given</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: <cite>VulkContext</cite></li>
-</ul>
+<dt id="vulk.graphic.d2.font.FontData.get_region">
+<code class="descname">get_region</code><span class="sig-paren">(</span><em>char</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#FontData.get_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.FontData.get_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get texture region of char in this FontData</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>char (str): One character to find</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="vulk.graphic.d2.batch.TextBatch.init_descriptorlayout">
-<code class="descname">init_descriptorlayout</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_descriptorlayout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_descriptorlayout" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="vulk.graphic.d2.font.FontData.get_sizes">
+<code class="descname">get_sizes</code><span class="sig-paren">(</span><em>char</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#FontData.get_sizes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.FontData.get_sizes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get size of char in this FontData</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>char (str): One character to find</dd>
+</dl>
+</dd></dl>
 
-<dl class="method">
-<dt id="vulk.graphic.d2.batch.TextBatch.init_descriptorpool">
-<code class="descname">init_descriptorpool</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_descriptorpool"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_descriptorpool" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="staticmethod">
+<dt id="vulk.graphic.d2.font.FontData.load_bmfont">
+<em class="property">static </em><code class="descname">load_bmfont</code><span class="sig-paren">(</span><em>filepath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#FontData.load_bmfont"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.FontData.load_bmfont" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the BMFont file into a dict</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>filename (str): BMFont file</dd>
+</dl>
+</dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="vulk.graphic.d2.font.TextRenderer">
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.font.</code><code class="descname">TextRenderer</code><span class="sig-paren">(</span><em>context</em>, <em>fontdata</em>, <em>batch=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#TextRenderer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.TextRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>TextRenderer performs computation to draw text</p>
 <dl class="method">
-<dt id="vulk.graphic.d2.batch.TextBatch.init_descriptorsets">
-<code class="descname">init_descriptorsets</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_descriptorsets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_descriptorsets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the descriptor set (for mat4)</p>
+<dt id="vulk.graphic.d2.font.TextRenderer.begin">
+<code class="descname">begin</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#TextRenderer.begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.TextRenderer.begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start rendering</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext): Context</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="vulk.graphic.d2.batch.TextBatch.init_mesh">
-<code class="descname">init_mesh</code><span class="sig-paren">(</span><em>context</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/batch.html#TextBatch.init_mesh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.batch.TextBatch.init_mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the Mesh handling blocks</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: <cite>VulkContext</cite></li>
-<li><cite>size</cite>: Number of blocks to handle</li>
-</ul>
+<dt id="vulk.graphic.d2.font.TextRenderer.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><em>text</em>, <em>x</em>, <em>y</em>, <em>size</em>, <em>r=1.0</em>, <em>g=1.0</em>, <em>b=1.0</em>, <em>a=1.0</em>, <em>rotation=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#TextRenderer.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.TextRenderer.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Render text on screen</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>text (str): String to render
+x (int): X position (from left)
+y (int): Y position (from top)
+size (float): Pixel size of font
+r (float): Red channel
+g (float): Green channel
+b (float): Blue channel
+a (float): Alpha channel
+rotation (float): Rotation in radian (clockwise)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.d2.font.TextRenderer.end">
+<code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/font.html#TextRenderer.end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.font.TextRenderer.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop rendering</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>Semaphore signaled when all drawing operations are finished</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -488,7 +569,7 @@ Currently, <cite>flush</cite> register and submit command.</p>
 
 <dl class="class">
 <dt id="vulk.graphic.d2.scene.Block">
-<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Block</code><span class="sig-paren">(</span><em>parent</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Block" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">vulk.graphic.d2.scene.</code><code class="descname">Block</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/d2/scene.html#Block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.d2.scene.Block" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#vulk.graphic.d2.scene.Widget" title="vulk.graphic.d2.scene.Widget"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.d2.scene.Widget</span></code></a></p>
 <p>Widget using the shader &#8216;block&#8217; with allow lot of customization</p>
 <dl class="method">
@@ -819,6 +900,7 @@ Currently, <cite>flush</cite> register and submit command.</p>
 <li><a class="reference internal" href="#">vulk.graphic.d2 package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-vulk.graphic.d2.batch">vulk.graphic.d2.batch module</a></li>
+<li><a class="reference internal" href="#module-vulk.graphic.d2.font">vulk.graphic.d2.font module</a></li>
 <li><a class="reference internal" href="#module-vulk.graphic.d2.scene">vulk.graphic.d2.scene module</a></li>
 <li><a class="reference internal" href="#module-vulk.graphic.d2">Module contents</a></li>
 </ul>

@@ -718,7 +718,7 @@
             <span class="n">pQueueFamilyIndices</span><span class="o">=</span><span class="n">queue_families</span> <span class="k">if</span> <span class="n">queue_families</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateBuffer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">buffer_create</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateBuffer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">buffer_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Get memory requirements</span>
         <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetBufferMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
@@ -735,7 +735,7 @@
         <span class="p">)</span>
 
         <span class="c1"># Create memory</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Bind device memory to the buffer</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkBindBufferMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -1207,8 +1207,8 @@
         <span class="p">)</span>
 
         <span class="c1"># The Vulkan command pool</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateCommandPool</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-                                                  <span class="n">commandpool_create</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateCommandPool</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">commandpool_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="c1"># Command buffers allocated from this pool</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffers</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1269,7 +1269,7 @@
 
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">vk</span><span class="o">.</span><span class="n">vkDestroyCommandPool</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">)</span></div></div>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkDestroyCommandPool</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">commandpool</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="DescriptorPool"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.DescriptorPool">[docs]</a><span class="k">class</span> <span class="nc">DescriptorPool</span><span class="p">():</span>
@@ -1307,7 +1307,7 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">descriptorpool</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorPool</span><span class="p">(</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorpool_create</span><span class="p">)</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">descriptorpool_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DescriptorPool.allocate_descriptorsets"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.DescriptorPool.allocate_descriptorsets">[docs]</a>    <span class="k">def</span> <span class="nf">allocate_descriptorsets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">layouts</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -1394,7 +1394,7 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">descriptorsetlayout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateDescriptorSetLayout</span><span class="p">(</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">layout_create</span><span class="p">)</span></div>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">layout_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Framebuffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Framebuffer">[docs]</a><span class="k">class</span> <span class="nc">Framebuffer</span><span class="p">():</span>
@@ -1427,7 +1427,7 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">framebuffer</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateFramebuffer</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-                                                  <span class="n">framebuffer_create</span><span class="p">)</span></div>
+                                                  <span class="n">framebuffer_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="HighPerformanceBuffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.HighPerformanceBuffer">[docs]</a><span class="k">class</span> <span class="nc">HighPerformanceBuffer</span><span class="p">():</span>
@@ -1719,7 +1719,7 @@
             <span class="n">initialLayout</span><span class="o">=</span><span class="n">layout</span><span class="o">.</span><span class="n">value</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImage</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image_create</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImage</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">image_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Get memory requirements</span>
         <span class="n">requirements</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkGetImageMemoryRequirements</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
@@ -1735,7 +1735,7 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkAllocateMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">alloc_info</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Bind device memory to the image</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkBindImageMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -1918,7 +1918,8 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">imageview</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImageView</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">imageview_create</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imageview</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateImageView</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                              <span class="n">imageview_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Pipeline"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Pipeline">[docs]</a><span class="k">class</span> <span class="nc">Pipeline</span><span class="p">():</span>
@@ -2129,8 +2130,8 @@
             <span class="n">basePipelineIndex</span><span class="o">=-</span><span class="mi">1</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateGraphicsPipelines</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                                                     <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">pipeline_create</span><span class="p">])</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateGraphicsPipelines</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">pipeline_create</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PipelineLayout"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.PipelineLayout">[docs]</a><span class="k">class</span> <span class="nc">PipelineLayout</span><span class="p">():</span>
@@ -2168,7 +2169,7 @@
             <span class="n">pPushConstantRanges</span><span class="o">=</span><span class="kc">None</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreatePipelineLayout</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
-                                                <span class="n">layout_create</span><span class="p">)</span></div>
+                                                <span class="n">layout_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Renderpass"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Renderpass">[docs]</a><span class="k">class</span> <span class="nc">Renderpass</span><span class="p">():</span>
@@ -2291,7 +2292,7 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">renderpass</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateRenderPass</span><span class="p">(</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">renderpass_create</span><span class="p">)</span></div>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">renderpass_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Sampler"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Sampler">[docs]</a><span class="k">class</span> <span class="nc">Sampler</span><span class="p">():</span>
@@ -2306,30 +2307,29 @@
                  <span class="n">anisotropy_enable</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="p">,</span> <span class="n">compare_enable</span><span class="p">,</span>
                  <span class="n">compare_op</span><span class="p">,</span> <span class="n">min_lod</span><span class="p">,</span> <span class="n">max_lod</span><span class="p">,</span> <span class="n">border_color</span><span class="p">,</span>
                  <span class="n">unnormalized_coordinates</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        *Parameters:*</span>
+        <span class="sd">&quot;&quot;&quot;Construct a new sampler</span>
 
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `mag_filter`: Magnification `Filter` to apply to lookups</span>
-<span class="sd">        - `min_filter`: Minification `Filter` to apply to lookups</span>
-<span class="sd">        - `mipmap_mode`: `SamplerMipmapMode` mipmap filter to apply to</span>
-<span class="sd">                         lookups</span>
-<span class="sd">        - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
-<span class="sd">        - `address_mode_v`: `SamplerAddressMode` vulk contant</span>
-<span class="sd">        - `address_mode_w`: `SamplerAddressMode` vulk contant</span>
-<span class="sd">        - `mip_lod_bias`: Bias to be added to mipmap LOD calculation</span>
-<span class="sd">        - `anisotropy_enable`: `True` to enable anisotropic filtering</span>
-<span class="sd">        - `max_anisotropy`: Anisotropy value clamp</span>
-<span class="sd">        - `compare_enable`: `True` to enable comparison against a reference</span>
-<span class="sd">                            value during lookups</span>
-<span class="sd">        - `compare_op`: `CompareOp` vulk constant comparison function to apply</span>
-<span class="sd">                        to fetched data before filtering</span>
-<span class="sd">        - `min_lod`: Value used to clamp the computed level-of-detail value</span>
-<span class="sd">        - `max_lod`: Value used to clamp the computed level-of-detail value</span>
-<span class="sd">        - `border_color`: `BorderColor` predefined border color to use</span>
-<span class="sd">        - `unnormalized_coordinates`: `True` to use unnormalized texel</span>
-<span class="sd">                                      coordinates</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext): Context containing device</span>
+<span class="sd">            mag_filter (Filter): Magnification filter to apply to lookups</span>
+<span class="sd">            min_filter (Filter): Minification filter to apply to lookups</span>
+<span class="sd">            mipmap_mode (SamplerMipmapMode): mipmap filter to apply to lookups</span>
+<span class="sd">            address_mode_u (SamplerAddressMode): Repeat X</span>
+<span class="sd">            address_mode_v (SamplerAddressMode): Repeat Y</span>
+<span class="sd">            address_mode_w (SamplerAddressMode): Repeat W</span>
+<span class="sd">            mip_lod_bias (float): Bias to be added to mipmap LOD calculation</span>
+<span class="sd">            anisotropy_enable (bool): enable anisotropic filtering</span>
+<span class="sd">            max_anisotropy (int): Anisotropy value clamp</span>
+<span class="sd">            compare_enable (bool): enable comparison against a reference value</span>
+<span class="sd">                                   during lookups</span>
+<span class="sd">            compare_op (CompareOp): comparison function to apply to fetched</span>
+<span class="sd">                                    data before filtering</span>
+<span class="sd">            min_lod (float): clamp the computed level-of-detail value</span>
+<span class="sd">            max_lod (float): clamp the computed level-of-detail value</span>
+<span class="sd">            border_color (BorderColor): predefined border color to use</span>
+<span class="sd">            unnormalized_coordinates (bool): True to use unnormalized texel</span>
+<span class="sd">                                             coordinates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sampler_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkSamplerCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -2350,7 +2350,16 @@
             <span class="n">unnormalizedCoordinates</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">unnormalized_coordinates</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSampler</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">sampler_create</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSampler</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">sampler_create</span><span class="p">,</span>
+                                          <span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Sampler.destroy"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Sampler.destroy">[docs]</a>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Destroy sampler</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext): Context containing device</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkDestroySampler</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Semaphore"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Semaphore">[docs]</a><span class="k">class</span> <span class="nc">Semaphore</span><span class="p">():</span>
@@ -2374,7 +2383,8 @@
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSemaphore</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">semaphore_create</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSemaphore</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span>
+                                              <span class="n">semaphore_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ShaderModule"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.ShaderModule">[docs]</a><span class="k">class</span> <span class="nc">ShaderModule</span><span class="p">():</span>
@@ -2407,7 +2417,8 @@
         <span class="n">shader_create</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkShaderModuleCreateInfo</span><span class="p">(</span>
             <span class="n">sType</span><span class="o">=</span><span class="n">vk</span><span class="o">.</span><span class="n">VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO</span><span class="p">,</span>
             <span class="n">flags</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">codeSize</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">code</span><span class="p">),</span> <span class="n">pCode</span><span class="o">=</span><span class="n">code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateShaderModule</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">shader_create</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">module</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateShaderModule</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">shader_create</span><span class="p">,</span>
+                                              <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ShaderProgram"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.ShaderProgram">[docs]</a><span class="k">class</span> <span class="nc">ShaderProgram</span><span class="p">():</span>

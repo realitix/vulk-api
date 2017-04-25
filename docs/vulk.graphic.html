@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vulk.graphic.d2.html">vulk.graphic.d2 package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.batch">vulk.graphic.d2.batch module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.font">vulk.graphic.d2.font module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.scene">vulk.graphic.d2.scene module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2">Module contents</a></li>
 </ul>
@@ -276,7 +277,7 @@ of vertex.</p>
 manually</p>
 <dl class="method">
 <dt id="vulk.graphic.texture.RawTexture.init_bitmap">
-<code class="descname">init_bitmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
+<code class="descname">init_bitmap</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the numpy array containing bitmap</p>
 </dd></dl>
 
@@ -335,11 +336,27 @@ manually</p>
 
 <dl class="class">
 <dt id="vulk.graphic.texture.TextureRegion">
-<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">TextureRegion</code><span class="sig-paren">(</span><em>texture</em>, <em>u=0</em>, <em>u2=1</em>, <em>v=0</em>, <em>v2=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">TextureRegion</code><span class="sig-paren">(</span><em>texture</em>, <em>u=0</em>, <em>v=0</em>, <em>u2=1</em>, <em>v2=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>Defines a rectangular area of a texture. The coordinate system used has
 its origin in the upper left corner with the x-axis pointing to the
 right and the y axis pointing downwards.</p>
+<dl class="staticmethod">
+<dt id="vulk.graphic.texture.TextureRegion.from_pixels">
+<em class="property">static </em><code class="descname">from_pixels</code><span class="sig-paren">(</span><em>texture</em>, <em>x</em>, <em>y</em>, <em>width</em>, <em>height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion.from_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion.from_pixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a TextureRegion with pixel coordinates</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>texture (Texture): Base texture of region
+x (int): X offset (left to right)
+y (int): Y offset (top to bottom)
+width (int): Region width
+height (int): Region height</dd>
+<dt>Returns:</dt>
+<dd>The new TextureRegion</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="vulk.graphic.texture.TextureRegion.set_region">
 <code class="descname">set_region</code><span class="sig-paren">(</span><em>u</em>, <em>u2</em>, <em>v</em>, <em>v2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#TextureRegion.set_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.TextureRegion.set_region" title="Permalink to this definition">¶</a></dt>

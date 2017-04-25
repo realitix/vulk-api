@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>vulk.graphic.d2.font &#8212; Vulk 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for vulk.graphic.d2.font</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">path</span> <span class="k">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">vulk.graphic.texture</span> <span class="k">import</span> <span class="n">Texture</span><span class="p">,</span> <span class="n">TextureRegion</span>
+<span class="kn">from</span> <span class="nn">vulk.graphic.d2.batch</span> <span class="k">import</span> <span class="n">CharBatch</span>
+
+
+<div class="viewcode-block" id="FontData"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.FontData">[docs]</a><span class="k">class</span> <span class="nc">FontData</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Load a BMFont Text file into a FontData</span>
+
+<span class="sd">    The FontData can be rendered with the CharBatch.</span>
+<span class="sd">    See http://www.angelcode.com/products/bmfont/doc/file_format.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_data</span> <span class="o">=</span> <span class="n">FontData</span><span class="o">.</span><span class="n">load_bmfont</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_pages</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_regions</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_chars</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kernings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_kernings</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_init_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create Texture for each page</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext): Vulk context</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Page indexed dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">dirpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">parent</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]:</span>
+            <span class="n">res</span><span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Texture</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">dirpath</span> <span class="o">/</span> <span class="n">p</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">_init_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a TextureRegion for each char</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Char indexed dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;char&#39;</span><span class="p">]:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pages</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+            <span class="n">w</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;width&#39;</span><span class="p">]</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span>
+            <span class="n">res</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">TextureRegion</span><span class="o">.</span><span class="n">from_pixels</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">_init_chars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create dict indexed key for each char</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Char indexed dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;char&#39;</span><span class="p">]:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+            <span class="n">res</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">_init_kernings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create tuple(char1, char2) indexed key for each kerning</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple indexed dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;kerning&#39;</span><span class="p">]:</span>
+            <span class="n">c1</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="s1">&#39;first&#39;</span><span class="p">])</span>
+            <span class="n">c2</span> <span class="o">=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">k</span><span class="p">[</span><span class="s1">&#39;second&#39;</span><span class="p">])</span>
+            <span class="n">res</span><span class="p">[(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="s1">&#39;amount&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+<div class="viewcode-block" id="FontData.get_region"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.FontData.get_region">[docs]</a>    <span class="k">def</span> <span class="nf">get_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get texture region of char in this FontData</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            char (str): One character to find</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">[</span><span class="n">char</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FontData.get_sizes"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.FontData.get_sizes">[docs]</a>    <span class="k">def</span> <span class="nf">get_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get size of char in this FontData</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            char (str): One character to find</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chars</span><span class="p">[</span><span class="n">char</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">chars</span><span class="p">[</span><span class="n">char</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="FontData.get_kerning"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.FontData.get_kerning">[docs]</a>    <span class="k">def</span> <span class="nf">get_kerning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_char</span><span class="p">,</span> <span class="n">current_char</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get kerning between last and current char</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            previous_char (str): Previous character</span>
+<span class="sd">            current_char (str): Current character</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernings</span><span class="p">[(</span><span class="n">previous_char</span><span class="p">,</span> <span class="n">current_char</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="FontData.load_bmfont"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.FontData.load_bmfont">[docs]</a>    <span class="k">def</span> <span class="nf">load_bmfont</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert the BMFont file into a dict</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename (str): BMFont file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">extract</span><span class="p">(</span><span class="n">attributes</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">attrib</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
+                <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">attrib</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="n">strval</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">strval</span><span class="p">:</span>
+                        <span class="n">arry</span> <span class="o">=</span> <span class="n">strval</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">arry</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">arry</span><span class="p">)</span>
+                        <span class="k">finally</span><span class="p">:</span>
+                            <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">arry</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">strval</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="n">atlas</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">extract</span><span class="p">(</span><span class="n">attributes</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;char&quot;</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="s2">&quot;kerning&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">atlas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                    <span class="n">atlas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">atlas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">atlas</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
+
+        <span class="k">return</span> <span class="n">atlas</span></div></div>
+
+
+<div class="viewcode-block" id="TextRenderer"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.TextRenderer">[docs]</a><span class="k">class</span> <span class="nc">TextRenderer</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;TextRenderer performs computation to draw text&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">fontdata</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize TextRenderer</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext): Context</span>
+<span class="sd">            fontdata (FontData): Font to use</span>
+<span class="sd">            batch: Batch with `draw_char` function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">batch</span><span class="p">:</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="n">CharBatch</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fontdata</span> <span class="o">=</span> <span class="n">fontdata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch</span> <span class="o">=</span> <span class="n">batch</span>
+
+<div class="viewcode-block" id="TextRenderer.begin"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.TextRenderer.begin">[docs]</a>    <span class="k">def</span> <span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start rendering</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext): Context</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextRenderer.end"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.TextRenderer.end">[docs]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stop rendering</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Semaphore signaled when all drawing operations are finished</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">end</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TextRenderer.draw"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.font.TextRenderer.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">g</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Render text on screen</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): String to render</span>
+<span class="sd">            x (int): X position (from left)</span>
+<span class="sd">            y (int): Y position (from top)</span>
+<span class="sd">            size (float): Pixel size of font</span>
+<span class="sd">            r (float): Red channel</span>
+<span class="sd">            g (float): Green channel</span>
+<span class="sd">            b (float): Blue channel</span>
+<span class="sd">            a (float): Alpha channel</span>
+<span class="sd">            rotation (float): Rotation in radian (clockwise)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">current_y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">size</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fontdata</span><span class="o">.</span><span class="n">raw_data</span><span class="p">[</span><span class="s1">&#39;info&#39;</span><span class="p">][</span><span class="s1">&#39;size&#39;</span><span class="p">]</span>
+        <span class="n">previous_char</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+            <span class="c1"># Compute kerning</span>
+            <span class="n">kerning</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">previous_char</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">kerning</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fontdata</span><span class="o">.</span><span class="n">get_kerning</span><span class="p">(</span><span class="n">previous_char</span><span class="p">,</span> <span class="n">char</span><span class="p">)</span>
+
+            <span class="c1"># Compute position</span>
+            <span class="n">char_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fontdata</span><span class="o">.</span><span class="n">chars</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">current_x</span> <span class="o">+</span> <span class="n">char_info</span><span class="p">[</span><span class="s1">&#39;xoffset&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">kerning</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">current_y</span> <span class="o">+</span> <span class="n">char_info</span><span class="p">[</span><span class="s1">&#39;yoffset&#39;</span><span class="p">]</span>
+
+            <span class="c1"># Draw char</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">batch</span><span class="o">.</span><span class="n">draw_char</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fontdata</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span>
+                                 <span class="n">scale</span><span class="p">,</span> <span class="n">rotation</span><span class="p">)</span>
+
+            <span class="c1"># Register variable</span>
+            <span class="n">current_x</span> <span class="o">+=</span> <span class="n">char_info</span><span class="p">[</span><span class="s1">&#39;xadvance&#39;</span><span class="p">]</span>
+            <span class="n">previous_char</span> <span class="o">=</span> <span class="n">char</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Vulk Engine.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

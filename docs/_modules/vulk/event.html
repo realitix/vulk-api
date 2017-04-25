@@ -105,12 +105,12 @@
 <span class="sd">    This class is very basic and performs no logic.</span>
 <span class="sd">    To get more logic, you must use `BaseEventListener`.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-<div class="viewcode-block" id="DispatchEventListener.handle"><a class="viewcode-back" href="../../vulk.html#vulk.event.DispatchEventListener.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+<div class="viewcode-block" id="DispatchEventListener.handle"><a class="viewcode-back" href="../../vulk.html#vulk.event.DispatchEventListener.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Called for each event received</span>
 
 <span class="sd">        *Parameters:*</span>
 
-<span class="sd">        - `e`: `eventconstant.BaseEvent`</span>
+<span class="sd">        - `event`: `eventconstant.BaseEvent`</span>
 
 <span class="sd">        *Returns:*</span>
 
@@ -118,20 +118,20 @@
 <span class="sd">        - `False` otherwise</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Unknow event</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">KEY_DOWN</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_down</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">KEY_UP</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_up</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_BUTTONUP</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_up</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_BUTTONDOWN</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_down</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_MOTION</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_move</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">xr</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">yr</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">KEY_DOWN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_down</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">KEY_UP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_up</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_BUTTONUP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_up</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_BUTTONDOWN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_down</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">MOUSE_MOTION</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_move</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">xr</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">yr</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ec</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="kc">False</span></div>
@@ -272,23 +272,31 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
     <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.key_down"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_down">[docs]</a>    <span class="k">def</span> <span class="nf">key_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.key_down"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_down">[docs]</a>    <span class="k">def</span> <span class="nf">key_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keycode</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
     <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.key_up"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_up">[docs]</a>    <span class="k">def</span> <span class="nf">key_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.key_up"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_up">[docs]</a>    <span class="k">def</span> <span class="nf">key_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keycode</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
     <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.mouse_drag"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_drag">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_drag"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_drag">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
     <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.mouse_move"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_move">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_down"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_down">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
     <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.quit"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.quit">[docs]</a>    <span class="k">def</span> <span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_up"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_up">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+    <span class="nd">@wrap_callback</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_move"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_move">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+    <span class="nd">@wrap_callback</span>
+<div class="viewcode-block" id="CallbackEventListener.quit"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.quit">[docs]</a>    <span class="k">def</span> <span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div></div>
 </pre></div>
 

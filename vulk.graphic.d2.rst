@@ -12,6 +12,14 @@ vulk\.graphic\.d2\.batch module
     :undoc-members:
     :show-inheritance:
 
+vulk\.graphic\.d2\.font module
+------------------------------
+
+.. automodule:: vulk.graphic.d2.font
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 vulk\.graphic\.d2\.scene module
 -------------------------------
 

@@ -52,6 +52,7 @@
 <li class="toctree-l3"><a class="reference internal" href="vulk.graphic.d2.html">vulk.graphic.d2 package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="vulk.graphic.d2.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.batch">vulk.graphic.d2.batch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.font">vulk.graphic.d2.font module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2.scene">vulk.graphic.d2.scene module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="vulk.graphic.d2.html#module-vulk.graphic.d2">Module contents</a></li>
 </ul>
@@ -253,6 +254,11 @@ You must pass named parameters with the exact same name as in
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="vulk.event.CallbackEventListener.mouse_down">
+<code class="descname">mouse_down</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/event.html#CallbackEventListener.mouse_down"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.CallbackEventListener.mouse_down" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="vulk.event.CallbackEventListener.mouse_drag">
 <code class="descname">mouse_drag</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/event.html#CallbackEventListener.mouse_drag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.CallbackEventListener.mouse_drag" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -260,6 +266,11 @@ You must pass named parameters with the exact same name as in
 <dl class="method">
 <dt id="vulk.event.CallbackEventListener.mouse_move">
 <code class="descname">mouse_move</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/event.html#CallbackEventListener.mouse_move"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.CallbackEventListener.mouse_move" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.event.CallbackEventListener.mouse_up">
+<code class="descname">mouse_up</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/event.html#CallbackEventListener.mouse_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.CallbackEventListener.mouse_up" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -278,11 +289,11 @@ This class is very basic and performs no logic.
 To get more logic, you must use <cite>BaseEventListener</cite>.</p>
 <dl class="method">
 <dt id="vulk.event.DispatchEventListener.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/event.html#DispatchEventListener.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.DispatchEventListener.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/event.html#DispatchEventListener.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.DispatchEventListener.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called for each event received</p>
 <p><em>Parameters:</em></p>
 <ul class="simple">
-<li><cite>e</cite>: <cite>eventconstant.BaseEvent</cite></li>
+<li><cite>event</cite>: <cite>eventconstant.BaseEvent</cite></li>
 </ul>
 <p><em>Returns:</em></p>
 <ul class="simple">
@@ -4963,6 +4974,16 @@ in a RenderPass object</p>
 <p><cite>Sampler</cite> objects represent the state of an image sampler which is used
 by the implementation to read image data and apply filtering and other
 transformations for the shader.</p>
+<dl class="method">
+<dt id="vulk.vulkanobject.Sampler.destroy">
+<code class="descname">destroy</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Sampler.destroy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Sampler.destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destroy sampler</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext): Context containing device</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
