@@ -83,8 +83,12 @@
         <span class="c1"># Init view and sampler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RawTexture.init"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init view and sampler&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_view</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_sampler</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RawTexture.init_bitmap"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.init_bitmap">[docs]</a>    <span class="k">def</span> <span class="nf">init_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="c1"># pylint: disable=unused-argument</span>
@@ -93,42 +97,48 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">*</span><span class="n">pixel_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RawTexture.set_view"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.set_view">[docs]</a>    <span class="k">def</span> <span class="nf">set_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Allow to customize the texture view</span>
+        <span class="sd">&quot;&quot;&quot;Set texture view</span>
 
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">texture_range</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageSubresourceRange</span><span class="p">(</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageAspect</span><span class="o">.</span><span class="n">COLOR</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">ImageView</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">final_image</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">ImageViewType</span><span class="o">.</span><span class="n">TYPE_2D</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">,</span> <span class="n">texture_range</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RawTexture.set_sampler"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.set_sampler">[docs]</a>    <span class="k">def</span> <span class="nf">set_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
-                    <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
+<div class="viewcode-block" id="RawTexture.set_sampler"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.set_sampler">[docs]</a>    <span class="k">def</span> <span class="nf">set_sampler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">NEAREST</span><span class="p">,</span>
+                    <span class="n">min_filter</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">Filter</span><span class="o">.</span><span class="n">NEAREST</span><span class="p">,</span>
+                    <span class="n">mipmap_mode</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">NEAREST</span><span class="p">,</span>
                     <span class="n">address_mode_u</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
                     <span class="n">address_mode_v</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
-                    <span class="n">anisotropy_enable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Allow to customize the texture sampler</span>
+                    <span class="n">address_mode_w</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
+                    <span class="n">anisotropy_enable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the texture sampler</span>
 
-<span class="sd">        *Parameters:*</span>
+<span class="sd">        By default, sampler is configured for the best performance.</span>
+<span class="sd">        If you want better quality, you must enable manually bilinear,</span>
+<span class="sd">        trilinear or anisotropic filtering.</span>
 
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `mag_filter`: `Filter` vulk constant</span>
-<span class="sd">        - `min_filter`: `Filter` vulk constant</span>
-<span class="sd">        - `address_mode_u`: `SamplerAddressMode` vulk constant</span>
-<span class="sd">        - `address_mode_v`: `SamplerAddressMode` vulk constant</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext): Context</span>
+<span class="sd">            mag_filter (Filter): Magnification filter to apply to lookups</span>
+<span class="sd">            min_filter (Filter): Minification filter to apply to lookups</span>
+<span class="sd">            mipmap_mode (SamplerMipmapMode): Mipmap filter to apply to lookups</span>
+<span class="sd">            address_mode_u (SamplerAddressMode):</span>
+<span class="sd">            address_mode_v (SamplerAddressMode):</span>
+<span class="sd">            address_mode_w (SamplerAddressMode):</span>
+<span class="sd">            anisotropy_enable (bool): Whether to enable anisotropy</span>
+<span class="sd">            max_anisotropy (int): Anisotropy value clamp</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">destroy</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Sampler</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerMipmapMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
-            <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">SamplerAddressMode</span><span class="o">.</span><span class="n">REPEAT</span><span class="p">,</span>
-            <span class="mi">0</span><span class="p">,</span> <span class="n">anisotropy_enable</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">CompareOp</span><span class="o">.</span><span class="n">ALWAYS</span><span class="p">,</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">mag_filter</span><span class="p">,</span> <span class="n">min_filter</span><span class="p">,</span> <span class="n">mipmap_mode</span><span class="p">,</span>
+            <span class="n">address_mode_u</span><span class="p">,</span> <span class="n">address_mode_v</span><span class="p">,</span> <span class="n">address_mode_w</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">anisotropy_enable</span><span class="p">,</span> <span class="n">max_anisotropy</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">CompareOp</span><span class="o">.</span><span class="n">ALWAYS</span><span class="p">,</span>
             <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BorderColor</span><span class="o">.</span><span class="n">INT_OPAQUE_BLACK</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RawTexture.upload"><a class="viewcode-back" href="../../../vulk.graphic.html#vulk.graphic.texture.RawTexture.upload">[docs]</a>    <span class="k">def</span> <span class="nf">upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -153,15 +163,16 @@
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span> <span class="n">raw_bitmap</span><span class="p">,</span>
                  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        *Parameter:*</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+<span class="sd">            width (int): Texture width</span>
+<span class="sd">            height (int): Texture height</span>
+<span class="sd">            texture_format (Format): Texture format</span>
+<span class="sd">            raw_bitmap (buffer): Bitmap buffer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_bitmap</span> <span class="o">=</span> <span class="n">raw_bitmap</span>
 
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `width`: Width of the texture</span>
-<span class="sd">        - `height`: Height of the texture</span>
-<span class="sd">        - `texture_format`: `Format` of the vulkan texture</span>
-<span class="sd">        - `raw_bitmap`: Buffer to a bitmap</span>
-<span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1"># Create all the components by calling parent init</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">texture_format</span><span class="p">,</span>
                          <span class="n">raw_bitmap</span><span class="o">=</span><span class="n">raw_bitmap</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>

@@ -678,32 +678,28 @@
 <span class="c1"># CLASSES</span>
 <span class="c1"># ----------</span>
 <div class="viewcode-block" id="Buffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Buffer">[docs]</a><span class="k">class</span> <span class="nc">Buffer</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    `Buffer` wrap a `VkBuffer` and a `VkMemory`</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;`Buffer` wrap a `VkBuffer` and a `VkMemory`&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">flags</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span>
                  <span class="n">queue_families</span><span class="p">,</span> <span class="n">memory_properties</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Create a new buffer</span>
+        <span class="sd">&quot;&quot;&quot;Create a new buffer</span>
 
 <span class="sd">        Creating a buffer is made of several steps:</span>
+<span class="sd">            - Create the buffer</span>
+<span class="sd">            - Allocate the memory</span>
+<span class="sd">            - Bind the memory to the buffer</span>
 
-<span class="sd">        - Create the buffer</span>
-<span class="sd">        - Allocate the memory</span>
-<span class="sd">        - Bind the memory to the buffer</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `flags`: `BufferCreate` vulk constant</span>
-<span class="sd">        - `size`: Buffer size in bytes</span>
-<span class="sd">        - `usage`: `BufferUsage` vulk constant</span>
-<span class="sd">        - `sharing_mode`: `SharingMode` vulk constant</span>
-<span class="sd">        - `queue_families`: List of queue families accessing this image</span>
-<span class="sd">                            (ignored if sharingMode is not</span>
-<span class="sd">                            `CONCURRENT`) (can be [])</span>
-<span class="sd">        - `memory_properties`: `MemoryProperty` vulk constant</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+<span class="sd">            flags (BufferCreate): Set sparse properties</span>
+<span class="sd">            size(int): Buffer size in bytes</span>
+<span class="sd">            usage (BufferUsage): All usages available for this buffer</span>
+<span class="sd">            sharing_mode (SharingMode): Shared between queues</span>
+<span class="sd">            queue_families (list): List of queue families accessing this</span>
+<span class="sd">                                   buffer (ignored if sharingMode is not</span>
+<span class="sd">                                   `CONCURRENT` - can be [])</span>
+<span class="sd">            memory_properties (MemoryProperty): Type of memory for this buffer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_properties</span> <span class="o">=</span> <span class="n">memory_properties</span><span class="o">.</span><span class="n">value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
 
@@ -741,18 +737,17 @@
         <span class="n">vk</span><span class="o">.</span><span class="n">vkBindBufferMemory</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Buffer.copy_to"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Buffer.copy_to">[docs]</a>    <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Copy this buffer to the destination buffer.</span>
+        <span class="sd">&quot;&quot;&quot;Copy this buffer to the destination buffer</span>
+
 <span class="sd">        Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
 <span class="sd">        you to start and submit the command buffer to the execution queue.</span>
 
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `cmd`: `CommandBufferRegister` used to register commands</span>
-<span class="sd">        - `dst_buffer`: Destination `Buffer`</span>
+<span class="sd">        Args:</span>
+<span class="sd">            cmd (CommandBufferRegister): used to register commands</span>
+<span class="sd">            dst_buffer (Buffer): Destination buffer</span>
 
 <span class="sd">        **Note: Buffers must have the same size**</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">dst_buffer</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Buffers must have the same size&quot;</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -765,6 +760,41 @@
         <span class="p">)</span>
 
         <span class="n">cmd</span><span class="o">.</span><span class="n">copy_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Buffer.copy_to_image"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Buffer.copy_to_image">[docs]</a>    <span class="k">def</span> <span class="nf">copy_to_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Copy this buffer to the destination image</span>
+
+<span class="sd">        Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
+<span class="sd">        you to start and submit the command buffer to the execution queue.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cmd (CommandBufferRegister): used to register commands</span>
+<span class="sd">            dst_image (Image): Destination image</span>
+<span class="sd">            mip_level (int): Image mip number</span>
+
+<span class="sd">        **Note: Layout of destination image must be `TRANSFERT_DST_OPTIMAL`.</span>
+<span class="sd">                It&#39;s up to you.**</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subresource</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceLayers</span><span class="p">(</span>
+            <span class="n">aspectMask</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">ImageAspect</span><span class="o">.</span><span class="n">COLOR</span><span class="p">,</span>
+            <span class="n">baseArrayLayer</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">mipLevel</span><span class="o">=</span><span class="n">mip_level</span><span class="p">,</span>
+            <span class="n">layerCount</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">extent</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkExtent3D</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">dst_image</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">dst_image</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                               <span class="n">depth</span><span class="o">=</span><span class="n">dst_image</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkOffset3D</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkBufferImageCopy</span><span class="p">(</span>
+            <span class="n">bufferOffset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">bufferRowLength</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">bufferImageHeight</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">imageSubresource</span><span class="o">=</span><span class="n">subresource</span><span class="p">,</span>
+            <span class="n">imageOffset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
+            <span class="n">imageExtent</span><span class="o">=</span><span class="n">extent</span>
+        <span class="p">)</span>
+        <span class="n">dst_layout</span> <span class="o">=</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_DST_OPTIMAL</span>
+
+        <span class="n">cmd</span><span class="o">.</span><span class="n">copy_buffer_to_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">,</span> <span class="n">dst_layout</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span></div>
 
     <span class="nd">@contextmanager</span>
 <div class="viewcode-block" id="Buffer.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Buffer.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
@@ -1167,6 +1197,21 @@
             <span class="n">dst_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">dst_layout</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span>
         <span class="p">)</span></div>
 
+<div class="viewcode-block" id="CommandBufferRegister.copy_buffer_to_image"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.CommandBufferRegister.copy_buffer_to_image">[docs]</a>    <span class="k">def</span> <span class="nf">copy_buffer_to_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_buffer</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">,</span> <span class="n">dst_layout</span><span class="p">,</span>
+                             <span class="n">regions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Copy a buffer into an image</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            src_buffer (Buffer): Source buffer</span>
+<span class="sd">            dst_image (Image): Destination image</span>
+<span class="sd">            dst_layout (ImageLayout): Image layout</span>
+<span class="sd">            regions (list): List of `VkBufferImageCopy`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vk</span><span class="o">.</span><span class="n">vkCmdCopyBufferToImage</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">src_buffer</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">dst_image</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+            <span class="n">dst_layout</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">),</span> <span class="n">regions</span>
+        <span class="p">)</span></div>
+
 <div class="viewcode-block" id="CommandBufferRegister.copy_buffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.CommandBufferRegister.copy_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">copy_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_buffer</span><span class="p">,</span> <span class="n">dst_buffer</span><span class="p">,</span> <span class="n">regions</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Copy data between buffers</span>
@@ -1504,57 +1549,50 @@
 
 
 <div class="viewcode-block" id="HighPerformanceImage"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.HighPerformanceImage">[docs]</a><span class="k">class</span> <span class="nc">HighPerformanceImage</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    `HighPerformanceImage` allows to use high performance image to be</span>
 <span class="sd">    sampled in your shaders.</span>
 
-<span class="sd">    To get the maximum performance, we are going to create two `Image`,</span>
-<span class="sd">    a staging image which memory can be updated (with our texture) and</span>
-<span class="sd">    a final image with very fast memory that we will use in shaders.</span>
-<span class="sd">    When we create an image, we first upload the pixels in the staging</span>
-<span class="sd">    image and then copy the memory in the final image. Of course, both of</span>
-<span class="sd">    the image have the same properties.</span>
-
-<span class="sd">    **Note: MipMap generation is done only on the final image, the staging</span>
-<span class="sd">            image don&#39;t need mipmap.**</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    To get the maximum performance, we are going to create a staging buffer</span>
+<span class="sd">    which memory can be updated (with our texture) and a final image with very</span>
+<span class="sd">    fast memory that we will use in shaders. When we create an image, we first</span>
+<span class="sd">    upload the pixels in the staging buffer and then copy the memory in the</span>
+<span class="sd">    final image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
                  <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span>
                  <span class="n">sharing_mode</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">SharingMode</span><span class="o">.</span><span class="n">EXCLUSIVE</span><span class="p">,</span>
                  <span class="n">queue_families</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Create a high performance image</span>
+        <span class="sd">&quot;&quot;&quot;Create a high performance image</span>
 
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        - `image_type`: `ImageType` vulk constant</span>
-<span class="sd">        - `image_format`: `Format` of the image</span>
-<span class="sd">        - `width`: Image width</span>
-<span class="sd">        - `heigth`: Image height</span>
-<span class="sd">        - `depth`: Image depth</span>
-<span class="sd">        - `mip_level`: Level of mip (`int`) (only for final_image)</span>
-<span class="sd">        - `layers`: Number of layers (`int`)</span>
-<span class="sd">        - `samples`: This `SampleCount` vulk constant is related</span>
-<span class="sd">                     to multisampling</span>
-<span class="sd">        - `sharing_mode`: `SharingMode` vulk constant</span>
-<span class="sd">        - `queue_families`: List of queue families accessing this image</span>
-<span class="sd">                            (ignored if sharingMode is not `CONCURRENT`)</span>
-<span class="sd">                            (can be [])</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+<span class="sd">            image_type (ImageType): 1D, 2D or 3D</span>
+<span class="sd">            image_format (Format)`: RGBA...</span>
+<span class="sd">            width (int): Image width</span>
+<span class="sd">            heigth (int): Image height</span>
+<span class="sd">            depth (int): Image depth</span>
+<span class="sd">            mip_level (int): Number of mips (only for final_image)</span>
+<span class="sd">            layers (int): Number of layers</span>
+<span class="sd">            samples (SampleCount)`: Related to multisampling</span>
+<span class="sd">            sharing_mode (SharingMode): Shared between queues or exclusive</span>
+<span class="sd">            queue_families (list)`: List of queue families accessing this image</span>
+<span class="sd">                                    (ignored if sharingMode is not</span>
+<span class="sd">                                    `CONCURRENT`, can be [])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">queue_families</span><span class="p">:</span>
             <span class="n">queue_families</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="c1"># Miplevel is applied automatically on final image if &gt; 1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mip_level</span> <span class="o">=</span> <span class="n">mip_level</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
-            <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PREINITIALIZED</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageTiling</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
-            <span class="n">vc</span><span class="o">.</span><span class="n">ImageUsage</span><span class="o">.</span><span class="n">TRANSFER_SRC</span><span class="p">,</span>
+        <span class="n">buffer_size</span> <span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="n">depth</span> <span class="o">*</span> <span class="n">vc</span><span class="o">.</span><span class="n">format_info</span><span class="p">(</span><span class="n">image_format</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span> <span class="o">=</span> <span class="n">Buffer</span><span class="p">(</span>
+            <span class="n">context</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">BufferCreate</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">,</span>
+            <span class="n">vc</span><span class="o">.</span><span class="n">BufferUsage</span><span class="o">.</span><span class="n">TRANSFER_SRC</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
             <span class="n">vc</span><span class="o">.</span><span class="n">MemoryProperty</span><span class="o">.</span><span class="n">HOST_VISIBLE</span> <span class="o">|</span> <span class="n">vc</span><span class="o">.</span><span class="n">MemoryProperty</span><span class="o">.</span><span class="n">HOST_COHERENT</span>
         <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span> <span class="o">=</span> <span class="n">Image</span><span class="p">(</span>
             <span class="n">context</span><span class="p">,</span> <span class="n">image_type</span><span class="p">,</span> <span class="n">image_format</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">,</span>
             <span class="n">layers</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">sharing_mode</span><span class="p">,</span> <span class="n">queue_families</span><span class="p">,</span>
@@ -1574,17 +1612,6 @@
         <span class="n">commandpool</span> <span class="o">=</span> <span class="n">CommandPool</span><span class="p">(</span><span class="n">context</span><span class="p">,</span>
                                   <span class="n">context</span><span class="o">.</span><span class="n">queue_family_indices</span><span class="p">[</span><span class="s1">&#39;graphic&#39;</span><span class="p">])</span>
 
-        <span class="c1"># Transition the staging image to optimal source transfert layout</span>
-        <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-                <span class="n">cmd</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">PREINITIALIZED</span><span class="p">,</span>
-                <span class="n">vc</span><span class="o">.</span><span class="n">ImageLayout</span><span class="o">.</span><span class="n">TRANSFER_SRC_OPTIMAL</span><span class="p">,</span>
-                <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
-                <span class="n">vc</span><span class="o">.</span><span class="n">PipelineStage</span><span class="o">.</span><span class="n">TOP_OF_PIPE</span><span class="p">,</span>
-                <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">HOST_WRITE</span><span class="p">,</span>
-                <span class="n">vc</span><span class="o">.</span><span class="n">Access</span><span class="o">.</span><span class="n">TRANSFER_READ</span>
-            <span class="p">)</span>
-
         <span class="c1"># Transition the final image to optimal destination transfert layout</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
@@ -1598,7 +1625,7 @@
 
         <span class="c1"># Copy staging image into final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">copy_to_image</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_image</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Set the best layout for the final image</span>
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
@@ -1634,7 +1661,7 @@
 <span class="sd">        - `context`: `VulkContext`</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_image</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">b</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">b</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_finalize</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></div></div>
@@ -1781,35 +1808,22 @@
         <span class="n">cmd</span><span class="o">.</span><span class="n">pipeline_barrier</span><span class="p">(</span><span class="n">src_stage</span><span class="p">,</span> <span class="n">dst_stage</span><span class="p">,</span> <span class="n">vc</span><span class="o">.</span><span class="n">Dependency</span><span class="o">.</span><span class="n">NONE</span><span class="p">,</span>
                              <span class="p">[],</span> <span class="p">[],</span> <span class="p">[</span><span class="n">barrier</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="Image.generate_mipmap"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Image.generate_mipmap">[docs]</a>    <span class="k">def</span> <span class="nf">generate_mipmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Generate mipmap of this image based on `self.mip_level`.</span>
-
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `cmd`: `CommandBufferRegister` used to register commands</span>
-
-<span class="sd">        **Note: TODO about layout**</span>
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="k">pass</span></div>
-
 <div class="viewcode-block" id="Image.copy_to"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Image.copy_to">[docs]</a>    <span class="k">def</span> <span class="nf">copy_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Copy this image to the destination image.</span>
+        <span class="sd">&quot;&quot;&quot;Copy this image to the destination image</span>
+
 <span class="sd">        Commands to copy are registered in the commandbuffer but it&#39;s up to</span>
 <span class="sd">        you to start and submit the command buffer to the execution queue.</span>
 
-<span class="sd">        *Parameters:*</span>
-
-<span class="sd">        - `cmd`: `CommandBufferRegister` used to register commands</span>
-<span class="sd">        - `dst_image`: Destination `Image`</span>
+<span class="sd">        Args:</span>
+<span class="sd">            cmd (CommandBufferRegister): Command used to register commands</span>
+<span class="sd">            dst_image (Image): Destination image</span>
 
 <span class="sd">        **Note: Layout of source image must be `TRANSFERT_SRC_OPTIMAL` and</span>
 <span class="sd">                layout of destination image must be `TRANSFERT_DST_OPTIMAL`.</span>
 <span class="sd">                It&#39;s up to you.**</span>
 
 <span class="sd">        **Warning: Format of both images must be compatible**</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Copy image</span>
         <span class="n">subresource</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">VkImageSubresourceLayers</span><span class="p">(</span>
             <span class="n">aspectMask</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">ImageAspect</span><span class="o">.</span><span class="n">COLOR</span><span class="p">,</span>
@@ -2350,8 +2364,8 @@
             <span class="n">unnormalizedCoordinates</span><span class="o">=</span><span class="n">btov</span><span class="p">(</span><span class="n">unnormalized_coordinates</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSampler</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">sampler_create</span><span class="p">,</span>
-                                          <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span> <span class="o">=</span> <span class="n">vk</span><span class="o">.</span><span class="n">vkCreateSampler</span><span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">sampler_create</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Sampler.destroy"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Sampler.destroy">[docs]</a>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Destroy sampler</span>

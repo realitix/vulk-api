@@ -3742,15 +3742,31 @@ be careful!</p>
 <dl class="method">
 <dt id="vulk.vulkanobject.Buffer.copy_to">
 <code class="descname">copy_to</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_buffer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.copy_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.copy_to" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy this buffer to the destination buffer.
-Commands to copy are registered in the commandbuffer but it&#8217;s up to
+<dd><p>Copy this buffer to the destination buffer</p>
+<p>Commands to copy are registered in the commandbuffer but it&#8217;s up to
 you to start and submit the command buffer to the execution queue.</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>cmd</cite>: <cite>CommandBufferRegister</cite> used to register commands</li>
-<li><cite>dst_buffer</cite>: Destination <cite>Buffer</cite></li>
-</ul>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>cmd (CommandBufferRegister): used to register commands
+dst_buffer (Buffer): Destination buffer</dd>
+</dl>
 <p><strong>Note: Buffers must have the same size</strong></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.vulkanobject.Buffer.copy_to_image">
+<code class="descname">copy_to_image</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_image</em>, <em>mip_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.copy_to_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.copy_to_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy this buffer to the destination image</p>
+<p>Commands to copy are registered in the commandbuffer but it&#8217;s up to
+you to start and submit the command buffer to the execution queue.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>cmd (CommandBufferRegister): used to register commands
+dst_image (Image): Destination image
+mip_level (int): Image mip number</dd>
+<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>Note: Layout of destination image must be <cite>TRANSFERT_DST_OPTIMAL</cite>.</dt>
+<dd>It&#8217;s up to you.**</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -3882,7 +3898,7 @@ buffer. You should not use it directly but with <cite>bind</cite> method of
 <li><cite>offsets</cite>: <cite>list</cite> of offset (<cite>int</cite>)</li>
 </ul>
 <dl class="docutils">
-<dt><a href="#id7"><span class="problematic" id="id8">**</span></a>Note: I don&#8217;t understand what is the point with offset but you</dt>
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>Note: I don&#8217;t understand what is the point with offset but you</dt>
 <dd>must pass an array of the same size as <cite>buffers</cite>.**</dd>
 </dl>
 <p><strong>Note: Generally, `count = len(buffers)` and `first = 0`</strong></p>
@@ -3911,6 +3927,19 @@ buffer. You should not use it directly but with <cite>bind</cite> method of
 <li><cite>dst_buffer</cite>: <cite>Buffer</cite></li>
 <li><cite>regions</cite>: <cite>list</cite> of <cite>VkBufferCopy</cite></li>
 </ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.vulkanobject.CommandBufferRegister.copy_buffer_to_image">
+<code class="descname">copy_buffer_to_image</code><span class="sig-paren">(</span><em>src_buffer</em>, <em>dst_image</em>, <em>dst_layout</em>, <em>regions</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#CommandBufferRegister.copy_buffer_to_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.CommandBufferRegister.copy_buffer_to_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy a buffer into an image</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>src_buffer (Buffer): Source buffer
+dst_image (Image): Destination image
+dst_layout (ImageLayout): Image layout
+regions (list): List of <cite>VkBufferImageCopy</cite></dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -4337,16 +4366,11 @@ when the contextmanager is released. Must be used with <cite>with</cite>.</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p><cite>HighPerformanceImage</cite> allows to use high performance image to be
 sampled in your shaders.</p>
-<p>To get the maximum performance, we are going to create two <cite>Image</cite>,
-a staging image which memory can be updated (with our texture) and
-a final image with very fast memory that we will use in shaders.
-When we create an image, we first upload the pixels in the staging
-image and then copy the memory in the final image. Of course, both of
-the image have the same properties.</p>
-<dl class="docutils">
-<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>Note: MipMap generation is done only on the final image, the staging</dt>
-<dd>image don&#8217;t need mipmap.**</dd>
-</dl>
+<p>To get the maximum performance, we are going to create a staging buffer
+which memory can be updated (with our texture) and a final image with very
+fast memory that we will use in shaders. When we create an image, we first
+upload the pixels in the staging buffer and then copy the memory in the
+final image.</p>
 <dl class="method">
 <dt id="vulk.vulkanobject.HighPerformanceImage.bind">
 <code class="descname">bind</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#HighPerformanceImage.bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.HighPerformanceImage.bind" title="Permalink to this definition">¶</a></dt>
@@ -4383,31 +4407,18 @@ be careful!</p>
 <dl class="method">
 <dt id="vulk.vulkanobject.Image.copy_to">
 <code class="descname">copy_to</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Image.copy_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Image.copy_to" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy this image to the destination image.
-Commands to copy are registered in the commandbuffer but it&#8217;s up to
+<dd><p>Copy this image to the destination image</p>
+<p>Commands to copy are registered in the commandbuffer but it&#8217;s up to
 you to start and submit the command buffer to the execution queue.</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>cmd</cite>: <cite>CommandBufferRegister</cite> used to register commands</li>
-<li><cite>dst_image</cite>: Destination <cite>Image</cite></li>
-</ul>
 <dl class="docutils">
+<dt>Args:</dt>
+<dd>cmd (CommandBufferRegister): Command used to register commands
+dst_image (Image): Destination image</dd>
 <dt><a href="#id11"><span class="problematic" id="id12">**</span></a>Note: Layout of source image must be <cite>TRANSFERT_SRC_OPTIMAL</cite> and</dt>
 <dd>layout of destination image must be <cite>TRANSFERT_DST_OPTIMAL</cite>.
 It&#8217;s up to you.**</dd>
 </dl>
 <p><strong>Warning: Format of both images must be compatible</strong></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vulk.vulkanobject.Image.generate_mipmap">
-<code class="descname">generate_mipmap</code><span class="sig-paren">(</span><em>cmd</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Image.generate_mipmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Image.generate_mipmap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate mipmap of this image based on <cite>self.mip_level</cite>.</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>cmd</cite>: <cite>CommandBufferRegister</cite> used to register commands</li>
-</ul>
-<p><strong>Note: TODO about layout</strong></p>
 </dd></dl>
 
 <dl class="method">

@@ -276,6 +276,12 @@ of vertex.</p>
 <p>A Raw texture is not initialized with an image file but can be filled
 manually</p>
 <dl class="method">
+<dt id="vulk.graphic.texture.RawTexture.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init view and sampler</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="vulk.graphic.texture.RawTexture.init_bitmap">
 <code class="descname">init_bitmap</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the numpy array containing bitmap</p>
@@ -283,26 +289,33 @@ manually</p>
 
 <dl class="method">
 <dt id="vulk.graphic.texture.RawTexture.set_sampler">
-<code class="descname">set_sampler</code><span class="sig-paren">(</span><em>context</em>, <em>mag_filter=&lt;Filter.LINEAR: 1&gt;</em>, <em>min_filter=&lt;Filter.LINEAR: 1&gt;</em>, <em>address_mode_u=&lt;SamplerAddressMode.NONE: 0&gt;</em>, <em>address_mode_v=&lt;SamplerAddressMode.NONE: 0&gt;</em>, <em>anisotropy_enable=True</em>, <em>max_anisotropy=16</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.set_sampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.set_sampler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allow to customize the texture sampler</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: <cite>VulkContext</cite></li>
-<li><cite>mag_filter</cite>: <cite>Filter</cite> vulk constant</li>
-<li><cite>min_filter</cite>: <cite>Filter</cite> vulk constant</li>
-<li><cite>address_mode_u</cite>: <cite>SamplerAddressMode</cite> vulk constant</li>
-<li><cite>address_mode_v</cite>: <cite>SamplerAddressMode</cite> vulk constant</li>
-</ul>
+<code class="descname">set_sampler</code><span class="sig-paren">(</span><em>context</em>, <em>mag_filter=&lt;Filter.NONE: 0&gt;</em>, <em>min_filter=&lt;Filter.NONE: 0&gt;</em>, <em>mipmap_mode=&lt;SamplerMipmapMode.NONE: 0&gt;</em>, <em>address_mode_u=&lt;SamplerAddressMode.NONE: 0&gt;</em>, <em>address_mode_v=&lt;SamplerAddressMode.NONE: 0&gt;</em>, <em>address_mode_w=&lt;SamplerAddressMode.NONE: 0&gt;</em>, <em>anisotropy_enable=False</em>, <em>max_anisotropy=16</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.set_sampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.set_sampler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the texture sampler</p>
+<p>By default, sampler is configured for the best performance.
+If you want better quality, you must enable manually bilinear,
+trilinear or anisotropic filtering.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext): Context
+mag_filter (Filter): Magnification filter to apply to lookups
+min_filter (Filter): Minification filter to apply to lookups
+mipmap_mode (SamplerMipmapMode): Mipmap filter to apply to lookups
+address_mode_u (SamplerAddressMode):
+address_mode_v (SamplerAddressMode):
+address_mode_w (SamplerAddressMode):
+anisotropy_enable (bool): Whether to enable anisotropy
+max_anisotropy (int): Anisotropy value clamp</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="vulk.graphic.texture.RawTexture.set_view">
 <code class="descname">set_view</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.set_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.set_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allow to customize the texture view</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: <cite>VulkContext</cite></li>
-</ul>
+<dd><p>Set texture view</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext)</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
