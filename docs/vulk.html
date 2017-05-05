@@ -695,15 +695,55 @@ return False.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="vulk.util.mipmap_levels">
+<code class="descclassname">vulk.util.</code><code class="descname">mipmap_levels</code><span class="sig-paren">(</span><em>base_width</em>, <em>base_height</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/util.html#mipmap_levels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.util.mipmap_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return max number of mipmap for the size</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>base_width (int): Width source
+base_height (int): Height source</dd>
+<dt>Returns:</dt>
+<dd>int: Number of mipmap levels</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vulk.util.mipmap_size">
+<code class="descclassname">vulk.util.</code><code class="descname">mipmap_size</code><span class="sig-paren">(</span><em>base_width</em>, <em>base_height</em>, <em>mip_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/util.html#mipmap_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.util.mipmap_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return mipmap width and height</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>base_width (int): Width of the base image (mip level 0)
+base_height (int): Height of the base image (mip level 0)
+mip_level (int): Level of mip to get</dd>
+<dt>Returns:</dt>
+<dd>tuple(mip_width, mip_height)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="vulk.util.nanos">
 <code class="descclassname">vulk.util.</code><code class="descname">nanos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/util.html#nanos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.util.nanos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the time in nanoseconds</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="vulk.util.next_multiple">
+<code class="descclassname">vulk.util.</code><code class="descname">next_multiple</code><span class="sig-paren">(</span><em>query</em>, <em>multiple</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/util.html#next_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.util.next_multiple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the next multiple</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>query (int): To test
+multiple (int): Divider</dd>
+<dt>Returns:</dt>
+<dd>int: Next multiple of divider</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="vulk.util.time_since_millis">
 <code class="descclassname">vulk.util.</code><code class="descname">time_since_millis</code><span class="sig-paren">(</span><em>previous_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/util.html#time_since_millis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.util.time_since_millis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the time in millisecons from the previous_time argument</p>
+<dd><p>Return the time in milliseconds from the previous_time argument</p>
 </dd></dl>
 
 </div>
@@ -3727,15 +3767,17 @@ object in this module.**</dd>
 <p><cite>Buffer</cite> wrap a <cite>VkBuffer</cite> and a <cite>VkMemory</cite></p>
 <dl class="method">
 <dt id="vulk.vulkanobject.Buffer.bind">
-<code class="descname">bind</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.bind" title="Permalink to this definition">¶</a></dt>
-<dd><p>Map this buffer to upload data in it.
-This function is a context manager and must be called with <cite>with</cite>.
+<code class="descname">bind</code><span class="sig-paren">(</span><em>context</em>, <em>offset=0</em>, <em>size=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map this buffer to upload data in it</p>
+<p>This function is a context manager and must be called with <cite>with</cite>.
 It return a python buffer and let you do what you want with it,
 be careful!</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: The <cite>VulkContext</cite></li>
-</ul>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext)
+offset (int): Where to begin uploading in buffer
+size (int): Max size to write into the buffer (0 = all)</dd>
+</dl>
 <p><strong>Warning: Buffer memory must be host visible</strong></p>
 </dd></dl>
 
@@ -3755,15 +3797,18 @@ dst_buffer (Buffer): Destination buffer</dd>
 
 <dl class="method">
 <dt id="vulk.vulkanobject.Buffer.copy_to_image">
-<code class="descname">copy_to_image</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_image</em>, <em>mip_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.copy_to_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.copy_to_image" title="Permalink to this definition">¶</a></dt>
+<code class="descname">copy_to_image</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_image</em>, <em>mip_infos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.copy_to_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.copy_to_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy this buffer to the destination image</p>
 <p>Commands to copy are registered in the commandbuffer but it&#8217;s up to
 you to start and submit the command buffer to the execution queue.</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd>cmd (CommandBufferRegister): used to register commands
+<dd><p class="first">cmd (CommandBufferRegister): used to register commands
 dst_image (Image): Destination image
-mip_level (int): Image mip number</dd>
+mip_infos (list): List containing for each mipmap a dict like</p>
+<blockquote class="last">
+<div>{&#8216;offset&#8217;:, &#8216;size&#8217;:, &#8216;width&#8217;:, &#8216;height&#8217;:}</div></blockquote>
+</dd>
 <dt><a href="#id7"><span class="problematic" id="id8">**</span></a>Note: Layout of destination image must be <cite>TRANSFERT_DST_OPTIMAL</cite>.</dt>
 <dd>It&#8217;s up to you.**</dd>
 </dl>
@@ -4362,7 +4407,7 @@ when the contextmanager is released. Must be used with <cite>with</cite>.</p>
 
 <dl class="class">
 <dt id="vulk.vulkanobject.HighPerformanceImage">
-<em class="property">class </em><code class="descclassname">vulk.vulkanobject.</code><code class="descname">HighPerformanceImage</code><span class="sig-paren">(</span><em>context</em>, <em>image_type</em>, <em>image_format</em>, <em>width</em>, <em>height</em>, <em>depth</em>, <em>mip_level</em>, <em>layers</em>, <em>samples</em>, <em>sharing_mode=&lt;SharingMode.NONE: 0&gt;</em>, <em>queue_families=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#HighPerformanceImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.HighPerformanceImage" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">vulk.vulkanobject.</code><code class="descname">HighPerformanceImage</code><span class="sig-paren">(</span><em>context</em>, <em>image_type</em>, <em>image_format</em>, <em>width</em>, <em>height</em>, <em>depth</em>, <em>mip_levels</em>, <em>layers</em>, <em>samples</em>, <em>sharing_mode=&lt;SharingMode.NONE: 0&gt;</em>, <em>queue_families=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#HighPerformanceImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.HighPerformanceImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p><cite>HighPerformanceImage</cite> allows to use high performance image to be
 sampled in your shaders.</p>
@@ -4372,15 +4417,27 @@ fast memory that we will use in shaders. When we create an image, we first
 upload the pixels in the staging buffer and then copy the memory in the
 final image.</p>
 <dl class="method">
-<dt id="vulk.vulkanobject.HighPerformanceImage.bind">
-<code class="descname">bind</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#HighPerformanceImage.bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.HighPerformanceImage.bind" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bind image for writing</p>
-<p>It calls <cite>bind</cite> method of the staging image and copy the image
-when the contextmanager is released. Must be used with <cite>with</cite>.</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: <cite>VulkContext</cite></li>
-</ul>
+<dt id="vulk.vulkanobject.HighPerformanceImage.bind_buffer">
+<code class="descname">bind_buffer</code><span class="sig-paren">(</span><em>context</em>, <em>mip_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#HighPerformanceImage.bind_buffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.HighPerformanceImage.bind_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind staging buffer</p>
+<p>It calls <cite>bind</cite> method of the staging buffer to allow writing.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext)
+offset (int): Offset in buffer
+size (int): Bytes to reserve in buffer
+mip_level (int): Mip level to copy image to</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.vulkanobject.HighPerformanceImage.finalize">
+<code class="descname">finalize</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#HighPerformanceImage.finalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.HighPerformanceImage.finalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy staging buffer to final image</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext)</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -4423,21 +4480,23 @@ It&#8217;s up to you.**</dd>
 
 <dl class="method">
 <dt id="vulk.vulkanobject.Image.update_layout">
-<code class="descname">update_layout</code><span class="sig-paren">(</span><em>cmd</em>, <em>old_layout</em>, <em>new_layout</em>, <em>src_stage</em>, <em>dst_stage</em>, <em>src_access</em>, <em>dst_access</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Image.update_layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Image.update_layout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the image layout.
-Command to update layout are registered in the commandbuffer
+<code class="descname">update_layout</code><span class="sig-paren">(</span><em>cmd</em>, <em>old_layout</em>, <em>new_layout</em>, <em>src_stage</em>, <em>dst_stage</em>, <em>src_access</em>, <em>dst_access</em>, <em>base_mip_level=0</em>, <em>mip_levels=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Image.update_layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Image.update_layout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the image layout</p>
+<p>Command to update layout are registered in the commandbuffer
 but it&#8217;s up to you to start and submit the command buffer to
 the execution queue.</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>cmd</cite>: <cite>CommandBufferRegister</cite> used to register commands</li>
-<li><cite>old_layout</cite>: <cite>ImageLayout</cite> vulk constant</li>
-<li><cite>new_layout</cite>: <cite>ImageLayout</cite> vulk constant</li>
-<li><cite>src_stage</cite>: <cite>PipelineStage</cite> vulk constant</li>
-<li><cite>dst_stage</cite>: <cite>PipelineStage</cite> vulk constant</li>
-<li><cite>src_access</cite>: <cite>Access</cite> vulk constant</li>
-<li><cite>dst_access</cite>: <cite>Access</cite> vulk constant</li>
-</ul>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>cmd (CommandBufferRegister): Register commands
+old_layout (ImageLayout): Previous layout
+new_layout (ImageLayout): Next layout
+src_stage (PipelineStage): Source stage
+dst_stage (PipelineStage): Destination stage
+src_access (Access): Source access
+dst_access (Access): Destination access
+base_mip_level (int): Starting mip level
+mip_levels (int): Number of mip levels</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -257,35 +257,84 @@ of vertex.</p>
 <p>This module allows to load texture and to sample from it</p>
 <dl class="class">
 <dt id="vulk.graphic.texture.BinaryTexture">
-<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">BinaryTexture</code><span class="sig-paren">(</span><em>context</em>, <em>width</em>, <em>height</em>, <em>texture_format</em>, <em>raw_bitmap</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">BinaryTexture</code><span class="sig-paren">(</span><em>context</em>, <em>width</em>, <em>height</em>, <em>texture_format</em>, <em>raw_bitmap</em>, <em>mip_levels=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#vulk.graphic.texture.RawTexture" title="vulk.graphic.texture.RawTexture"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.texture.RawTexture</span></code></a></p>
 <p>RawTexture with provided bitmap buffer.</p>
 <p><strong>Warning: You are responsible of the bitmap buffer</strong></p>
 <dl class="method">
+<dt id="vulk.graphic.texture.BinaryTexture.generate_mipmaps">
+<code class="descname">generate_mipmaps</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture.generate_mipmaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture.generate_mipmaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate mipmap automatically</p>
+<p>This method generates mipmap on processor and then upload it on GPU.
+This method is heavy, use it with care. You shouldn&#8217;t need to call it
+several times unless raw_bitmap is modified.</p>
+<p>You must call <cite>upload</cite> to update the texture in Graphic Card.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="vulk.graphic.texture.BinaryTexture.init_bitmap">
-<code class="descname">init_bitmap</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
+<code class="descname">init_bitmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize bitmap array with <cite>raw_bitmap</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.BinaryTexture.upload_buffer">
+<code class="descname">upload_buffer</code><span class="sig-paren">(</span><em>context</em>, <em>mip_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture.upload_buffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture.upload_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload bitmap into Vulkan memory</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>context (VulkContext)
+mip_level (int): Level of mip</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
+<dt id="vulk.graphic.texture.HighQualityTexture">
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">HighQualityTexture</code><span class="sig-paren">(</span><em>context</em>, <em>path_file</em>, <em>anisotropy=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#HighQualityTexture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.HighQualityTexture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#vulk.graphic.texture.Texture" title="vulk.graphic.texture.Texture"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.texture.Texture</span></code></a></p>
+<p>Texture with best quality</p>
+<p>To get best quality, we generate automatically all mipmaps and
+set filter to trilinear or anisotropy filtering.
+It&#8217;s really just a helper class.</p>
+<dl class="method">
+<dt id="vulk.graphic.texture.HighQualityTexture.init_sampler">
+<code class="descname">init_sampler</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#HighQualityTexture.init_sampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.HighQualityTexture.init_sampler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="vulk.graphic.texture.RawTexture">
-<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">RawTexture</code><span class="sig-paren">(</span><em>context</em>, <em>width</em>, <em>height</em>, <em>texture_format</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">RawTexture</code><span class="sig-paren">(</span><em>context</em>, <em>width</em>, <em>height</em>, <em>texture_format</em>, <em>mip_levels=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
 <p>A Raw texture is not initialized with an image file but can be filled
 manually</p>
 <dl class="method">
-<dt id="vulk.graphic.texture.RawTexture.init">
-<code class="descname">init</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Init view and sampler</p>
+<dt id="vulk.graphic.texture.RawTexture.init_bitmap">
+<code class="descname">init_bitmap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the numpy array containing bitmap</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="vulk.graphic.texture.RawTexture.init_bitmap">
-<code class="descname">init_bitmap</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_bitmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_bitmap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the numpy array containing bitmap</p>
-</dd></dl>
+<dt id="vulk.graphic.texture.RawTexture.init_sampler">
+<code class="descname">init_sampler</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_sampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_sampler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.RawTexture.init_texture">
+<code class="descname">init_texture</code><span class="sig-paren">(</span><em>context</em>, <em>mip_levels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_texture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_texture" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vulk.graphic.texture.RawTexture.init_view">
+<code class="descname">init_view</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.init_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.init_view" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="vulk.graphic.texture.RawTexture.set_sampler">
@@ -321,20 +370,18 @@ max_anisotropy (int): Anisotropy value clamp</dd>
 <dl class="method">
 <dt id="vulk.graphic.texture.RawTexture.upload">
 <code class="descname">upload</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.upload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upload bitmap into Vulkan memory</p>
-<p><em>Parameters:</em></p>
-<ul class="simple">
-<li><cite>context</cite>: <cite>VulkContext</cite></li>
-</ul>
+<dd><p>Make texture accessible for shader</p>
+<p>If this function is not called, the texture can&#8217;t be used.
+When all your buffers are uploaded, call this function</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="vulk.graphic.texture.Texture">
-<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">Texture</code><span class="sig-paren">(</span><em>context</em>, <em>path_file</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#Texture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.Texture" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">vulk.graphic.texture.</code><code class="descname">Texture</code><span class="sig-paren">(</span><em>context</em>, <em>path_file</em>, <em>mip_levels=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#Texture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.Texture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#vulk.graphic.texture.BinaryTexture" title="vulk.graphic.texture.BinaryTexture"><code class="xref py py-class docutils literal"><span class="pre">vulk.graphic.texture.BinaryTexture</span></code></a></p>
-<p>BinaryTexture with file managing.</p>
+<p>BinaryTexture with file managing</p>
 <dl class="staticmethod">
 <dt id="vulk.graphic.texture.Texture.components_to_format">
 <em class="property">static </em><code class="descname">components_to_format</code><span class="sig-paren">(</span><em>components</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#Texture.components_to_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.Texture.components_to_format" title="Permalink to this definition">¶</a></dt>

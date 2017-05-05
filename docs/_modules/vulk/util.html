@@ -46,18 +46,78 @@
 
 
 <div class="viewcode-block" id="millis"><a class="viewcode-back" href="../../vulk.html#vulk.util.millis">[docs]</a><span class="k">def</span> <span class="nf">millis</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;Return the time in milliseconds&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Return the time in milliseconds&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span></div>
 
 
 <div class="viewcode-block" id="nanos"><a class="viewcode-back" href="../../vulk.html#vulk.util.nanos">[docs]</a><span class="k">def</span> <span class="nf">nanos</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;Return the time in nanoseconds&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Return the time in nanoseconds&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span></div>
 
 
 <div class="viewcode-block" id="time_since_millis"><a class="viewcode-back" href="../../vulk.html#vulk.util.time_since_millis">[docs]</a><span class="k">def</span> <span class="nf">time_since_millis</span><span class="p">(</span><span class="n">previous_time</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Return the time in millisecons from the previous_time argument&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Return the time in milliseconds from the previous_time argument&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">millis</span><span class="p">()</span> <span class="o">-</span> <span class="n">previous_time</span></div>
+
+
+<div class="viewcode-block" id="mipmap_size"><a class="viewcode-back" href="../../vulk.html#vulk.util.mipmap_size">[docs]</a><span class="k">def</span> <span class="nf">mipmap_size</span><span class="p">(</span><span class="n">base_width</span><span class="p">,</span> <span class="n">base_height</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return mipmap width and height</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        base_width (int): Width of the base image (mip level 0)</span>
+<span class="sd">        base_height (int): Height of the base image (mip level 0)</span>
+<span class="sd">        mip_level (int): Level of mip to get</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple(mip_width, mip_height)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">base_width</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">base_height</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mip_level</span><span class="p">):</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">or</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span></div>
+
+
+<div class="viewcode-block" id="mipmap_levels"><a class="viewcode-back" href="../../vulk.html#vulk.util.mipmap_levels">[docs]</a><span class="k">def</span> <span class="nf">mipmap_levels</span><span class="p">(</span><span class="n">base_width</span><span class="p">,</span> <span class="n">base_height</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return max number of mipmap for the size</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        base_width (int): Width source</span>
+<span class="sd">        base_height (int): Height source</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Number of mipmap levels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">base_width</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">base_height</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">while</span> <span class="n">width</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">height</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="n">width</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">height</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">or</span> <span class="mi">1</span>
+        <span class="n">levels</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">levels</span></div>
+
+
+<div class="viewcode-block" id="next_multiple"><a class="viewcode-back" href="../../vulk.html#vulk.util.next_multiple">[docs]</a><span class="k">def</span> <span class="nf">next_multiple</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">multiple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the next multiple</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (int): To test</span>
+<span class="sd">        multiple (int): Divider</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Next multiple of divider</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">query</span>
+    <span class="k">while</span> <span class="n">result</span> <span class="o">%</span> <span class="n">multiple</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
 
           </div>
