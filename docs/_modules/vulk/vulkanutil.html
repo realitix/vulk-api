@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -33,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -137,8 +137,8 @@
             <span class="n">semaphore</span> <span class="o">=</span> <span class="n">vo</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">semaphores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">semaphore</span><span class="p">)</span></div>
 
-    <span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="CommandBufferSynchronizedPool.pull"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanutil.CommandBufferSynchronizedPool.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CommandBufferSynchronizedPool.pull"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanutil.CommandBufferSynchronizedPool.pull">[docs]</a>    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Pull a new command buffer.</span>
 <span class="sd">        This function is a context manager, you should call it with</span>
@@ -185,6 +185,11 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphores_in</span><span class="p">[:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># No submission return no semaphore</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphore_id</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphores</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">semaphore_id</span><span class="p">]</span></div></div>
 </pre></div>
 
@@ -219,7 +224,7 @@
       &copy;2017, Vulk Engine.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -33,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -119,9 +119,9 @@ logical device and queues.
 The context will be then passed to the Application to use it.</p>
 <p>Vulk uses a specific way to interact with Vulkan that allow a good
 abstraction. Instead of performing the final drawing operation
-directly on the swapchain&#8217;s images, Vulk performs all operations on
+directly on the swapchain’s images, Vulk performs all operations on
 custom images and framebuffer and finally just copy the result in the
-swapchain&#8217;s image.</p>
+swapchain’s image.</p>
 <dl class="class">
 <dt id="vulk.context.VulkContext">
 <em class="property">class </em><code class="descclassname">vulk.context.</code><code class="descname">VulkContext</code><a class="reference internal" href="_modules/vulk/context.html#VulkContext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.context.VulkContext" title="Permalink to this definition">¶</a></dt>
@@ -388,8 +388,8 @@ will intercept events until one of them return False.</p>
 <em class="property">class </em><code class="descclassname">vulk.event.</code><code class="descname">RawEventListener</code><a class="reference internal" href="_modules/vulk/event.html#RawEventListener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.RawEventListener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">abc.ABC</span></code></p>
 <p>Base class for event listener.
-You shouldn&#8217;t need to inherit directly from this class,
-it&#8217;s very low level.</p>
+You shouldn’t need to inherit directly from this class,
+it’s very low level.</p>
 <dl class="method">
 <dt id="vulk.event.RawEventListener.handle">
 <code class="descname">handle</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/event.html#RawEventListener.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.event.RawEventListener.handle" title="Permalink to this definition">¶</a></dt>
@@ -754,7 +754,7 @@ multiple (int): Divider</dd>
 There are two types of enumeration, <cite>IntEnum</cite> and <cite>IntFlag</cite>.
 <cite>IntEnum</cite> are classic enumeration whereas <cite>IntFlag</cite> are different.
 <cite>IntFlag</cite> allows to realize bitwise operation and corresponds to
-the Vulkan enumeration that ends by &#8216;_BIT&#8217;. All enumerations have a
+the Vulkan enumeration that ends by ‘_BIT’. All enumerations have a
 specific field <cite>NONE</cite> which is equals to 0.</p>
 <dl class="class">
 <dt id="vulk.vulkanconstant.Access">
@@ -3655,19 +3655,19 @@ specific field <cite>NONE</cite> which is equals to 0.</p>
 <div class="section" id="module-vulk.vulkanobject">
 <span id="vulk-vulkanobject-module"></span><h2>vulk.vulkanobject module<a class="headerlink" href="#module-vulk.vulkanobject" title="Permalink to this headline">¶</a></h2>
 <p>Vulkan objects modules</p>
-<p>This module contains the <em>High</em> level Vulkan object. It&#8217;s not that <em>high</em>
+<p>This module contains the <em>High</em> level Vulkan object. It’s not that <em>high</em>
 level, you need to understand fully Vulkan to use theses objects.
 This module must be use by Vulkan expert and is very complicated to work with.
 You will see a lot of namedtuple here, they are used to better document the
 object arguments. Instead of passing a dict whith unknow keys, you pass a
-documented namedtuple, I think it&#8217;s better.
+documented namedtuple, I think it’s better.
 If you want to understand internal Vulkan functions, you can hack around this
 module.</p>
 <dl class="docutils">
 <dt><a href="#id3"><span class="problematic" id="id4">**</span></a>Note: All classes, functions, tuples of this module are sorted</dt>
 <dd>alphabetically.**</dd>
-<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>Note: In this module, when it&#8217;s needed, the parameter type is indicated. If</dt>
-<dd>the type begins with Vk..., it means a real Vulkan object and not an
+<dt><a href="#id5"><span class="problematic" id="id6">**</span></a>Note: In this module, when it’s needed, the parameter type is indicated. If</dt>
+<dd>the type begins with Vk…, it means a real Vulkan object and not an
 object in this module.**</dd>
 </dl>
 <dl class="class">
@@ -3785,7 +3785,7 @@ size (int): Max size to write into the buffer (0 = all)</dd>
 <dt id="vulk.vulkanobject.Buffer.copy_to">
 <code class="descname">copy_to</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_buffer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.copy_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.copy_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy this buffer to the destination buffer</p>
-<p>Commands to copy are registered in the commandbuffer but it&#8217;s up to
+<p>Commands to copy are registered in the commandbuffer but it’s up to
 you to start and submit the command buffer to the execution queue.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -3799,7 +3799,7 @@ dst_buffer (Buffer): Destination buffer</dd>
 <dt id="vulk.vulkanobject.Buffer.copy_to_image">
 <code class="descname">copy_to_image</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_image</em>, <em>mip_infos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Buffer.copy_to_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Buffer.copy_to_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy this buffer to the destination image</p>
-<p>Commands to copy are registered in the commandbuffer but it&#8217;s up to
+<p>Commands to copy are registered in the commandbuffer but it’s up to
 you to start and submit the command buffer to the execution queue.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -3807,10 +3807,10 @@ you to start and submit the command buffer to the execution queue.</p>
 dst_image (Image): Destination image
 mip_infos (list): List containing for each mipmap a dict like</p>
 <blockquote class="last">
-<div>{&#8216;offset&#8217;:, &#8216;size&#8217;:, &#8216;width&#8217;:, &#8216;height&#8217;:}</div></blockquote>
+<div>{‘offset’:, ‘size’:, ‘width’:, ‘height’:}</div></blockquote>
 </dd>
 <dt><a href="#id7"><span class="problematic" id="id8">**</span></a>Note: Layout of destination image must be <cite>TRANSFERT_DST_OPTIMAL</cite>.</dt>
-<dd>It&#8217;s up to you.**</dd>
+<dd>It’s up to you.**</dd>
 </dl>
 </dd></dl>
 
@@ -3943,7 +3943,7 @@ buffer. You should not use it directly but with <cite>bind</cite> method of
 <li><cite>offsets</cite>: <cite>list</cite> of offset (<cite>int</cite>)</li>
 </ul>
 <dl class="docutils">
-<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>Note: I don&#8217;t understand what is the point with offset but you</dt>
+<dt><a href="#id9"><span class="problematic" id="id10">**</span></a>Note: I don’t understand what is the point with offset but you</dt>
 <dd>must pass an array of the same size as <cite>buffers</cite>.**</dd>
 </dl>
 <p><strong>Note: Generally, `count = len(buffers)` and `first = 0`</strong></p>
@@ -4465,7 +4465,7 @@ be careful!</p>
 <dt id="vulk.vulkanobject.Image.copy_to">
 <code class="descname">copy_to</code><span class="sig-paren">(</span><em>cmd</em>, <em>dst_image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Image.copy_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Image.copy_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy this image to the destination image</p>
-<p>Commands to copy are registered in the commandbuffer but it&#8217;s up to
+<p>Commands to copy are registered in the commandbuffer but it’s up to
 you to start and submit the command buffer to the execution queue.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -4473,7 +4473,7 @@ you to start and submit the command buffer to the execution queue.</p>
 dst_image (Image): Destination image</dd>
 <dt><a href="#id11"><span class="problematic" id="id12">**</span></a>Note: Layout of source image must be <cite>TRANSFERT_SRC_OPTIMAL</cite> and</dt>
 <dd>layout of destination image must be <cite>TRANSFERT_DST_OPTIMAL</cite>.
-It&#8217;s up to you.**</dd>
+It’s up to you.**</dd>
 </dl>
 <p><strong>Warning: Format of both images must be compatible</strong></p>
 </dd></dl>
@@ -4483,7 +4483,7 @@ It&#8217;s up to you.**</dd>
 <code class="descname">update_layout</code><span class="sig-paren">(</span><em>cmd</em>, <em>old_layout</em>, <em>new_layout</em>, <em>src_stage</em>, <em>dst_stage</em>, <em>src_access</em>, <em>dst_access</em>, <em>base_mip_level=0</em>, <em>mip_levels=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#Image.update_layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.Image.update_layout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the image layout</p>
 <p>Command to update layout are registered in the commandbuffer
-but it&#8217;s up to you to start and submit the command buffer to
+but it’s up to you to start and submit the command buffer to
 the execution queue.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -4505,7 +4505,7 @@ mip_levels (int): Number of mip levels</dd>
 <dt id="vulk.vulkanobject.ImageSubresourceRange">
 <em class="property">class </em><code class="descclassname">vulk.vulkanobject.</code><code class="descname">ImageSubresourceRange</code><a class="headerlink" href="#vulk.vulkanobject.ImageSubresourceRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
-<p><cite>ImageSubresourceRange</cite> object describes what the image&#8217;s purpose is and
+<p><cite>ImageSubresourceRange</cite> object describes what the image’s purpose is and
 which part of the image should be accessed.</p>
 <p><em>Parameters:</em></p>
 <ul class="simple">
@@ -5075,7 +5075,7 @@ semaphore is also unsignaled before the batch begins execution.</p>
 <p>ShaderModule Vulkan object</p>
 <p>A shader module is a Spir-V shader loaded into Vulkan.
 After being created, it must be inserted in a pipeline stage.
-The real Vulkan module can be accessed by the &#8216;module&#8217; property.</p>
+The real Vulkan module can be accessed by the ‘module’ property.</p>
 </dd></dl>
 
 <dl class="class">
@@ -5092,7 +5092,7 @@ The real Vulkan module can be accessed by the &#8216;module&#8217; property.</p>
 <p>A <cite>ShaderProgramGlsl</cite> is a <cite>ShaderProgram</cite> which compiles glsl to spirv.</p>
 <dl class="attribute">
 <dt id="vulk.vulkanobject.ShaderProgramGlsl.shaderc_mapping">
-<code class="descname">shaderc_mapping</code><em class="property"> = {&lt;ShaderStage.VERTEX: 1&gt;: 'vert', &lt;ShaderStage.TESSELLATION_CONTROL: 2&gt;: 'tesc', &lt;ShaderStage.TESSELLATION_EVALUATION: 4&gt;: 'tese', &lt;ShaderStage.GEOMETRY: 8&gt;: 'geom', &lt;ShaderStage.FRAGMENT: 16&gt;: 'frag', &lt;ShaderStage.COMPUTE: 32&gt;: 'comp'}</em><a class="headerlink" href="#vulk.vulkanobject.ShaderProgramGlsl.shaderc_mapping" title="Permalink to this definition">¶</a></dt>
+<code class="descname">shaderc_mapping</code><em class="property"> = {&lt;ShaderStage.VERTEX: 1&gt;: ‘vert’, &lt;ShaderStage.TESSELLATION_CONTROL: 2&gt;: ‘tesc’, &lt;ShaderStage.TESSELLATION_EVALUATION: 4&gt;: ‘tese’, &lt;ShaderStage.GEOMETRY: 8&gt;: ‘geom’, &lt;ShaderStage.FRAGMENT: 16&gt;: ‘frag’, &lt;ShaderStage.COMPUTE: 32&gt;: ‘comp’}</em><a class="headerlink" href="#vulk.vulkanobject.ShaderProgramGlsl.shaderc_mapping" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -5101,7 +5101,7 @@ The real Vulkan module can be accessed by the &#8216;module&#8217; property.</p>
 <dt id="vulk.vulkanobject.ShaderProgramGlslFile">
 <em class="property">class </em><code class="descclassname">vulk.vulkanobject.</code><code class="descname">ShaderProgramGlslFile</code><span class="sig-paren">(</span><em>context</em>, <em>modules</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/vulkanobject.html#ShaderProgramGlslFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.vulkanobject.ShaderProgramGlslFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#vulk.vulkanobject.ShaderProgramGlsl" title="vulk.vulkanobject.ShaderProgramGlsl"><code class="xref py py-class docutils literal"><span class="pre">vulk.vulkanobject.ShaderProgramGlsl</span></code></a></p>
-<p>It&#8217;s a <cite>ShaderProgramGlsl</cite> which needs only file paths.</p>
+<p>It’s a <cite>ShaderProgramGlsl</cite> which needs only file paths.</p>
 </dd></dl>
 
 <dl class="class">
@@ -5212,7 +5212,7 @@ same size as <cite>wait_semaphores</cite></dd>
 <em class="property">class </em><code class="descclassname">vulk.vulkanobject.</code><code class="descname">SubpassDescription</code><a class="headerlink" href="#vulk.vulkanobject.SubpassDescription" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
 <p><cite>SubpassDescription</cite> describes all attachments in the subpass.
-All parameters are of type <cite>AttachmentReference</cite>. If you don&#8217;t want
+All parameters are of type <cite>AttachmentReference</cite>. If you don’t want
 an attachment, set it to an empty list.</p>
 <p><em>Parameters:</em></p>
 <ul class="simple">
@@ -5468,7 +5468,7 @@ own application requirements to find the right type of memory to use.</p>
 </ul>
 <dl class="docutils">
 <dt><a href="#id13"><span class="problematic" id="id14">**</span></a>Todo: I made a bitwise comparaison with <cite>type_filter</cite>, I have to test</dt>
-<dd>it to be sure it&#8217;s working**</dd>
+<dd>it to be sure it’s working**</dd>
 </dl>
 </dd></dl>
 
@@ -5669,7 +5669,7 @@ This function is a context manager, you should call it with
       &copy;2017, Vulk Engine.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |

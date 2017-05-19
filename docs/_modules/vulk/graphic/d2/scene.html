@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -33,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -44,24 +44,35 @@
   <h1>Source code for vulk.graphic.d2.scene</h1><div class="highlight"><pre>
 <span></span><span class="sd">&#39;&#39;&#39;This module contains scene related functions and classes&#39;&#39;&#39;</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="k">import</span> <span class="n">PATH_VULK_SHADER</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="k">import</span> <span class="n">vulkanconstant</span> <span class="k">as</span> <span class="n">vc</span>
 <span class="kn">from</span> <span class="nn">vulk</span> <span class="k">import</span> <span class="n">vulkanobject</span> <span class="k">as</span> <span class="n">vo</span>
+<span class="kn">from</span> <span class="nn">vulk.exception</span> <span class="k">import</span> <span class="n">VulkError</span>
 <span class="kn">from</span> <span class="nn">vulk.math.shape</span> <span class="k">import</span> <span class="n">Rectangle</span>
 <span class="kn">from</span> <span class="nn">vulk.math.interpolation</span> <span class="k">import</span> <span class="n">Linear</span>
-<span class="kn">from</span> <span class="nn">vulk.graphic.d2.batch</span> <span class="k">import</span> <span class="n">SpriteBatch</span>
+<span class="kn">from</span> <span class="nn">vulk.graphic.d2.batch</span> <span class="k">import</span> <span class="n">SpriteBatch</span><span class="p">,</span> <span class="n">BlockBatch</span><span class="p">,</span> <span class="n">BlockProperty</span>
+<span class="kn">from</span> <span class="nn">vulk.graphic.d2.font</span> <span class="k">import</span> <span class="n">TextRenderer</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 
 
 <span class="c1"># ----------</span>
 <span class="c1"># WIDGETS</span>
 <span class="c1"># ----------</span>
-<div class="viewcode-block" id="Widget"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget">[docs]</a><span class="k">class</span> <span class="nc">Widget</span><span class="p">():</span>
+<div class="viewcode-block" id="BaseWidget"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget">[docs]</a><span class="k">class</span> <span class="nc">BaseWidget</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Widget is the base of the scene</span>
+
+<span class="sd">    All widgets inherit from this class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">Rectangle</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># rgba depending on parent color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Grid properties</span>
@@ -100,7 +111,7 @@
     <span class="k">def</span> <span class="nf">alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="Widget.collect_children"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.collect_children">[docs]</a>    <span class="k">def</span> <span class="nf">collect_children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.collect_children"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.collect_children">[docs]</a>    <span class="k">def</span> <span class="nf">collect_children</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return all chidren recursively&quot;&quot;&quot;</span>
         <span class="n">result_children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
@@ -108,10 +119,10 @@
 
         <span class="k">return</span> <span class="n">result_children</span></div>
 
-<div class="viewcode-block" id="Widget.reshape"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.reshape">[docs]</a>    <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.reshape"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.reshape">[docs]</a>    <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reshape_grid</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Widget.reshape_all"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.reshape_all">[docs]</a>    <span class="k">def</span> <span class="nf">reshape_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.reshape_all"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.reshape_all">[docs]</a>    <span class="k">def</span> <span class="nf">reshape_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Ascend all parent until root and ask to reshape all&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">reshape_all</span><span class="p">()</span>
@@ -119,16 +130,27 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">reshape</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Widget.add_action"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.add_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.add_action"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.add_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add action to the widget</span>
+
+<span class="sd">        Actions are executed when you call `update`.</span>
+<span class="sd">        Be careful, don&#39;t use the same action across several widgets,</span>
+<span class="sd">        create a new action each time. Actions are initialized for</span>
+<span class="sd">        each widget, if you reuse the same action, it will be initialized</span>
+<span class="sd">        two times and the first widget will loose the action</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (Action): Action to perform</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">action</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Widget.remove_action"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.remove_action">[docs]</a>    <span class="k">def</span> <span class="nf">remove_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.remove_action"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.remove_action">[docs]</a>    <span class="k">def</span> <span class="nf">remove_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span>
             <span class="n">action</span><span class="o">.</span><span class="n">unset_widget</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Widget.update"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.update"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Method allowing to perform actions&quot;&quot;&quot;</span>
         <span class="n">remove_actions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span>
@@ -145,10 +167,10 @@
     <span class="c1"># ----------</span>
     <span class="c1"># Place methods</span>
     <span class="c1"># ----------</span>
-<div class="viewcode-block" id="Widget.place"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.place">[docs]</a>    <span class="k">def</span> <span class="nf">place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.place"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.place">[docs]</a>    <span class="k">def</span> <span class="nf">place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">add_child_to_place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Widget.add_child_to_place"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.add_child_to_place">[docs]</a>    <span class="k">def</span> <span class="nf">add_child_to_place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.add_child_to_place"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.add_child_to_place">[docs]</a>    <span class="k">def</span> <span class="nf">add_child_to_place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
         <span class="n">child</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span>
                                   <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span></div>
@@ -156,7 +178,7 @@
     <span class="c1"># ----------</span>
     <span class="c1"># Grid methods</span>
     <span class="c1"># ----------</span>
-<div class="viewcode-block" id="Widget.grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.grid">[docs]</a>    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.grid">[docs]</a>    <span class="k">def</span> <span class="nf">grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">add_child_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
@@ -167,7 +189,7 @@
     <span class="k">def</span> <span class="nf">row_width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span>
 
-<div class="viewcode-block" id="Widget.add_child_to_grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.add_child_to_grid">[docs]</a>    <span class="k">def</span> <span class="nf">add_child_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.add_child_to_grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.add_child_to_grid">[docs]</a>    <span class="k">def</span> <span class="nf">add_child_to_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Called when the child ask a place in the parent grid&quot;&quot;&quot;</span>
         <span class="c1"># Increase columns and rows number</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_grid_size</span><span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
@@ -178,18 +200,18 @@
         <span class="c1"># Reshape all children</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reshape_grid</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Widget.reshape_grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.reshape_grid">[docs]</a>    <span class="k">def</span> <span class="nf">reshape_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.reshape_grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.reshape_grid">[docs]</a>    <span class="k">def</span> <span class="nf">reshape_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">child</span><span class="p">,</span> <span class="n">grid_position</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children_grid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_position_to_xy</span><span class="p">(</span><span class="n">grid_position</span><span class="p">)</span>
             <span class="n">child</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Rectangle</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_width</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Widget.update_grid_size"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.update_grid_size">[docs]</a>    <span class="k">def</span> <span class="nf">update_grid_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.update_grid_size"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.update_grid_size">[docs]</a>    <span class="k">def</span> <span class="nf">update_grid_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">column</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">column</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">row</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span></div>
 
-<div class="viewcode-block" id="Widget.register_child_grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.register_child_grid">[docs]</a>    <span class="k">def</span> <span class="nf">register_child_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.register_child_grid"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.register_child_grid">[docs]</a>    <span class="k">def</span> <span class="nf">register_child_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">child</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
         <span class="c1"># Remove child at grid position if exists</span>
         <span class="n">existing_child</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children_grid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -203,23 +225,56 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">children_grid</span><span class="p">[</span><span class="n">child</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">column</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Widget.grid_position_to_xy"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.grid_position_to_xy">[docs]</a>    <span class="k">def</span> <span class="nf">grid_position_to_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_position</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseWidget.grid_position_to_xy"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BaseWidget.grid_position_to_xy">[docs]</a>    <span class="k">def</span> <span class="nf">grid_position_to_xy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_position</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">grid_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_width</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">grid_position</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_width</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="Scene"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Scene">[docs]</a><span class="k">class</span> <span class="nc">Scene</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Main 2D Scene&#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<div class="viewcode-block" id="Widget"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget">[docs]</a><span class="k">class</span> <span class="nc">Widget</span><span class="p">(</span><span class="n">BaseWidget</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="Widget.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Widget.render">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Render widget</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            renderer (object): Renderer compatible with this widget</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="Scene"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Scene">[docs]</a><span class="k">class</span> <span class="nc">Scene</span><span class="p">(</span><span class="n">BaseWidget</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Main 2D Scene&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">renderers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a new Scene</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+<span class="sd">            width (int): Scene width</span>
+<span class="sd">            height (int): Scene height</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spritebatch</span> <span class="o">=</span> <span class="n">SpriteBatch</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">block_spritebatch</span> <span class="o">=</span> <span class="n">SpriteBatch</span><span class="p">(</span>
-            <span class="n">context</span><span class="p">,</span> <span class="n">shaderprogram</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_block_shaderprogram</span><span class="p">(</span><span class="n">context</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_get_block_shaderprogram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="c1"># Default renderers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderers</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="n">SpriteBatch</span><span class="p">(</span><span class="n">context</span><span class="p">),</span>
+            <span class="s1">&#39;block&#39;</span><span class="p">:</span> <span class="n">BlockBatch</span><span class="p">(</span><span class="n">context</span><span class="p">),</span>
+            <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">TextRenderer</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Custom renderers</span>
+        <span class="k">if</span> <span class="n">renderers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">renderers</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_block_sp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create the `block` shader program</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ShaderProgram</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;block.vs.glsl&quot;</span><span class="p">)</span>
         <span class="n">fs</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PATH_VULK_SHADER</span><span class="p">,</span> <span class="s2">&quot;block.fs.glsl&quot;</span><span class="p">)</span>
 
@@ -231,13 +286,31 @@
         <span class="k">return</span> <span class="n">vo</span><span class="o">.</span><span class="n">ShaderProgramGlslFile</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">shaders_mapping</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Scene.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Scene.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spritebatch</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;Render Scene</span>
 
+<span class="sd">        For each widget, get renderer and render it.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Semaphore or None if no semaphore</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_children</span><span class="p">()</span>
+        <span class="n">semaphores</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="n">widgets</span><span class="p">:</span>
-            <span class="n">widget</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spritebatch</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderers</span><span class="p">[</span><span class="n">widget</span><span class="o">.</span><span class="n">get_renderer_name</span><span class="p">()]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Cannot find renderer&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">spritebatch</span><span class="o">.</span><span class="n">end</span><span class="p">()</span></div>
+            <span class="n">renderer</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">semaphores</span><span class="p">)</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+            <span class="n">semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="n">renderer</span><span class="o">.</span><span class="n">end</span><span class="p">()]</span>
+
+        <span class="k">return</span> <span class="n">semaphores</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">semaphores</span> <span class="k">else</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Scene.update"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Scene.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
         <span class="n">widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_children</span><span class="p">()</span>
@@ -245,25 +318,146 @@
             <span class="n">widget</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span></div></div>
 
 
+<div class="viewcode-block" id="BatchedScene"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BatchedScene">[docs]</a><span class="k">class</span> <span class="nc">BatchedScene</span><span class="p">(</span><span class="n">Scene</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Faster Scene but with limitations</span>
+
+<span class="sd">    If your scene doesnét contain overlapping elements,</span>
+<span class="sd">    this scene will be faster.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BatchedScene.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BatchedScene.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Render Scene</span>
+
+<span class="sd">        Collect renderers and then display all widget by renderer.</span>
+<span class="sd">        Renderers are in this order:</span>
+<span class="sd">            - Block renderer</span>
+<span class="sd">            - Sprite renderer</span>
+<span class="sd">            - Text renderer</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Semaphore or None if no semaphore</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_widgets_to_render</span><span class="p">()</span>
+        <span class="n">semaphore</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">renderer</span><span class="p">,</span> <span class="n">widgets</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">semaphores</span> <span class="o">=</span> <span class="p">[</span><span class="n">semaphore</span><span class="p">]</span> <span class="k">if</span> <span class="n">semaphore</span> <span class="k">else</span> <span class="p">[]</span>
+            <span class="n">renderer</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">semaphores</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="n">widgets</span><span class="p">:</span>
+                <span class="n">widget</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">renderer</span><span class="p">)</span>
+            <span class="n">semaphore</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">semaphore</span> <span class="k">if</span> <span class="n">semaphore</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="BatchedScene.collect_widgets_to_render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.BatchedScene.collect_widgets_to_render">[docs]</a>    <span class="k">def</span> <span class="nf">collect_widgets_to_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a mapping used to render widgets</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict[renderer: list[widgets]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_children</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">renderer_name</span><span class="p">,</span> <span class="n">renderer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="n">widgets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">widget</span><span class="o">.</span><span class="n">get_renderer_name</span><span class="p">()</span> <span class="o">==</span> <span class="n">renderer_name</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">renderer</span><span class="p">):</span>
+                        <span class="n">mapping</span><span class="p">[</span><span class="n">renderer</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+                    <span class="n">mapping</span><span class="p">[</span><span class="n">renderer</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">mapping</span></div></div>
+
+
 <div class="viewcode-block" id="Image"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Image">[docs]</a><span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">texture_region</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">texture_region</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a new Image widget</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (Widget): Parent widget (may be a Scene)</span>
+<span class="sd">            texture_region (TextureRegion): Region of the texture to draw</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">texture_region</span> <span class="o">=</span> <span class="n">texture_region</span>
 
-<div class="viewcode-block" id="Image.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Image.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spritebatch</span><span class="p">):</span>
+<div class="viewcode-block" id="Image.get_renderer_name"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Image.get_renderer_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_renderer_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;default&#39;</span></div>
+
+<div class="viewcode-block" id="Image.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Image.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            renderer (SpriteBatch)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_abs</span>
-        <span class="n">spritebatch</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
-                         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                         <span class="n">r</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div></div>
+        <span class="n">renderer</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                      <span class="n">r</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div></div>
 
 
 <div class="viewcode-block" id="Block"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Block">[docs]</a><span class="k">class</span> <span class="nc">Block</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Widget using the shader &#39;block&#39; with allow lot of customization&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Block.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Block.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spritebatch</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">border_colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">border_widths</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">border_colors</span><span class="p">:</span>
+            <span class="n">border_colors</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">border_widths</span><span class="p">:</span>
+            <span class="n">border_widths</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">BlockProperty</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">border_colors</span> <span class="o">=</span> <span class="n">border_colors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">border_widths</span> <span class="o">=</span> <span class="n">border_widths</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Block.get_renderer_name"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Block.get_renderer_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_renderer_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;block&#39;</span></div>
+
+<div class="viewcode-block" id="Block.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Block.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            renderer (BlockBatch)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">][:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_abs</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">][:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_abs</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">][:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_abs</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="p">][:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_abs</span><span class="p">[:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation</span>
+
+        <span class="n">renderer</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Label"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Label">[docs]</a><span class="k">class</span> <span class="nc">Label</span><span class="p">(</span><span class="n">Widget</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Widget used to write text&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">fontdata</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a new label widget</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (Widget): Parent widget (may be a Scene)</span>
+<span class="sd">            fontdata (FontData): Font to render</span>
+<span class="sd">            text (str): Text to write</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fontdata</span> <span class="o">=</span> <span class="n">fontdata</span>
+
+<div class="viewcode-block" id="Label.get_renderer_name"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Label.get_renderer_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_renderer_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;text&#39;</span></div>
+
+<div class="viewcode-block" id="Label.render"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Label.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            renderer (TextRenderer)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_abs</span>
-        <span class="n">spritebatch</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_region</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
-                         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-                         <span class="n">r</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div></div>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="n">renderer</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fontdata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                      <span class="n">size</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+                      <span class="n">rotation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># ----------</span>
@@ -275,10 +469,7 @@
 
 <div class="viewcode-block" id="Action.init"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Action.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Init action from widget&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="n">widget</span></div>
-
-<div class="viewcode-block" id="Action.unset_widget"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.Action.unset_widget">[docs]</a>    <span class="k">def</span> <span class="nf">unset_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="n">widget</span></div></div>
 
 
 <div class="viewcode-block" id="TemporalAction"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.TemporalAction">[docs]</a><span class="k">class</span> <span class="nc">TemporalAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
@@ -379,6 +570,67 @@
         <span class="n">x_rel</span><span class="p">,</span> <span class="n">y_rel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolation</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">percent</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">x_rel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="n">y_rel</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="RotateTo"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.RotateTo">[docs]</a><span class="k">class</span> <span class="nc">RotateTo</span><span class="p">(</span><span class="n">TemporalAction</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">interpolation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_src</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_dest</span> <span class="o">=</span> <span class="n">rotation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dest_init</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="RotateTo.init"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.RotateTo.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_src</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">rotation</span>
+
+        <span class="k">if</span> <span class="n">widget</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dest_init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dest_init</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rotation_dest</span> <span class="o">+=</span> <span class="n">widget</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">rotation</span></div>
+
+<div class="viewcode-block" id="RotateTo.update"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.RotateTo.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+
+        <span class="n">percent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">percent</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">percent</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">percent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpolation</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">percent</span><span class="p">)</span>
+        <span class="n">rotation_current</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation_src</span> <span class="o">+</span>
+                            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rotation_dest</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_src</span><span class="p">)</span> <span class="o">*</span>
+                            <span class="n">percent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="n">rotation_current</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="RotateBy"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.RotateBy">[docs]</a><span class="k">class</span> <span class="nc">RotateBy</span><span class="p">(</span><span class="n">TemporalAction</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rotation</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="n">interpolation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_base</span> <span class="o">=</span> <span class="n">rotation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_prev</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="RotateBy.init"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.RotateBy.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_prev</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+    <span class="k">def</span> <span class="nf">_compute_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percent</span><span class="p">):</span>
+        <span class="n">rotation_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_base</span> <span class="o">*</span> <span class="n">percent</span>
+        <span class="n">rotation_res</span> <span class="o">=</span> <span class="n">rotation_diff</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_prev</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_prev</span> <span class="o">=</span> <span class="n">rotation_diff</span>
+        <span class="k">return</span> <span class="n">rotation_res</span>
+
+<div class="viewcode-block" id="RotateBy.update"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.scene.RotateBy.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+
+        <span class="n">percent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">percent</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">percent</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">rotation_rel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolation</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">percent</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">rotation</span> <span class="o">+=</span> <span class="n">rotation_rel</span>
 
         <span class="k">return</span> <span class="kc">True</span></div></div>
 
@@ -568,7 +820,7 @@
       &copy;2017, Vulk Engine.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

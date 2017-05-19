@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -33,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -56,8 +56,8 @@
 <span class="sd">    it&#39;s very low level.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="RawEventListener.handle"><a class="viewcode-back" href="../../vulk.html#vulk.event.RawEventListener.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<div class="viewcode-block" id="RawEventListener.handle"><a class="viewcode-back" href="../../vulk.html#vulk.event.RawEventListener.handle">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Called for each event received</span>
 
 <span class="sd">        *Parameters:*</span>
@@ -271,32 +271,32 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;_callback&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
-    <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.key_down"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_down">[docs]</a>    <span class="k">def</span> <span class="nf">key_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keycode</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.key_down"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_down">[docs]</a>    <span class="nd">@wrap_callback</span>
+    <span class="k">def</span> <span class="nf">key_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keycode</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-    <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.key_up"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_up">[docs]</a>    <span class="k">def</span> <span class="nf">key_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keycode</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.key_up"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.key_up">[docs]</a>    <span class="nd">@wrap_callback</span>
+    <span class="k">def</span> <span class="nf">key_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keycode</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-    <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.mouse_drag"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_drag">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_drag"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_drag">[docs]</a>    <span class="nd">@wrap_callback</span>
+    <span class="k">def</span> <span class="nf">mouse_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-    <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.mouse_down"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_down">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_down"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_down">[docs]</a>    <span class="nd">@wrap_callback</span>
+    <span class="k">def</span> <span class="nf">mouse_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-    <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.mouse_up"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_up">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_up"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_up">[docs]</a>    <span class="nd">@wrap_callback</span>
+    <span class="k">def</span> <span class="nf">mouse_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-    <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.mouse_move"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_move">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.mouse_move"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.mouse_move">[docs]</a>    <span class="nd">@wrap_callback</span>
+    <span class="k">def</span> <span class="nf">mouse_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xr</span><span class="p">,</span> <span class="n">yr</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-    <span class="nd">@wrap_callback</span>
-<div class="viewcode-block" id="CallbackEventListener.quit"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.quit">[docs]</a>    <span class="k">def</span> <span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CallbackEventListener.quit"><a class="viewcode-back" href="../../vulk.html#vulk.event.CallbackEventListener.quit">[docs]</a>    <span class="nd">@wrap_callback</span>
+    <span class="k">def</span> <span class="nf">quit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div></div>
 </pre></div>
 
@@ -331,7 +331,7 @@
       &copy;2017, Vulk Engine.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

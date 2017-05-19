@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -33,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -711,13 +711,13 @@
         <span class="k">return</span> <span class="n">semaphore</span></div>
 
 <div class="viewcode-block" id="SpriteBatch.flush"><a class="viewcode-back" href="../../../../vulk.graphic.d2.html#vulk.graphic.d2.batch.SpriteBatch.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Flush all draws to graphic card.</span>
-<span class="sd">        Currently, `flush` register and submit command.</span>
+        <span class="sd">&quot;&quot;&quot;Flush all draws to graphic card</span>
 
-<span class="sd">        *Parameters:*</span>
+<span class="sd">        Currently, flush register and submit command.</span>
 
-<span class="sd">        - `context`: `VulkContext`</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            context (VulkContext)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -818,17 +818,20 @@
             <span class="n">x3</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h2</span>
             <span class="n">y3</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h2</span>
 
-            <span class="n">x4</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x3</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
-            <span class="n">y4</span> <span class="o">=</span> <span class="n">y3</span> <span class="o">-</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span>
+            <span class="n">x4</span> <span class="o">=</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">-</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">h1</span>
+            <span class="n">y4</span> <span class="o">=</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">w2</span> <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">h1</span>
 
-            <span class="n">x1</span> <span class="o">+=</span> <span class="n">p1x</span>
-            <span class="n">x2</span> <span class="o">+=</span> <span class="n">p1x</span>
-            <span class="n">x3</span> <span class="o">+=</span> <span class="n">p1x</span>
-            <span class="n">x4</span> <span class="o">+=</span> <span class="n">p1x</span>
-            <span class="n">y1</span> <span class="o">+=</span> <span class="n">p1y</span>
-            <span class="n">y2</span> <span class="o">+=</span> <span class="n">p1y</span>
-            <span class="n">y3</span> <span class="o">+=</span> <span class="n">p1y</span>
-            <span class="n">y4</span> <span class="o">+=</span> <span class="n">p1y</span>
+            <span class="n">x_abs</span> <span class="o">=</span> <span class="n">p1x</span> <span class="o">+</span> <span class="n">width</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">y_abs</span> <span class="o">=</span> <span class="n">p1y</span> <span class="o">+</span> <span class="n">height</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">x1</span> <span class="o">+=</span> <span class="n">x_abs</span>
+            <span class="n">x2</span> <span class="o">+=</span> <span class="n">x_abs</span>
+            <span class="n">x3</span> <span class="o">+=</span> <span class="n">x_abs</span>
+            <span class="n">x4</span> <span class="o">+=</span> <span class="n">x_abs</span>
+            <span class="n">y1</span> <span class="o">+=</span> <span class="n">y_abs</span>
+            <span class="n">y2</span> <span class="o">+=</span> <span class="n">y_abs</span>
+            <span class="n">y3</span> <span class="o">+=</span> <span class="n">y_abs</span>
+            <span class="n">y4</span> <span class="o">+=</span> <span class="n">y_abs</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span> <span class="o">=</span> <span class="n">p1x</span><span class="p">,</span> <span class="n">p2x</span><span class="p">,</span> <span class="n">p3x</span><span class="p">,</span> <span class="n">p4x</span>
             <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">,</span> <span class="n">y4</span> <span class="o">=</span> <span class="n">p1y</span><span class="p">,</span> <span class="n">p2y</span><span class="p">,</span> <span class="n">p3y</span><span class="p">,</span> <span class="n">p4y</span>
@@ -949,7 +952,7 @@
       &copy;2017, Vulk Engine.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

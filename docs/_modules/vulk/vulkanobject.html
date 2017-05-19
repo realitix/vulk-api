@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -33,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -115,8 +115,8 @@
     <span class="k">raise</span> <span class="n">VulkError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="immediate_buffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.immediate_buffer">[docs]</a><span class="k">def</span> <span class="nf">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="immediate_buffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.immediate_buffer">[docs]</a><span class="nd">@contextmanager</span>
+<span class="k">def</span> <span class="nf">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">commandpool</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Manage creation and destruction of commandbuffer for one time submit.</span>
 <span class="sd">    If commandpool is not given, it is created here.</span>
@@ -803,8 +803,8 @@
 
         <span class="n">cmd</span><span class="o">.</span><span class="n">copy_buffer_to_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">,</span> <span class="n">dst_layout</span><span class="p">,</span> <span class="n">regions</span><span class="p">)</span></div>
 
-    <span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="Buffer.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Buffer.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="Buffer.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Buffer.bind">[docs]</a>    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Map this buffer to upload data in it</span>
 
 <span class="sd">        This function is a context manager and must be called with `with`.</span>
@@ -925,8 +925,8 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">vk</span><span class="o">.</span><span class="n">vkResetCommandBuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commandbuffer</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span></div>
 
-    <span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="CommandBuffer.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.CommandBuffer.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">CommandBufferUsage</span><span class="o">.</span><span class="n">NONE</span><span class="p">):</span>
+<div class="viewcode-block" id="CommandBuffer.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.CommandBuffer.bind">[docs]</a>    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">vc</span><span class="o">.</span><span class="n">CommandBufferUsage</span><span class="o">.</span><span class="n">NONE</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Bind this buffer to register command.</span>
 
@@ -1539,8 +1539,8 @@
         <span class="k">with</span> <span class="n">immediate_buffer</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">as</span> <span class="n">cmd</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">staging_buffer</span><span class="o">.</span><span class="n">copy_to</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_buffer</span><span class="p">)</span>
 
-    <span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="HighPerformanceBuffer.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.HighPerformanceBuffer.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<div class="viewcode-block" id="HighPerformanceBuffer.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.HighPerformanceBuffer.bind">[docs]</a>    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Bind buffer for writing</span>
 
 <span class="sd">        It calls `bind` method of the staging buffer and copy the buffer</span>
@@ -1685,8 +1685,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_copy_staging_to_final</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></div>
 
-    <span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="HighPerformanceImage.bind_buffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.HighPerformanceImage.bind_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">bind_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">):</span>
+<div class="viewcode-block" id="HighPerformanceImage.bind_buffer"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.HighPerformanceImage.bind_buffer">[docs]</a>    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">mip_level</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Bind staging buffer</span>
 
 <span class="sd">        It calls `bind` method of the staging buffer to allow writing.</span>
@@ -1889,8 +1889,8 @@
         <span class="n">cmd</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_layout</span><span class="p">,</span> <span class="n">dst_image</span><span class="p">,</span>
                        <span class="n">dst_layout</span><span class="p">,</span> <span class="p">[</span><span class="n">region</span><span class="p">])</span></div>
 
-    <span class="nd">@contextmanager</span>
-<div class="viewcode-block" id="Image.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Image.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<div class="viewcode-block" id="Image.bind"><a class="viewcode-back" href="../../vulk.html#vulk.vulkanobject.Image.bind">[docs]</a>    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Map this image to upload data in it.</span>
 <span class="sd">        This function is a context manager and must be called with `with`.</span>
@@ -2597,7 +2597,7 @@
       &copy;2017, Vulk Engine.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
     </div>

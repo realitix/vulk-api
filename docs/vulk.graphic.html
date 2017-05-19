@@ -1,6 +1,6 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -33,7 +33,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head>
-  <body role="document">
+  <body>
   
 
     <div class="document">
@@ -266,7 +266,7 @@ of vertex.</p>
 <code class="descname">generate_mipmaps</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#BinaryTexture.generate_mipmaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.BinaryTexture.generate_mipmaps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate mipmap automatically</p>
 <p>This method generates mipmap on processor and then upload it on GPU.
-This method is heavy, use it with care. You shouldn&#8217;t need to call it
+This method is heavy, use it with care. You shouldn’t need to call it
 several times unless raw_bitmap is modified.</p>
 <p>You must call <cite>upload</cite> to update the texture in Graphic Card.</p>
 <dl class="docutils">
@@ -301,7 +301,7 @@ mip_level (int): Level of mip</dd>
 <p>Texture with best quality</p>
 <p>To get best quality, we generate automatically all mipmaps and
 set filter to trilinear or anisotropy filtering.
-It&#8217;s really just a helper class.</p>
+It’s really just a helper class.</p>
 <dl class="method">
 <dt id="vulk.graphic.texture.HighQualityTexture.init_sampler">
 <code class="descname">init_sampler</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#HighQualityTexture.init_sampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.HighQualityTexture.init_sampler" title="Permalink to this definition">¶</a></dt>
@@ -371,7 +371,7 @@ max_anisotropy (int): Anisotropy value clamp</dd>
 <dt id="vulk.graphic.texture.RawTexture.upload">
 <code class="descname">upload</code><span class="sig-paren">(</span><em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/vulk/graphic/texture.html#RawTexture.upload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vulk.graphic.texture.RawTexture.upload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make texture accessible for shader</p>
-<p>If this function is not called, the texture can&#8217;t be used.
+<p>If this function is not called, the texture can’t be used.
 When all your buffers are uploaded, call this function</p>
 </dd></dl>
 
@@ -594,7 +594,7 @@ height (int): Region height</dd>
       &copy;2017, Vulk Engine.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
